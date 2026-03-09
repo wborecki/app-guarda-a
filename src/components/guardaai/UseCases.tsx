@@ -1,15 +1,15 @@
 import { motion } from "framer-motion";
-import { Truck, Hammer, Plane, Home, ShoppingBag, Sofa, GraduationCap, Wrench } from "lucide-react";
+import { Truck, Hammer, Plane, Home, Store, KeyRound, Sofa, CalendarRange } from "lucide-react";
 
 const cases = [
-  { icon: Truck, title: "Mudança", desc: "Guarde móveis durante a transição." },
-  { icon: Hammer, title: "Reforma", desc: "Proteja pertences durante a obra." },
-  { icon: Plane, title: "Viagem", desc: "Armazene com segurança enquanto viaja." },
-  { icon: Home, title: "Falta de espaço", desc: "Libere espaço em casa." },
-  { icon: ShoppingBag, title: "Estoque e-commerce", desc: "Estoque perto dos clientes." },
-  { icon: Sofa, title: "Guarda de móveis", desc: "Móveis por dias ou meses." },
-  { icon: GraduationCap, title: "Estudantes", desc: "Ideal para férias ou intercâmbio." },
-  { icon: Wrench, title: "Ferramentas", desc: "Equipamentos guardados com segurança." },
+  { icon: Truck, title: "Mudança", desc: "Guarde seus móveis e caixas durante a transição entre imóveis." },
+  { icon: Hammer, title: "Reforma", desc: "Proteja seus pertences enquanto a obra acontece em casa." },
+  { icon: Plane, title: "Viagem longa", desc: "Armazene com segurança o que não vai usar durante um período fora." },
+  { icon: Home, title: "Falta de espaço em casa", desc: "Libere espaço sem precisar se desfazer das suas coisas." },
+  { icon: Store, title: "Estoque do negócio", desc: "Guarde produtos e materiais do seu negócio perto de você." },
+  { icon: KeyRound, title: "Transição de imóvel", desc: "Ideal para quem está saindo de um lugar e ainda não entrou no próximo." },
+  { icon: Sofa, title: "Guarda temporária de móveis", desc: "Uma solução prática para guardar móveis por dias ou meses." },
+  { icon: CalendarRange, title: "Objetos sazonais", desc: "Guarde itens que usa só em alguns períodos do ano." },
 ];
 
 const UseCases = () => {
@@ -26,7 +26,7 @@ const UseCases = () => {
             Para quem é o GuardaAí?
           </h2>
           <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto">
-            Soluções para diferentes situações do dia a dia.
+            Soluções para momentos em que falta espaço, sobra coisa ou você precisa guardar algo por um tempo.
           </p>
         </motion.div>
 
