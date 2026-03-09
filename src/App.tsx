@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import HostLanding from "./pages/HostLanding";
 import Login from "./pages/Login";
 import SearchResults from "./pages/SearchResults";
+import SpaceDetails from "./pages/SpaceDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/anunciar" element={<HostLanding />} />
           <Route path="/entrar" element={<Login />} />
           <Route path="/buscar" element={<SearchResults />} />
+          <Route path="/espaco/:id" element={<SpaceDetails />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

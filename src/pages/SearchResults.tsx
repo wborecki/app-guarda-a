@@ -4,14 +4,19 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock } from "lucide-react";
+import { MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import useEmblaCarousel from "embla-carousel-react";
+import { useCallback, useEffect, useState } from "react";
 
 const mockSpaces = [
   {
     id: 1,
     name: "Garagem coberta espaçosa",
     owner: "Carlos M.",
+    ownerPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+    ownerSince: "2023",
+    ownerDescription: "Moro no bairro há 15 anos. Ofereço minha garagem extra para quem precisa de um espaço seguro.",
     rating: 4.8,
     reviews: 23,
     type: "Garagem",
@@ -19,13 +24,27 @@ const mockSpaces = [
     distance: "1.2 km",
     area: 12,
     pricePerDay: 8,
-    photo: "/placeholder.svg",
+    description: "Garagem ampla e coberta com portão automático, ideal para guardar móveis, caixas e itens maiores. Ambiente seco e seguro com câmeras de monitoramento 24h.",
+    photos: [
+      "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1486006920555-c77dcf18193c?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop",
+    ],
     features: ["Portão automático", "Câmeras 24h", "Acesso fácil"],
+    reviewsList: [
+      { name: "Pedro A.", rating: 5, date: "2024-01-15", text: "Excelente espaço! Muito seguro e o Carlos é super atencioso." },
+      { name: "Lucia R.", rating: 5, date: "2024-02-20", text: "Guardei meus móveis por 2 meses sem problemas. Recomendo!" },
+      { name: "Fernando G.", rating: 4, date: "2023-12-10", text: "Bom espaço, só achei um pouco difícil de estacionar na rua." },
+    ],
   },
   {
     id: 2,
     name: "Quarto vazio em apartamento",
     owner: "Ana P.",
+    ownerPhoto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
+    ownerSince: "2022",
+    ownerDescription: "Tenho um quarto extra no meu apartamento e decidi ajudar quem precisa de espaço temporário.",
     rating: 4.9,
     reviews: 41,
     type: "Quarto",
@@ -33,13 +52,27 @@ const mockSpaces = [
     distance: "2.0 km",
     area: 9,
     pricePerDay: 6,
-    photo: "/placeholder.svg",
+    description: "Quarto vazio em apartamento com portaria 24h e elevador. Ambiente climatizado, perfeito para itens que precisam de cuidado extra.",
+    photos: [
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop",
+    ],
     features: ["Prédio com portaria", "Elevador", "Climatizado"],
+    reviewsList: [
+      { name: "Marcos T.", rating: 5, date: "2024-03-01", text: "A Ana é incrível! Apartamento super limpo e organizado." },
+      { name: "Carla B.", rating: 5, date: "2024-01-28", text: "Melhor experiência que já tive. Muito prático e seguro." },
+      { name: "Ricardo M.", rating: 5, date: "2024-02-14", text: "Perfeito para guardar coisas durante uma mudança." },
+    ],
   },
   {
     id: 3,
     name: "Depósito comercial pequeno",
     owner: "Roberto S.",
+    ownerPhoto: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+    ownerSince: "2021",
+    ownerDescription: "Tenho um pequeno depósito comercial que não uso mais e resolvi disponibilizar na plataforma.",
     rating: 4.6,
     reviews: 15,
     type: "Depósito",
@@ -47,13 +80,26 @@ const mockSpaces = [
     distance: "3.5 km",
     area: 20,
     pricePerDay: 12,
-    photo: "/placeholder.svg",
+    description: "Depósito comercial com piso nivelado e seguro incluso. Ideal para estoques, equipamentos e itens de maior volume.",
+    photos: [
+      "https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1504418684940-75eb70512506?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=600&h=400&fit=crop",
+    ],
     features: ["Seguro incluso", "Acesso 24h", "Piso nivelado"],
+    reviewsList: [
+      { name: "Sandra L.", rating: 5, date: "2024-02-05", text: "Ótimo depósito, muito espaçoso e seguro." },
+      { name: "Diego C.", rating: 4, date: "2023-11-20", text: "Bom espaço, mas fica um pouco longe do metrô." },
+    ],
   },
   {
     id: 4,
     name: "Área coberta em casa",
     owner: "Mariana L.",
+    ownerPhoto: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+    ownerSince: "2023",
+    ownerDescription: "Tenho uma área coberta grande nos fundos da minha casa que fica vazia. Ótima para guardar coisas!",
     rating: 5.0,
     reviews: 8,
     type: "Área coberta",
@@ -61,13 +107,26 @@ const mockSpaces = [
     distance: "4.1 km",
     area: 15,
     pricePerDay: 7,
-    photo: "/placeholder.svg",
+    description: "Área coberta nos fundos de casa em bairro tranquilo. Ambiente seco e arejado com fácil acesso para carga e descarga.",
+    photos: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&h=400&fit=crop",
+    ],
     features: ["Ambiente seco", "Vizinhança tranquila", "Fácil estacionamento"],
+    reviewsList: [
+      { name: "Thiago N.", rating: 5, date: "2024-03-10", text: "Mariana é super gentil! O espaço é exatamente como descrito." },
+      { name: "Juliana P.", rating: 5, date: "2024-02-28", text: "Lugar perfeito, tranquilo e seguro. Voltarei a usar!" },
+    ],
   },
   {
     id: 5,
     name: "Pequeno galpão nos fundos",
     owner: "João F.",
+    ownerPhoto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+    ownerSince: "2022",
+    ownerDescription: "Tenho um galpão nos fundos da minha propriedade com portão largo, ideal para itens grandes.",
     rating: 4.7,
     reviews: 19,
     type: "Galpão",
@@ -75,10 +134,82 @@ const mockSpaces = [
     distance: "1.8 km",
     area: 25,
     pricePerDay: 15,
-    photo: "/placeholder.svg",
+    description: "Galpão com pé direito alto e portão largo, ideal para móveis grandes e equipamentos. Acesso para veículos facilita a carga e descarga.",
+    photos: [
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600566753051-f0b89df2dd90?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1600585153490-76fb20a32601?w=600&h=400&fit=crop",
+    ],
     features: ["Portão largo", "Pé direito alto", "Acesso para veículos"],
+    reviewsList: [
+      { name: "Bruno A.", rating: 5, date: "2024-01-05", text: "Galpão excelente! Coube tudo que eu precisava guardar." },
+      { name: "Camila F.", rating: 4, date: "2023-12-18", text: "Bom espaço, João é muito prestativo e pontual." },
+      { name: "Eduardo V.", rating: 5, date: "2024-03-02", text: "Perfeito para quem precisa de espaço grande. Super recomendo." },
+    ],
   },
 ];
+
+// Mini carousel component for cards
+const CardCarousel = ({ photos, name }: { photos: string[]; name: string }) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const scrollPrev = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    emblaApi?.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    emblaApi?.scrollNext();
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    emblaApi.on("select", onSelect);
+    return () => { emblaApi.off("select", onSelect); };
+  }, [emblaApi]);
+
+  return (
+    <div className="relative group h-full">
+      <div ref={emblaRef} className="overflow-hidden h-full">
+        <div className="flex h-full">
+          {photos.map((photo, i) => (
+            <div key={i} className="flex-[0_0_100%] min-w-0 h-full">
+              <img src={photo} alt={`${name} ${i + 1}`} className="w-full h-full object-cover" />
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Arrows */}
+      <button
+        onClick={scrollPrev}
+        className="absolute left-1 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <ChevronLeft size={16} />
+      </button>
+      <button
+        onClick={scrollNext}
+        className="absolute right-1 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <ChevronRight size={16} />
+      </button>
+      {/* Dots */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+        {photos.map((_, i) => (
+          <div
+            key={i}
+            className={`w-1.5 h-1.5 rounded-full transition-colors ${
+              i === selectedIndex ? "bg-background" : "bg-background/50"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const SearchResults = () => {
   const location = useLocation();
@@ -102,11 +233,16 @@ const SearchResults = () => {
   const totalVol = state?.totalVol || 0;
   const userLocation = state?.location || "Não informado";
 
-  const handleSelect = (spaceId: number) => {
+  const handleSelect = (e: React.MouseEvent, spaceId: number) => {
+    e.stopPropagation();
     toast({
       title: "Em breve!",
       description: "O fluxo de contratação estará disponível em breve. Obrigado pelo interesse!",
     });
+  };
+
+  const handleCardClick = (space: typeof mockSpaces[0]) => {
+    navigate(`/espaco/${space.id}`, { state: { space, simulation: state } });
   };
 
   return (
@@ -171,16 +307,15 @@ const SearchResults = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08 }}
               >
-                <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                <Card
+                  className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => handleCardClick(space)}
+                >
                   <CardContent className="p-0">
                     <div className="flex flex-col sm:flex-row">
-                      {/* Photo */}
+                      {/* Photo Carousel */}
                       <div className="sm:w-48 h-40 sm:h-auto bg-muted flex-shrink-0">
-                        <img
-                          src={space.photo}
-                          alt={space.name}
-                          className="w-full h-full object-cover"
-                        />
+                        <CardCarousel photos={space.photos} name={space.name} />
                       </div>
 
                       {/* Info */}
@@ -228,9 +363,9 @@ const SearchResults = () => {
                           </div>
                           <Button
                             className="bg-accent hover:bg-accent/90 text-accent-foreground"
-                            onClick={() => handleSelect(space.id)}
+                            onClick={(e) => handleSelect(e, space.id)}
                           >
-                            Selecionar este espaço
+                            Selecionar
                           </Button>
                         </div>
                       </div>
