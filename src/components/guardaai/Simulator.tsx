@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Package, Search, Ruler, DollarSign, MapPin, Zap } from "lucide-react";
 
@@ -101,9 +102,9 @@ const Simulator = () => {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Cidade ou bairro</label>
-                  <Input
+                  <LocationAutocomplete
                     value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    onChange={setLocation}
                     placeholder="Ex: São Paulo, Pinheiros"
                     className="h-11 md:h-10"
                   />
