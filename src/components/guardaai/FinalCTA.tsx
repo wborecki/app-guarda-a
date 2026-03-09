@@ -33,7 +33,7 @@ const FinalCTA = () => {
             </h2>
 
             <p className="text-base md:text-xl text-primary-foreground/70 mb-10 md:mb-12 max-w-xl mx-auto leading-relaxed font-medium">
-              Encontre espaços perto de você e pague até 70% menos que um self storage tradicional.
+              Encontre espaços perto de você e pague muito menos que um self storage tradicional.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">

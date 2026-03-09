@@ -79,7 +79,7 @@ const Simulator = () => {
         >
           <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-full bg-accent/10 text-accent text-xs md:text-sm font-semibold mb-3 md:mb-4">
             <Zap size={14} />
-            Feature central do produto
+            Calcule em segundos
           </div>
           <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4">
             Simulador de armazenamento
