@@ -1,48 +1,38 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
+import ItemDimensionInput, { type AddedItem } from "@/components/guardaai/ItemDimensionInput";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, Search, Ruler, DollarSign, MapPin, Zap } from "lucide-react";
-
-const objectOptions = [
-  { value: "caixa-pequena", label: "Caixa pequena", area: 0.25, vol: 0.06 },
-  { value: "caixa-media", label: "Caixa média", area: 0.36, vol: 0.14 },
-  { value: "caixa-grande", label: "Caixa grande", area: 0.5, vol: 0.3 },
-  { value: "mala", label: "Mala", area: 0.4, vol: 0.15 },
-  { value: "bicicleta", label: "Bicicleta", area: 1.2, vol: 0.6 },
-  { value: "sofa", label: "Sofá", area: 3, vol: 2 },
-  { value: "cama", label: "Cama", area: 3.5, vol: 1.5 },
-  { value: "guarda-roupa", label: "Guarda-roupa", area: 1.8, vol: 2.5 },
-  { value: "mesa", label: "Mesa", area: 1.5, vol: 0.8 },
-  { value: "geladeira", label: "Geladeira", area: 0.8, vol: 1.2 },
-  { value: "estoque-ecommerce", label: "Estoque de e-commerce", area: 4, vol: 3 },
-  { value: "mudanca-completa", label: "Mudança completa", area: 15, vol: 20 },
-  { value: "item-personalizado", label: "Item personalizado", area: 1, vol: 0.5 },
-];
+import { Package, Search, Ruler, DollarSign, Zap } from "lucide-react";
 
 const Simulator = () => {
-  const [selectedObject, setSelectedObject] = useState("");
-  const [qty, setQty] = useState("1");
+  const [items, setItems] = useState<AddedItem[]>([]);
   const [location, setLocation] = useState("");
   const [period, setPeriod] = useState("");
   const [spaceType, setSpaceType] = useState("");
   const [usage, setUsage] = useState("");
   const [showResult, setShowResult] = useState(false);
 
-  const obj = objectOptions.find((o) => o.value === selectedObject);
-  const quantity = parseInt(qty) || 1;
-  const totalArea = obj ? Math.max(obj.area * quantity, 1) : 0;
-  const totalVol = obj ? obj.vol * quantity : 0;
+  const totalArea = Math.max(
+    items.reduce((sum, i) => sum + ((i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0),
+    items.length > 0 ? 1 : 0
+  );
+  const totalVol = items.reduce((sum, i) => sum + ((i.altura / 100) * (i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0);
+
   const days = period === "semanal" ? 7 : period === "quinzenal" ? 15 : period === "mensal" ? 30 : period === "trimestral" ? 90 : 1;
   const dailyRate = days >= 30 ? 1.5 : 2;
   const estimatedPrice = totalArea * dailyRate * days;
 
   const handleSimulate = () => {
-    if (selectedObject && period) {
+    if (items.length > 0 && period) {
       setShowResult(true);
     }
+  };
+
+  const handleItemsChange = (newItems: AddedItem[]) => {
+    setItems(newItems);
+    setShowResult(false);
   };
 
   return (
@@ -75,31 +65,11 @@ const Simulator = () => {
           <div className="p-5 md:p-10 rounded-2xl bg-card border shadow-lg relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/3 to-accent/3 pointer-events-none" />
             <div className="relative">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-4 mb-5 md:mb-4">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">O que deseja guardar?</label>
-                  <Select value={selectedObject} onValueChange={(v) => { setSelectedObject(v); setShowResult(false); }}>
-                    <SelectTrigger className="h-11 md:h-10">
-                      <SelectValue placeholder="Selecione um objeto" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {objectOptions.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Quantidade</label>
-                  <Input
-                    type="number"
-                    min="1"
-                    value={qty}
-                    onChange={(e) => { setQty(e.target.value); setShowResult(false); }}
-                    placeholder="1"
-                    className="h-11 md:h-10"
-                  />
-                </div>
+              <div className="mb-5">
+                <ItemDimensionInput items={items} onItemsChange={handleItemsChange} />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Cidade ou bairro</label>
                   <LocationAutocomplete
@@ -157,13 +127,13 @@ const Simulator = () => {
               <Button
                 className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base h-12"
                 onClick={handleSimulate}
-                disabled={!selectedObject || !period}
+                disabled={items.length === 0 || !period}
               >
                 <Search size={18} className="mr-2" />
                 Simular agora
               </Button>
 
-              {showResult && obj && (
+              {showResult && items.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
