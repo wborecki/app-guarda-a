@@ -10,11 +10,13 @@ import SearchResults from "./pages/SearchResults";
 import SpaceDetails from "./pages/SpaceDetails";
 import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
+import { AuthProvider } from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <AuthProvider>
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -31,6 +33,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
