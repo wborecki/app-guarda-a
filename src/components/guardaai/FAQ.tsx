@@ -2,18 +2,66 @@ import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "O que é o GuardaAí?", a: "O GuardaAí é uma plataforma que conecta pessoas que precisam guardar objetos com pessoas que têm espaço ocioso em casa — como garagens, quartos vazios e depósitos. É um marketplace de self storage descentralizado, mais barato e mais próximo de você." },
-  { q: "Como o preço é calculado?", a: "O preço é baseado na metragem necessária para armazenar seus objetos. A cobrança mínima é de 1 m². Objetos menores que 1 m² pagam como 1 m². O sistema calcula tudo automaticamente com base no que você precisa guardar." },
-  { q: "Posso guardar por poucos dias?", a: "Sim! Oferecemos diárias a partir de R$1,50 por m². Você pode guardar por 1 dia, uma semana ou o tempo que precisar." },
-  { q: "Posso guardar por meses?", a: "Claro! Temos mensalidades a partir de R$45 por m². Quanto mais tempo, menor o valor proporcional por dia." },
-  { q: "Quais objetos posso armazenar?", a: "Você pode guardar móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce, ferramentas e itens pessoais em geral. Basta serem objetos permitidos pelos termos da plataforma." },
-  { q: "Quais itens são proibidos?", a: "São proibidos: drogas, armas, explosivos, produtos perigosos, itens ilegais, perecíveis e animais vivos. A lista completa está nos termos de uso." },
-  { q: "Como funciona a segurança?", a: "Todos os objetos devem ser cadastrados com foto. Ambas as partes aceitam termos de responsabilidade. O anfitrião tem direito de recusa e toda a intermediação é feita pela plataforma." },
-  { q: "O que acontece se o objeto não for retirado?", a: "Objetos não retirados após o prazo contratual e o período adicional previsto nos termos poderão ser considerados abandonados conforme as regras da plataforma." },
-  { q: "Como faço para anunciar meu espaço?", a: "É simples: cadastre seu espaço informando dimensões e tipo, publique fotos e aguarde solicitações. Você decide quais reservas aceitar." },
-  { q: "Preciso medir meu objeto?", a: "Não! O sistema possui uma lista de objetos pré-cadastrados com medidas estimadas. Basta selecionar o que deseja guardar e o cálculo é automático." },
-  { q: "Existe cobrança mínima?", a: "Sim, a cobrança mínima equivale a 1 m². Objetos que ocupem menos de 1 m² são cobrados como 1 m²." },
-  { q: "Como funciona a taxa de serviço?", a: "Uma taxa de serviço fixa é adicionada no checkout para cobrir custos operacionais da plataforma. O valor é exibido antes da confirmação do pagamento." },
+  {
+    q: "O que é o GuardaAí?",
+    a: "O GuardaAí é uma plataforma que conecta quem precisa guardar objetos com quem tem espaço sobrando — como garagens, quartos vazios e depósitos. É um self storage descentralizado, mais barato e mais perto de você.",
+  },
+  {
+    q: "Como o preço é calculado?",
+    a: "O preço é baseado na área que seus objetos vão ocupar (mínimo de 1 m²). Usamos uma tabela progressiva: quanto mais tempo você guardar, menor o valor proporcional por dia. Uma taxa de serviço fixa de R$ 28,00 é adicionada no checkout.",
+  },
+  {
+    q: "Quanto custa guardar no GuardaAí?",
+    a: "Diárias a partir de R$ 5,00/m². Para 30 dias, o valor é R$ 45,00/m². Em planos anuais, a partir de R$ 40,00/m². Quanto maior o período, menor o custo por dia.",
+  },
+  {
+    q: "Posso guardar por poucos dias?",
+    a: "Sim! Você pode guardar a partir de 1 dia. A cobrança segue a tabela progressiva — mesmo períodos curtos têm preço justo.",
+  },
+  {
+    q: "Posso guardar por meses ou mais?",
+    a: "Claro. Temos planos de 30 dias e anuais. Quanto mais longo o período, menor o valor proporcional por dia.",
+  },
+  {
+    q: "Existe cobrança mínima?",
+    a: "Sim. A cobrança mínima equivale a 1 m². Objetos que ocupem menos de 1 m² são cobrados como 1 m².",
+  },
+  {
+    q: "O que é a taxa de serviço?",
+    a: "É uma taxa fixa de R$ 28,00 por reserva, cobrada no checkout. Ela cobre os custos operacionais da plataforma.",
+  },
+  {
+    q: "Eu pago pela área total do espaço?",
+    a: "Não. Você paga apenas pela área que seus objetos vão ocupar, e não pela metragem total do local anunciado.",
+  },
+  {
+    q: "Quais objetos posso armazenar?",
+    a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce, ferramentas e itens pessoais em geral. Basta serem objetos permitidos pelos termos de uso.",
+  },
+  {
+    q: "Quais itens são proibidos?",
+    a: "Drogas, armas, explosivos, produtos perigosos, perecíveis, animais vivos e qualquer item ilegal.",
+  },
+  {
+    q: "Como funciona a segurança?",
+    a: "Todos os objetos são cadastrados com foto. Ambas as partes aceitam termos de responsabilidade. Toda a intermediação é feita pela plataforma, com regras claras para proteger quem guarda e quem oferece espaço.",
+  },
+  {
+    q: "O que acontece se o objeto não for retirado?",
+    a: "Objetos não retirados após o prazo contratual e o período adicional previsto nos termos poderão ser considerados abandonados, conforme as regras da plataforma.",
+  },
+  {
+    q: "Como faço para anunciar meu espaço?",
+    a: "Cadastre seu espaço com dimensões, tipo e fotos. Depois é só aguardar solicitações e aceitar as reservas que fizerem sentido para você.",
+  },
+  {
+    q: "Preciso medir meu objeto?",
+    a: "Não necessariamente. O sistema possui uma lista de objetos com medidas estimadas. Basta selecionar o que deseja guardar e o cálculo é automático.",
+  },
+  {
+    q: "Posso pagar online?",
+    a: "Sim. Todo o processo de reserva e pagamento pode ser feito diretamente pela plataforma.",
+  },
 ];
 
 const FAQ = () => {

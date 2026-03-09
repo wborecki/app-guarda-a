@@ -9,8 +9,8 @@ const testimonials = [
   },
   {
     name: "Lucas P.",
-    role: "Estudante",
-    text: "Fui fazer intercâmbio e deixei tudo num quarto vazio pelo GuardaAí. Voltei e estava tudo perfeito.",
+    role: "Guardou durante viagem",
+    text: "Fui viajar por 3 meses e deixei tudo num quarto vazio pelo GuardaAí. Voltei e estava tudo perfeito.",
   },
   {
     name: "Ana R.",

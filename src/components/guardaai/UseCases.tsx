@@ -7,7 +7,7 @@ const cases = [
   { icon: Plane, title: "Viagem longa", desc: "Armazene com segurança o que não vai usar durante um período fora." },
   { icon: Home, title: "Falta de espaço em casa", desc: "Libere espaço sem precisar se desfazer das suas coisas." },
   { icon: Store, title: "Estoque do negócio", desc: "Guarde produtos e materiais do seu negócio perto de você." },
-  { icon: KeyRound, title: "Transição de imóvel", desc: "Ideal para quem está saindo de um lugar e ainda não entrou no próximo." },
+  { icon: KeyRound, title: "Mudança de escritório", desc: "Guarde móveis e equipamentos durante a troca de ponto comercial." },
   { icon: Sofa, title: "Guarda temporária de móveis", desc: "Uma solução prática para guardar móveis por dias ou meses." },
   { icon: CalendarRange, title: "Objetos sazonais", desc: "Guarde itens que usa só em alguns períodos do ano." },
 ];

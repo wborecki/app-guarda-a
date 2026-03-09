@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { DollarSign, MapPin, Zap, Calendar, Wallet, ShieldCheck } from "lucide-react";
 
 const items = [
-  { icon: DollarSign, title: "Mais barato que self storage", desc: "Preços até 60% menores que self storages tradicionais." },
+  { icon: DollarSign, title: "Muito mais barato", desc: "Pague muito menos que um self storage tradicional." },
   { icon: MapPin, title: "Espaços perto de casa", desc: "Encontre opções no seu bairro, sem atravessar a cidade." },
   { icon: Zap, title: "Reserva simples e rápida", desc: "Escolha, reserve e pague online em minutos." },
   { icon: Calendar, title: "Curtos e longos períodos", desc: "Guarde por dias, semanas ou meses. Flexibilidade total." },
