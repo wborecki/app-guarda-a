@@ -579,7 +579,8 @@ const SearchResults = () => {
             </motion.div>
           ) : (
             filteredSortedSpaces.map((space, index) => {
-              const bp = calculatePrice(space.area, days);
+              const reservedArea = Math.max(totalArea, 1);
+              const bp = calculatePrice(reservedArea, days);
               return (
                 <motion.div key={space.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
                   <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer border-border/60" onClick={() => handleCardClick(space)}>
@@ -602,7 +603,11 @@ const SearchResults = () => {
                                 <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
                               </div>
                             </div>
-                            <p className="text-xs text-muted-foreground mb-3">{space.type} · {space.area} m² · {space.neighborhood}, {space.city}</p>
+                            <p className="text-xs text-muted-foreground mb-2">{space.type} · {space.neighborhood}, {space.city}</p>
+                            <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
+                              <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m²</span>
+                              <span className="text-primary font-semibold">Disponível: {space.area} m²</span>
+                            </div>
                             <div className="flex flex-wrap gap-1.5 mb-3">
                               {space.features.map((f) => (
                                 <span key={f} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{f}</span>
@@ -617,9 +622,9 @@ const SearchResults = () => {
                               </div>
                               <p className="text-xl font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
                               <p className="text-[11px] text-muted-foreground mt-0.5">
-                                {space.area} m² × {days} {days === 1 ? "dia" : "dias"} → R$ {bp.pricePerM2.toFixed(2).replace(".", ",")}/m²
+                                {reservedArea} m² reservado{reservedArea > 1 ? "s" : ""} × {days} {days === 1 ? "dia" : "dias"}
                               </p>
-                              <p className="text-[10px] text-muted-foreground/60">+ taxa de serviço R$ 28,00 no checkout</p>
+                              <p className="text-[10px] text-muted-foreground/60">+ taxa fixa R$ 28,00 no checkout</p>
                             </div>
                             <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm" onClick={(e) => handleSelect(e, space)}>
                               Selecionar
