@@ -468,7 +468,7 @@ const SpaceDetails = () => {
         <div className="container max-w-6xl flex items-center justify-between gap-4">
           <div>
             <p className="text-xl font-extrabold text-foreground">R$ {totalPrice.toFixed(2)}</p>
-            <p className="text-[11px] text-muted-foreground">{days} {days === 1 ? "dia" : "dias"} · taxa inclusa</p>
+            <p className="text-[11px] text-muted-foreground">{days} {days === 1 ? "dia" : "dias"} · {bp.tierLabel} · taxa inclusa</p>
           </div>
           <Button
             size="lg"
