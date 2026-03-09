@@ -9,14 +9,22 @@ import { useToast } from "@/hooks/use-toast";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo } from "react";
 
-import garage1 from "@/assets/spaces/garage-1.jpg";
-import garage2 from "@/assets/spaces/garage-2.jpg";
-import garage3 from "@/assets/spaces/garage-3.jpg";
-import room1 from "@/assets/spaces/room-1.jpg";
-import room2 from "@/assets/spaces/room-2.jpg";
-import deposit1 from "@/assets/spaces/deposit-1.jpg";
-import covered1 from "@/assets/spaces/covered-1.jpg";
-import shed1 from "@/assets/spaces/shed-1.jpg";
+// Coherent photo sets — each set shows the SAME space from different angles
+import garageA1 from "@/assets/spaces/garage-a1.jpg";
+import garageA2 from "@/assets/spaces/garage-a2.jpg";
+import garageA3 from "@/assets/spaces/garage-a3.jpg";
+import roomA1 from "@/assets/spaces/room-a1.jpg";
+import roomA2 from "@/assets/spaces/room-a2.jpg";
+import roomA3 from "@/assets/spaces/room-a3.jpg";
+import depositA1 from "@/assets/spaces/deposit-a1.jpg";
+import depositA2 from "@/assets/spaces/deposit-a2.jpg";
+import depositA3 from "@/assets/spaces/deposit-a3.jpg";
+import coveredA1 from "@/assets/spaces/covered-a1.jpg";
+import coveredA2 from "@/assets/spaces/covered-a2.jpg";
+import coveredA3 from "@/assets/spaces/covered-a3.jpg";
+import shedA1 from "@/assets/spaces/shed-a1.jpg";
+import shedA2 from "@/assets/spaces/shed-a2.jpg";
+import shedA3 from "@/assets/spaces/shed-a3.jpg";
 
 // ─── City-aware neighborhood data ──────────────────────────────────
 type CityData = {
@@ -30,10 +38,10 @@ const cityDatabase: Record<string, CityData> = {
     city: "Curitiba",
     state: "PR",
     neighborhoods: [
-      { name: "Centro", street: "Rua XV de Novembro", number: "700" },
-      { name: "Batel", street: "Rua Coronel Dulcídio", number: "320" },
+      { name: "Centro", street: "Rua Emiliano Perneta", number: "340" },
+      { name: "Batel", street: "Rua Coronel Dulcídio", number: "185" },
       { name: "Água Verde", street: "Rua Brasílio Itiberê", number: "455" },
-      { name: "Rebouças", street: "Rua Rockefeller", number: "180" },
+      { name: "Rebouças", street: "Rua Rockefeller", number: "72" },
       { name: "Alto da XV", street: "Rua Fernando Amaro", number: "290" },
       { name: "Juvevê", street: "Rua Augusto Stresser", number: "112" },
       { name: "Mercês", street: "Rua Jaime Reis", number: "540" },
@@ -99,7 +107,7 @@ const defaultCity: CityData = {
   ],
 };
 
-// ─── Space templates ───────────────────────────────────────────────
+// ─── Space templates with coherent photo sets ──────────────────────
 const spaceTemplates = [
   {
     name: "Garagem coberta disponível",
@@ -107,7 +115,7 @@ const spaceTemplates = [
     area: 12,
     pricePerDay: 8,
     description: "Garagem residencial coberta com portão automático. Espaço limpo e seco, ideal para caixas, móveis e itens do dia a dia.",
-    photos: [garage1, garage3, garage2],
+    photos: [garageA1, garageA2, garageA3],
     features: ["Portão automático", "Câmeras", "Acesso fácil"],
   },
   {
@@ -115,17 +123,17 @@ const spaceTemplates = [
     type: "Quarto",
     area: 9,
     pricePerDay: 6,
-    description: "Quarto vazio em apartamento com portaria e elevador. Ambiente fechado e climatizado, perfeito para itens que precisam de cuidado.",
-    photos: [room1, room2, garage1],
+    description: "Quarto vazio em apartamento com portaria e elevador. Ambiente fechado e arejado, perfeito para itens que precisam de cuidado.",
+    photos: [roomA1, roomA2, roomA3],
     features: ["Portaria 24h", "Elevador", "Climatizado"],
   },
   {
-    name: "Depósito pequeno disponível",
+    name: "Depósito organizado",
     type: "Depósito",
     area: 20,
     pricePerDay: 12,
-    description: "Depósito organizado com prateleiras metálicas e piso nivelado. Espaço prático para estoque ou itens variados.",
-    photos: [deposit1, shed1, garage2],
+    description: "Depósito com prateleiras metálicas e piso nivelado. Espaço prático para estoque, equipamentos ou volumes variados.",
+    photos: [depositA1, depositA2, depositA3],
     features: ["Seguro incluso", "Acesso 24h", "Piso nivelado"],
   },
   {
@@ -134,7 +142,7 @@ const spaceTemplates = [
     area: 15,
     pricePerDay: 7,
     description: "Área coberta nos fundos de casa em bairro residencial. Ambiente arejado com acesso fácil para carga e descarga.",
-    photos: [covered1, garage3, shed1],
+    photos: [coveredA1, coveredA2, coveredA3],
     features: ["Ambiente seco", "Rua tranquila", "Fácil acesso"],
   },
   {
@@ -143,7 +151,7 @@ const spaceTemplates = [
     area: 25,
     pricePerDay: 15,
     description: "Galpão com pé direito alto e portão largo. Ideal para móveis maiores, equipamentos ou volumes grandes.",
-    photos: [shed1, garage1, deposit1],
+    photos: [shedA1, shedA2, shedA3],
     features: ["Portão largo", "Pé direito alto", "Veículos entram"],
   },
 ];
@@ -170,7 +178,6 @@ function detectCity(locationStr: string): CityData {
   for (const [key, data] of Object.entries(cityDatabase)) {
     if (lower.includes(key)) return data;
   }
-  // Try to extract city name from location for display
   const parts = locationStr.split(",").map((s) => s.trim());
   if (parts.length >= 2) {
     return { ...defaultCity, city: parts[1] || parts[0] };
@@ -184,21 +191,32 @@ function shortenLocation(locationStr: string): string {
 
   const lower = locationStr.toLowerCase();
 
-  // Try known cities
+  // Try known cities first
   for (const [key, data] of Object.entries(cityDatabase)) {
     if (lower.includes(key)) {
-      // Try to find a neighborhood / street
-      const parts = locationStr.split(",").map((s) => s.trim());
-      if (parts.length >= 2) {
-        // First part is usually street or number, find a short meaningful piece
-        const shortPart = parts[0].length < 40 ? parts[0] : "";
-        if (shortPart) return `${shortPart}, ${data.city}`;
+      // Try to extract a neighborhood or street from the original string
+      const parts = locationStr.split(",").map((s) => s.trim()).filter(Boolean);
+
+      // Look for a neighborhood match in the parts
+      for (const part of parts) {
+        const partLower = part.toLowerCase();
+        for (const n of data.neighborhoods) {
+          if (partLower.includes(n.name.toLowerCase())) {
+            return `${n.name}, ${data.city}`;
+          }
+        }
       }
-      return data.city;
+
+      // If first part looks like a street (short enough), use it
+      if (parts[0] && parts[0].length <= 35 && !parts[0].toLowerCase().includes(key)) {
+        return `${parts[0]} – ${data.city}`;
+      }
+
+      return `Centro, ${data.city}`;
     }
   }
 
-  // Generic: take first 2 meaningful parts
+  // Generic: first 2 meaningful parts
   const parts = locationStr.split(",").map((s) => s.trim()).filter(Boolean);
   if (parts.length >= 3) return `${parts[0]}, ${parts[1]}`;
   if (parts.length >= 2) return `${parts[0]}, ${parts[1]}`;
@@ -258,11 +276,11 @@ const CardCarousel = ({ photos, name }: { photos: string[]; name: string }) => {
 
   return (
     <div className="relative group h-full">
-      <div ref={emblaRef} className="overflow-hidden h-full rounded-lg">
+      <div ref={emblaRef} className="overflow-hidden h-full rounded-l-lg sm:rounded-l-lg rounded-r-none">
         <div className="flex h-full">
           {photos.map((photo, i) => (
             <div key={i} className="flex-[0_0_100%] min-w-0 h-full">
-              <img src={photo} alt={`${name} ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
+              <img src={photo} alt={`${name} – ângulo ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
             </div>
           ))}
         </div>
@@ -285,8 +303,8 @@ const CardCarousel = ({ photos, name }: { photos: string[]; name: string }) => {
         {photos.map((_, i) => (
           <div
             key={i}
-            className={`w-1.5 h-1.5 rounded-full transition-all ${
-              i === selectedIndex ? "bg-background w-3" : "bg-background/50"
+            className={`h-1.5 rounded-full transition-all ${
+              i === selectedIndex ? "bg-background w-3" : "bg-background/50 w-1.5"
             }`}
           />
         ))}
@@ -343,10 +361,10 @@ const SearchResults = () => {
           <div className="flex-1 min-w-0">
             <h1 className="text-lg font-bold text-foreground">Espaços disponíveis</h1>
             <p className="text-sm text-muted-foreground truncate">
-              {totalArea.toFixed(1)} m² · {days} {days === 1 ? "dia" : "dias"} · {shortLocation}
+              {shortLocation} · {totalArea.toFixed(1)} m² · {days} {days === 1 ? "dia" : "dias"}
             </p>
           </div>
-          <span className="text-xs text-muted-foreground hidden sm:block">
+          <span className="text-xs font-medium text-muted-foreground bg-secondary rounded-full px-2.5 py-1 hidden sm:block">
             {spaces.length} resultados
           </span>
         </div>
@@ -362,7 +380,7 @@ const SearchResults = () => {
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
             <div className="flex items-center gap-1.5">
               <MapPin size={14} className="text-primary flex-shrink-0" />
-              <span className="text-foreground font-medium">{shortLocation}</span>
+              <span className="text-foreground font-semibold">{shortLocation}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Ruler size={14} className="text-primary flex-shrink-0" />
@@ -384,13 +402,13 @@ const SearchResults = () => {
         </motion.div>
 
         {/* Sort label */}
-        <div className="flex items-center gap-1.5 mb-4 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1.5 mb-4">
           <Navigation size={12} className="text-primary" />
-          <span>Ordenado por proximidade</span>
+          <span className="text-xs font-medium text-muted-foreground">Espaços mais próximos de você</span>
         </div>
 
         {/* Results */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {spaces.map((space, index) => {
             const totalPrice = space.pricePerDay * days;
             return (
@@ -407,29 +425,29 @@ const SearchResults = () => {
                   <CardContent className="p-0">
                     <div className="flex flex-col sm:flex-row">
                       {/* Photo */}
-                      <div className="sm:w-52 h-44 sm:h-auto bg-muted flex-shrink-0 relative">
+                      <div className="sm:w-56 h-48 sm:h-auto bg-muted flex-shrink-0 relative">
                         <CardCarousel photos={space.photos} name={space.name} />
                         {/* Distance badge */}
-                        <div className="absolute top-2 left-2 bg-background/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 flex items-center gap-1 shadow-sm">
-                          <MapPin size={10} className="text-primary" />
-                          <span className="text-xs font-semibold text-foreground">{space.distance}</span>
+                        <div className="absolute top-2.5 left-2.5 bg-background/95 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm">
+                          <MapPin size={11} className="text-primary" />
+                          <span className="text-xs font-bold text-foreground">{space.distance}</span>
                         </div>
                       </div>
 
                       {/* Info */}
-                      <div className="flex-1 p-4 flex flex-col justify-between">
+                      <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between min-h-[180px]">
                         {/* Top */}
                         <div>
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <h3 className="font-bold text-foreground leading-tight">{space.name}</h3>
-                            <div className="flex items-center gap-0.5 flex-shrink-0">
-                              <Star size={13} className="text-accent fill-accent" />
+                          <div className="flex items-start justify-between gap-2 mb-1.5">
+                            <h3 className="font-bold text-foreground text-[15px] leading-snug">{space.name}</h3>
+                            <div className="flex items-center gap-0.5 flex-shrink-0 bg-accent/10 rounded-md px-1.5 py-0.5">
+                              <Star size={12} className="text-accent fill-accent" />
                               <span className="text-sm font-bold text-foreground">{space.rating}</span>
-                              <span className="text-xs text-muted-foreground">({space.reviews})</span>
+                              <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
                             </div>
                           </div>
 
-                          <p className="text-xs text-muted-foreground mb-2.5">
+                          <p className="text-xs text-muted-foreground mb-3">
                             {space.type} · {space.area} m² · {space.neighborhood}, {space.city}
                           </p>
 
@@ -446,27 +464,22 @@ const SearchResults = () => {
                         </div>
 
                         {/* Bottom */}
-                        <div className="flex items-end justify-between gap-3">
+                        <div className="flex items-end justify-between gap-3 pt-2 border-t border-border/40">
                           <div>
-                            <div className="flex items-center gap-1.5 mb-1">
+                            <div className="flex items-center gap-1.5 mb-1.5">
                               <Shield size={12} className="text-primary" />
-                              <span className="text-xs text-muted-foreground">{space.owner}</span>
+                              <span className="text-xs text-muted-foreground font-medium">{space.owner}</span>
                             </div>
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-xl font-extrabold text-foreground">
-                                R$ {totalPrice.toFixed(0)}
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                / {days} {days === 1 ? "dia" : "dias"}
-                              </span>
-                            </div>
-                            <span className="text-[10px] text-muted-foreground">
-                              R$ {space.pricePerDay}/dia
-                            </span>
+                            <p className="text-xl font-extrabold text-foreground leading-none">
+                              R$ {totalPrice.toFixed(0)}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground mt-0.5">
+                              {days} {days === 1 ? "dia" : "dias"} · R$ {space.pricePerDay}/dia
+                            </p>
                           </div>
                           <Button
                             size="sm"
-                            className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5"
+                            className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm"
                             onClick={(e) => handleSelect(e, space.id)}
                           >
                             Selecionar
