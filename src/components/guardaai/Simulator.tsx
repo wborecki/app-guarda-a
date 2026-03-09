@@ -102,27 +102,14 @@ const Simulator = () => {
                 <ItemDimensionInput items={items} onItemsChange={handleItemsChange} />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Cidade ou bairro</label>
-                  <LocationAutocomplete
-                    value={location}
-                    onChange={setLocation}
-                    placeholder="Ex: São Paulo, Pinheiros"
-                    className="h-11 md:h-10"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Quantos dias?</label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={days}
-                    onChange={(e) => { setDays(Math.max(1, parseInt(e.target.value) || 1)); setShowResult(false); }}
-                    placeholder="Número de dias"
-                    className="h-11 md:h-10"
-                  />
-                </div>
+              <div className="mb-5 md:mb-4">
+                <label className="text-sm font-medium text-foreground mb-2 block">Cidade ou bairro</label>
+                <LocationAutocomplete
+                  value={location}
+                  onChange={setLocation}
+                  placeholder="Ex: São Paulo, Pinheiros"
+                  className="h-11 md:h-10"
+                />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
