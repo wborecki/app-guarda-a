@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
-import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Percent } from "lucide-react";
+import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Percent, Info } from "lucide-react";
+import { RATE_TIERS, SERVICE_FEE_RATE, PRICING_EXPLANATION, MIN_AREA } from "@/lib/pricing";
 
 const Pricing = () => {
   return (
     <section id="precos" className="py-16 md:py-24 bg-secondary/50">
       <div className="container max-w-6xl">
-        {/* Header — compact */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -23,7 +24,7 @@ const Pricing = () => {
           </p>
         </motion.div>
 
-        {/* Bloco 1 — Comparação editorial horizontal */}
+        {/* Bloco 1 — Comparação */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -57,13 +58,14 @@ const Pricing = () => {
                 Economize até 70%
               </div>
               <p className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-primary-foreground/60 font-semibold mb-3">GuardaAí</p>
-              <div className="flex items-baseline gap-1.5 mb-4">
-                <span className="text-3xl md:text-5xl font-black">R$40</span>
-                <span className="text-sm text-primary-foreground/50">/m² mês</span>
+              <div className="flex items-baseline gap-1.5 mb-1">
+                <span className="text-3xl md:text-5xl font-black">R$1,50</span>
+                <span className="text-sm text-primary-foreground/50">/m² dia</span>
               </div>
+              <p className="text-xs text-primary-foreground/40 mb-4">a partir de · em reservas de 30+ dias</p>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-xs md:text-sm">
-                  <Check size={14} className="text-accent shrink-0" /> Diárias a partir de R$1,50/m²
+                  <Check size={14} className="text-accent shrink-0" /> Preço proporcional ao período
                 </div>
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-xs md:text-sm">
                   <Check size={14} className="text-accent shrink-0" /> Sem contrato longo
@@ -76,50 +78,51 @@ const Pricing = () => {
           </div>
         </motion.div>
 
-        {/* Bloco 2 — Modelo de cobrança: faixa horizontal compacta */}
+        {/* Bloco 2 — Tabela de faixas */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-6 md:mb-8"
         >
-          <div className="grid md:grid-cols-3 gap-3 md:gap-4">
-            <div className="flex items-center gap-4 p-4 md:p-5 rounded-xl bg-card border hover:shadow-md transition-shadow">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                <Clock size={20} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground font-medium">Diária</p>
-                <p className="text-lg md:text-xl font-extrabold text-foreground">R$1,50<span className="text-xs font-normal text-muted-foreground">/m²</span></p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 p-4 md:p-5 rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/15 ring-1 ring-primary/20">
-              <div className="w-10 h-10 rounded-xl bg-primary-foreground/15 flex items-center justify-center shrink-0">
-                <TrendingDown size={20} className="text-primary-foreground" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-xs text-primary-foreground/60 font-medium">Mensalidade</p>
-                  <span className="px-1.5 py-0.5 rounded bg-accent text-accent-foreground text-[9px] font-bold uppercase">Popular</span>
+          <h3 className="text-sm font-semibold text-foreground mb-3 text-center">Como o preço funciona</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {RATE_TIERS.map((tier, i) => {
+              const isPopular = tier.minDays === 30;
+              return (
+                <div
+                  key={i}
+                  className={`flex flex-col items-center gap-2 p-4 md:p-5 rounded-xl transition-shadow ${
+                    isPopular
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/15 ring-1 ring-primary/20"
+                      : "bg-card border hover:shadow-md"
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                    isPopular ? "bg-primary-foreground/15" : "bg-primary/10"
+                  }`}>
+                    {i === 0 && <Clock size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />}
+                    {i === 1 && <Calculator size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />}
+                    {i === 2 && <TrendingDown size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />}
+                    {i === 3 && <Sparkles size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />}
+                  </div>
+                  <p className={`text-xs font-medium ${isPopular ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+                    {tier.label}
+                  </p>
+                  {isPopular && (
+                    <span className="px-1.5 py-0.5 rounded bg-accent text-accent-foreground text-[9px] font-bold uppercase">Melhor valor</span>
+                  )}
+                  <p className={`text-lg md:text-xl font-extrabold ${isPopular ? "" : "text-foreground"}`}>
+                    R${tier.rate.toFixed(2).replace(".", ",")}
+                    <span className={`text-xs font-normal ${isPopular ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/m² dia</span>
+                  </p>
                 </div>
-                <p className="text-lg md:text-xl font-extrabold">R$40<span className="text-xs font-normal text-primary-foreground/50">/m²</span></p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 p-4 md:p-5 rounded-xl bg-card border hover:shadow-md transition-shadow">
-              <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
-                <Sparkles size={20} className="text-accent" />
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground font-medium">Cálculo automático</p>
-                <p className="text-lg md:text-xl font-extrabold text-foreground">Zero complicação</p>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </motion.div>
 
-        {/* Bloco 3 — Regras rápidas: linha discreta */}
+        {/* Bloco 3 — Regras rápidas */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -128,18 +131,24 @@ const Pricing = () => {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-6 md:gap-8 py-3 md:py-4 px-4 md:px-0">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <CheckCircle size={14} className="text-primary shrink-0" />
-              <span>Cobrança mínima: 1 m²</span>
-            </div>
-            <div className="hidden sm:block w-px h-4 bg-border" />
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Calculator size={14} className="text-primary shrink-0" />
-              <span>Taxa de serviço no checkout</span>
+              <span>Cobrança mínima: {MIN_AREA} m²</span>
             </div>
             <div className="hidden sm:block w-px h-4 bg-border" />
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Percent size={14} className="text-primary shrink-0" />
+              <span>Taxa de serviço de {(SERVICE_FEE_RATE * 100).toFixed(0)}% no checkout</span>
+            </div>
+            <div className="hidden sm:block w-px h-4 bg-border" />
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <TrendingDown size={14} className="text-primary shrink-0" />
               <span>Mais tempo = menor valor por dia</span>
             </div>
+          </div>
+
+          {/* Explanation */}
+          <div className="mt-2 flex items-start gap-2 justify-center text-center max-w-lg mx-auto">
+            <Info size={14} className="text-muted-foreground/50 shrink-0 mt-0.5" />
+            <p className="text-[11px] text-muted-foreground/70 leading-relaxed">{PRICING_EXPLANATION}</p>
           </div>
         </motion.div>
       </div>

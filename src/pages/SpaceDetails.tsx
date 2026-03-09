@@ -5,13 +5,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   ArrowLeft, Star, MapPin, Shield, ChevronLeft, ChevronRight,
   MessageSquare, User, Clock, CheckCircle2, Lock, FileText,
-  Camera, Package, Calendar, Pencil, Plus, Minus
+  Camera, Package, Calendar, Pencil, Plus, Minus, Info
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
+import { calculatePrice, PRICING_HINT_SHORT, RATE_TIERS } from "@/lib/pricing";
 
 const SpaceDetails = () => {
   const location = useLocation();
@@ -56,10 +57,10 @@ const SpaceDetails = () => {
     );
   }
 
-  const pricePerDay = space.pricePerDay;
-  const subtotal = pricePerDay * days;
-  const serviceFee = Math.round(subtotal * 0.12);
-  const totalPrice = subtotal + serviceFee;
+  const bp = calculatePrice(space.area, days);
+  const subtotal = bp.subtotal;
+  const serviceFee = bp.serviceFee;
+  const totalPrice = bp.total;
 
   const handleContinue = () => {
     toast({
@@ -391,19 +392,28 @@ const SpaceDetails = () => {
                     {/* Pricing breakdown */}
                     <div className="space-y-2 mb-4 pb-4 border-b border-border/50">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">R$ {pricePerDay.toFixed(2)} × {days} {days === 1 ? "dia" : "dias"}</span>
+                        <span className="text-muted-foreground">{space.area} m² × R${bp.dailyRate.toFixed(2)}/dia × {days} {days === 1 ? "dia" : "dias"}</span>
                         <span className="text-foreground">R$ {subtotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Taxa de serviço GuardaAí</span>
+                        <span className="text-muted-foreground">Taxa de serviço (12%)</span>
                         <span className="text-foreground">R$ {serviceFee.toFixed(2)}</span>
                       </div>
                     </div>
 
                     {/* Total */}
-                    <div className="flex justify-between items-center mb-5">
+                    <div className="flex justify-between items-center mb-2">
                       <span className="font-bold text-foreground">Total estimado</span>
                       <span className="text-2xl font-extrabold text-primary">R$ {totalPrice.toFixed(2)}</span>
+                    </div>
+
+                    {/* Tier hint */}
+                    <div className="flex items-start gap-1.5 mb-5 p-2.5 rounded-lg bg-secondary/50">
+                      <Info size={12} className="text-muted-foreground/50 shrink-0 mt-0.5" />
+                      <div className="text-[11px] text-muted-foreground leading-relaxed">
+                        <span className="font-medium text-foreground">Faixa: {bp.tierLabel}</span> · R${bp.dailyRate.toFixed(2)}/m²/dia
+                        <br />{PRICING_HINT_SHORT}
+                      </div>
                     </div>
 
                     {/* CTAs */}
@@ -458,7 +468,7 @@ const SpaceDetails = () => {
         <div className="container max-w-6xl flex items-center justify-between gap-4">
           <div>
             <p className="text-xl font-extrabold text-foreground">R$ {totalPrice.toFixed(2)}</p>
-            <p className="text-[11px] text-muted-foreground">{days} {days === 1 ? "dia" : "dias"} · taxa inclusa</p>
+            <p className="text-[11px] text-muted-foreground">{days} {days === 1 ? "dia" : "dias"} · {bp.tierLabel} · taxa inclusa</p>
           </div>
           <Button
             size="lg"

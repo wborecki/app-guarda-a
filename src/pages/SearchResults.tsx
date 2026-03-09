@@ -7,10 +7,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock,
   ChevronLeft, ChevronRight, Navigation, SlidersHorizontal,
-  X, ChevronDown, Check
+  X, ChevronDown, Check, Info
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo, useRef } from "react";
+import { calculatePrice, getDailyRate, PRICING_HINT_SHORT } from "@/lib/pricing";
 
 // Coherent photo sets
 import garageA1 from "@/assets/spaces/garage-a1.jpg";
@@ -324,7 +325,7 @@ const SearchResults = () => {
 
     // Filters
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
-    if (filters.maxPrice !== null) result = result.filter(s => s.pricePerDay * days <= filters.maxPrice!);
+    if (filters.maxPrice !== null) result = result.filter(s => calculatePrice(s.area, days).subtotal <= filters.maxPrice!);
     if (filters.maxDistance !== null) result = result.filter(s => s.distanceNum <= filters.maxDistance!);
     if (filters.minRating !== null) result = result.filter(s => s.rating >= filters.minRating!);
     if (filters.features.length > 0) result = result.filter(s => filters.features.every(f => s.features.includes(f)));
@@ -332,7 +333,7 @@ const SearchResults = () => {
     // Sort
     switch (sortBy) {
       case "proximity": result.sort((a, b) => a.distanceNum - b.distanceNum); break;
-      case "price_asc": result.sort((a, b) => a.pricePerDay - b.pricePerDay); break;
+      case "price_asc": result.sort((a, b) => calculatePrice(a.area, days).subtotal - calculatePrice(b.area, days).subtotal); break;
       case "rating": result.sort((a, b) => b.rating - a.rating); break;
       case "area_desc": result.sort((a, b) => b.area - a.area); break;
       case "relevance": result.sort((a, b) => (b.rating * b.reviews) - (a.rating * a.reviews)); break;
@@ -578,7 +579,7 @@ const SearchResults = () => {
             </motion.div>
           ) : (
             filteredSortedSpaces.map((space, index) => {
-              const totalPrice = space.pricePerDay * days;
+              const bp = calculatePrice(space.area, days);
               return (
                 <motion.div key={space.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
                   <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer border-border/60" onClick={() => handleCardClick(space)}>
@@ -614,8 +615,11 @@ const SearchResults = () => {
                                 <Shield size={12} className="text-primary" />
                                 <span className="text-xs text-muted-foreground font-medium">{space.owner}</span>
                               </div>
-                              <p className="text-xl font-extrabold text-foreground leading-none">R$ {totalPrice.toFixed(0)}</p>
-                              <p className="text-[11px] text-muted-foreground mt-0.5">{days} {days === 1 ? "dia" : "dias"} · R$ {space.pricePerDay}/dia</p>
+                              <p className="text-xl font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
+                              <p className="text-[11px] text-muted-foreground mt-0.5">
+                                {space.area} m² × R${bp.dailyRate.toFixed(2)}/dia × {days} {days === 1 ? "dia" : "dias"}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground/60">+ taxa de serviço no checkout</p>
                             </div>
                             <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm" onClick={(e) => handleSelect(e, space)}>
                               Selecionar
@@ -630,6 +634,16 @@ const SearchResults = () => {
             })
           )}
         </div>
+
+        {/* Pricing hint */}
+        {filteredSortedSpaces.length > 0 && (
+          <div className="flex items-start gap-1.5 mt-5 justify-center">
+            <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
+            <p className="text-[10px] text-muted-foreground/60 text-center max-w-md">
+              {PRICING_HINT_SHORT} Valores estimados antes da taxa de serviço (12%), adicionada no checkout.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* ═══ Mobile Filter Drawer ═══ */}
