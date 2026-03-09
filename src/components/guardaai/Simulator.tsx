@@ -283,7 +283,7 @@ const Simulator = () => {
                   <div className="flex items-start gap-1.5 mt-3 md:mt-4 justify-center">
                     <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
                     <p className="text-[10px] md:text-xs text-muted-foreground text-center">
-                      {PRICING_HINT_SHORT} O preço final inclui taxa de serviço de 12%.
+                      {PRICING_HINT_SHORT} Taxa de serviço fixa de R$ {SERVICE_FEE.toFixed(2).replace(".", ",")} adicionada no checkout.
                     </p>
                   </div>
                 </motion.div>

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Percent, Info } from "lucide-react";
-import { RATE_TIERS, SERVICE_FEE_RATE, PRICING_EXPLANATION, MIN_AREA } from "@/lib/pricing";
+import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Info, DollarSign } from "lucide-react";
+import { PRICING_EXPLANATION, MIN_AREA, SERVICE_FEE, PRICE_HIGHLIGHTS } from "@/lib/pricing";
 
 const Pricing = () => {
   return (
@@ -59,13 +59,14 @@ const Pricing = () => {
               </div>
               <p className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-primary-foreground/60 font-semibold mb-3">GuardaAí</p>
               <div className="flex items-baseline gap-1.5 mb-1">
-                <span className="text-3xl md:text-5xl font-black">R$1,50</span>
-                <span className="text-sm text-primary-foreground/50">/m² dia</span>
+                <span className="text-3xl md:text-5xl font-black">R$45</span>
+                <span className="text-sm text-primary-foreground/50">/m² mês</span>
               </div>
-              <p className="text-xs text-primary-foreground/40 mb-4">a partir de · em reservas de 30+ dias</p>
+              <p className="text-xs text-primary-foreground/40 mb-1">ou a partir de R$ 40,00/m² em planos anuais</p>
+              <p className="text-xs text-primary-foreground/40 mb-4">Diária a partir de R$ 5,00 / m²</p>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-xs md:text-sm">
-                  <Check size={14} className="text-accent shrink-0" /> Preço proporcional ao período
+                  <Check size={14} className="text-accent shrink-0" /> Tabela progressiva — mais dias, menor valor
                 </div>
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-xs md:text-sm">
                   <Check size={14} className="text-accent shrink-0" /> Sem contrato longo
@@ -78,17 +79,19 @@ const Pricing = () => {
           </div>
         </motion.div>
 
-        {/* Bloco 2 — Tabela de faixas */}
+        {/* Bloco 2 — Price highlights */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-6 md:mb-8"
         >
-          <h3 className="text-sm font-semibold text-foreground mb-3 text-center">Como o preço funciona</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-3 text-center">Tabela progressiva (por 1 m²)</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {RATE_TIERS.map((tier, i) => {
-              const isPopular = tier.minDays === 30;
+            {PRICE_HIGHLIGHTS.map((h, i) => {
+              const isPopular = h.days === 30;
+              const icons = [Clock, Calculator, TrendingDown, Sparkles];
+              const Icon = icons[i];
               return (
                 <div
                   key={i}
@@ -101,20 +104,20 @@ const Pricing = () => {
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                     isPopular ? "bg-primary-foreground/15" : "bg-primary/10"
                   }`}>
-                    {i === 0 && <Clock size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />}
-                    {i === 1 && <Calculator size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />}
-                    {i === 2 && <TrendingDown size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />}
-                    {i === 3 && <Sparkles size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />}
+                    <Icon size={20} className={isPopular ? "text-primary-foreground" : "text-primary"} />
                   </div>
                   <p className={`text-xs font-medium ${isPopular ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
-                    {tier.label}
+                    {h.label}
                   </p>
                   {isPopular && (
                     <span className="px-1.5 py-0.5 rounded bg-accent text-accent-foreground text-[9px] font-bold uppercase">Melhor valor</span>
                   )}
                   <p className={`text-lg md:text-xl font-extrabold ${isPopular ? "" : "text-foreground"}`}>
-                    R${tier.rate.toFixed(2).replace(".", ",")}
-                    <span className={`text-xs font-normal ${isPopular ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/m² dia</span>
+                    R${h.price.toFixed(2).replace(".", ",")}
+                    <span className={`text-xs font-normal ${isPopular ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/m²</span>
+                  </p>
+                  <p className={`text-[10px] ${isPopular ? "text-primary-foreground/40" : "text-muted-foreground/60"}`}>
+                    ≈ R${(h.price / h.days).toFixed(2).replace(".", ",")}/dia
                   </p>
                 </div>
               );
@@ -135,8 +138,8 @@ const Pricing = () => {
             </div>
             <div className="hidden sm:block w-px h-4 bg-border" />
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Percent size={14} className="text-primary shrink-0" />
-              <span>Taxa de serviço de {(SERVICE_FEE_RATE * 100).toFixed(0)}% no checkout</span>
+              <DollarSign size={14} className="text-primary shrink-0" />
+              <span>Taxa de serviço fixa: R$ {SERVICE_FEE.toFixed(2).replace(".", ",")}</span>
             </div>
             <div className="hidden sm:block w-px h-4 bg-border" />
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
