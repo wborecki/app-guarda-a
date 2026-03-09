@@ -5,7 +5,7 @@ import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock, ChevronLeft, ChevronRight, Navigation } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo } from "react";
 
@@ -317,7 +317,7 @@ const CardCarousel = ({ photos, name }: { photos: string[]; name: string }) => {
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  
   const state = location.state as {
     items?: any[];
     location?: string;
@@ -338,12 +338,9 @@ const SearchResults = () => {
 
   const spaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
 
-  const handleSelect = (e: React.MouseEvent, spaceId: number) => {
+  const handleSelect = (e: React.MouseEvent, space: (typeof spaces)[0]) => {
     e.stopPropagation();
-    toast({
-      title: "Em breve!",
-      description: "O fluxo de contratação estará disponível em breve. Obrigado pelo interesse!",
-    });
+    navigate(`/espaco/${space.id}`, { state: { space, simulation: state } });
   };
 
   const handleCardClick = (space: (typeof spaces)[0]) => {
@@ -480,7 +477,7 @@ const SearchResults = () => {
                           <Button
                             size="sm"
                             className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm"
-                            onClick={(e) => handleSelect(e, space.id)}
+                            onClick={(e) => handleSelect(e, space)}
                           >
                             Selecionar
                           </Button>
