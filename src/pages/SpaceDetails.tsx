@@ -392,11 +392,11 @@ const SpaceDetails = () => {
                     {/* Pricing breakdown */}
                     <div className="space-y-2 mb-4 pb-4 border-b border-border/50">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">R$ {pricePerDay.toFixed(2)} × {days} {days === 1 ? "dia" : "dias"}</span>
+                        <span className="text-muted-foreground">{space.area} m² × R${bp.dailyRate.toFixed(2)}/dia × {days} {days === 1 ? "dia" : "dias"}</span>
                         <span className="text-foreground">R$ {subtotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Taxa de serviço GuardaAí</span>
+                        <span className="text-muted-foreground">Taxa de serviço (12%)</span>
                         <span className="text-foreground">R$ {serviceFee.toFixed(2)}</span>
                       </div>
                     </div>
