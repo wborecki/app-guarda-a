@@ -33,6 +33,8 @@ const Simulator = () => {
   );
   const totalVol = items.reduce((sum, i) => sum + ((i.altura / 100) * (i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0);
 
+  const days = (deliveryDate && pickupDate) ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
+
   const dailyRate = days >= 30 ? 1.5 : 2;
   const estimatedPrice = totalArea * dailyRate * days;
 
