@@ -579,7 +579,7 @@ const SearchResults = () => {
             </motion.div>
           ) : (
             filteredSortedSpaces.map((space, index) => {
-              const totalPrice = space.pricePerDay * days;
+              const bp = calculatePrice(space.area, days);
               return (
                 <motion.div key={space.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
                   <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer border-border/60" onClick={() => handleCardClick(space)}>
@@ -615,8 +615,11 @@ const SearchResults = () => {
                                 <Shield size={12} className="text-primary" />
                                 <span className="text-xs text-muted-foreground font-medium">{space.owner}</span>
                               </div>
-                              <p className="text-xl font-extrabold text-foreground leading-none">R$ {totalPrice.toFixed(0)}</p>
-                              <p className="text-[11px] text-muted-foreground mt-0.5">{days} {days === 1 ? "dia" : "dias"} · R$ {space.pricePerDay}/dia</p>
+                              <p className="text-xl font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
+                              <p className="text-[11px] text-muted-foreground mt-0.5">
+                                {space.area} m² × R${bp.dailyRate.toFixed(2)}/dia × {days} {days === 1 ? "dia" : "dias"}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground/60">+ taxa de serviço no checkout</p>
                             </div>
                             <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm" onClick={(e) => handleSelect(e, space)}>
                               Selecionar
