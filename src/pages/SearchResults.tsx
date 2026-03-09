@@ -333,7 +333,7 @@ const SearchResults = () => {
     // Sort
     switch (sortBy) {
       case "proximity": result.sort((a, b) => a.distanceNum - b.distanceNum); break;
-      case "price_asc": result.sort((a, b) => calculatePrice(a.area, days).subtotal - calculatePrice(b.area, days).subtotal); break;
+      case "price_asc": result.sort((a, b) => a.area - b.area); break;
       case "rating": result.sort((a, b) => b.rating - a.rating); break;
       case "area_desc": result.sort((a, b) => b.area - a.area); break;
       case "relevance": result.sort((a, b) => (b.rating * b.reviews) - (a.rating * a.reviews)); break;
