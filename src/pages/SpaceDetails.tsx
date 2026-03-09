@@ -57,10 +57,10 @@ const SpaceDetails = () => {
     );
   }
 
-  const pricePerDay = space.pricePerDay;
-  const subtotal = pricePerDay * days;
-  const serviceFee = Math.round(subtotal * 0.12);
-  const totalPrice = subtotal + serviceFee;
+  const bp = calculatePrice(space.area, days);
+  const subtotal = bp.subtotal;
+  const serviceFee = bp.serviceFee;
+  const totalPrice = bp.total;
 
   const handleContinue = () => {
     toast({
