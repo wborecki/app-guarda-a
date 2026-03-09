@@ -338,12 +338,9 @@ const SearchResults = () => {
 
   const spaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
 
-  const handleSelect = (e: React.MouseEvent, spaceId: number) => {
+  const handleSelect = (e: React.MouseEvent, space: (typeof spaces)[0]) => {
     e.stopPropagation();
-    toast({
-      title: "Em breve!",
-      description: "O fluxo de contratação estará disponível em breve. Obrigado pelo interesse!",
-    });
+    navigate(`/espaco/${space.id}`, { state: { space, simulation: state } });
   };
 
   const handleCardClick = (space: (typeof spaces)[0]) => {
