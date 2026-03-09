@@ -7,10 +7,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock,
   ChevronLeft, ChevronRight, Navigation, SlidersHorizontal,
-  X, ChevronDown, Check
+  X, ChevronDown, Check, Info
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo, useRef } from "react";
+import { calculatePrice, getDailyRate, PRICING_HINT_SHORT } from "@/lib/pricing";
 
 // Coherent photo sets
 import garageA1 from "@/assets/spaces/garage-a1.jpg";
