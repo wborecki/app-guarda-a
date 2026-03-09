@@ -219,7 +219,7 @@ const Simulator = () => {
               <Button
                 className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base h-12"
                 onClick={handleSimulate}
-                disabled={items.length === 0 || days < 1}
+                disabled={items.length === 0 || !deliveryDate || !pickupDate}
               >
                 <Search size={18} className="mr-2" />
                 Simular agora
