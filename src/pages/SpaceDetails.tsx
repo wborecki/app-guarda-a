@@ -5,13 +5,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   ArrowLeft, Star, MapPin, Shield, ChevronLeft, ChevronRight,
   MessageSquare, User, Clock, CheckCircle2, Lock, FileText,
-  Camera, Package, Calendar, Pencil, Plus, Minus
+  Camera, Package, Calendar, Pencil, Plus, Minus, Info
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
+import { calculatePrice, PRICING_HINT_SHORT, RATE_TIERS } from "@/lib/pricing";
 
 const SpaceDetails = () => {
   const location = useLocation();
