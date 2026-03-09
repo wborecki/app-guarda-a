@@ -12,7 +12,7 @@ import ItemDimensionInput, { type AddedItem } from "@/components/guardaai/ItemDi
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Package, Search, Ruler, DollarSign, Zap, CalendarIcon, MapPin, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { calculatePrice, PRICING_HINT_SHORT, getDailyRate } from "@/lib/pricing";
+import { calculatePrice, PRICING_HINT_SHORT, SERVICE_FEE } from "@/lib/pricing";
 
 const Simulator = () => {
   const navigate = useNavigate();
