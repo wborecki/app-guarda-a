@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, User, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-import logo from "@/assets/guardaai-logo.png";
+import logo from "@/assets/guardaai-logo-negative.png";
 
 const navLinks = [
   { label: "Como funciona", href: "#como-funciona" },
