@@ -1,18 +1,31 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import ItemDimensionInput, { type AddedItem } from "@/components/guardaai/ItemDimensionInput";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, Search, Ruler, DollarSign, Zap } from "lucide-react";
+import { Package, Search, Ruler, DollarSign, Zap, CalendarIcon, MapPin } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Simulator = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState<AddedItem[]>([]);
   const [location, setLocation] = useState("");
-  const [period, setPeriod] = useState("");
+  const [days, setDays] = useState<number>(1);
   const [spaceType, setSpaceType] = useState("");
   const [usage, setUsage] = useState("");
   const [showResult, setShowResult] = useState(false);
+
+  const [deliveryDate, setDeliveryDate] = useState<Date>();
+  const [deliveryTime, setDeliveryTime] = useState("09:00");
+  const [pickupDate, setPickupDate] = useState<Date>();
+  const [pickupTime, setPickupTime] = useState("09:00");
 
   const totalArea = Math.max(
     items.reduce((sum, i) => sum + ((i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0),
@@ -20,12 +33,11 @@ const Simulator = () => {
   );
   const totalVol = items.reduce((sum, i) => sum + ((i.altura / 100) * (i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0);
 
-  const days = period === "semanal" ? 7 : period === "quinzenal" ? 15 : period === "mensal" ? 30 : period === "trimestral" ? 90 : 1;
   const dailyRate = days >= 30 ? 1.5 : 2;
   const estimatedPrice = totalArea * dailyRate * days;
 
   const handleSimulate = () => {
-    if (items.length > 0 && period) {
+    if (items.length > 0 && days >= 1) {
       setShowResult(true);
     }
   };
@@ -33,6 +45,25 @@ const Simulator = () => {
   const handleItemsChange = (newItems: AddedItem[]) => {
     setItems(newItems);
     setShowResult(false);
+  };
+
+  const handleFindSpace = () => {
+    navigate("/buscar", {
+      state: {
+        items,
+        location,
+        days,
+        spaceType,
+        usage,
+        totalArea,
+        totalVol,
+        estimatedPrice,
+        deliveryDate: deliveryDate?.toISOString(),
+        deliveryTime,
+        pickupDate: pickupDate?.toISOString(),
+        pickupTime,
+      },
+    });
   };
 
   return (
@@ -80,20 +111,92 @@ const Simulator = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Período</label>
-                  <Select value={period} onValueChange={(v) => { setPeriod(v); setShowResult(false); }}>
-                    <SelectTrigger className="h-11 md:h-10">
-                      <SelectValue placeholder="Selecione o período" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="diario">Diário</SelectItem>
-                      <SelectItem value="semanal">Semanal (7 dias)</SelectItem>
-                      <SelectItem value="quinzenal">Quinzenal (15 dias)</SelectItem>
-                      <SelectItem value="mensal">Mensal (30 dias)</SelectItem>
-                      <SelectItem value="trimestral">Trimestral (90 dias)</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Quantos dias?</label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={days}
+                    onChange={(e) => { setDays(Math.max(1, parseInt(e.target.value) || 1)); setShowResult(false); }}
+                    placeholder="Número de dias"
+                    className="h-11 md:h-10"
+                  />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Data e hora de entrega</label>
+                  <div className="flex gap-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "flex-1 justify-start text-left font-normal h-11 md:h-10",
+                            !deliveryDate && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {deliveryDate ? format(deliveryDate, "dd/MM/yyyy", { locale: pt }) : "Data"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={deliveryDate}
+                          onSelect={setDeliveryDate}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                          className="p-3 pointer-events-auto"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <Input
+                      type="time"
+                      value={deliveryTime}
+                      onChange={(e) => setDeliveryTime(e.target.value)}
+                      className="w-24 h-11 md:h-10"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Data e hora de retirada</label>
+                  <div className="flex gap-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "flex-1 justify-start text-left font-normal h-11 md:h-10",
+                            !pickupDate && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {pickupDate ? format(pickupDate, "dd/MM/yyyy", { locale: pt }) : "Data"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={pickupDate}
+                          onSelect={setPickupDate}
+                          disabled={(date) => date < (deliveryDate || new Date())}
+                          initialFocus
+                          className="p-3 pointer-events-auto"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <Input
+                      type="time"
+                      value={pickupTime}
+                      onChange={(e) => setPickupTime(e.target.value)}
+                      className="w-24 h-11 md:h-10"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Tipo de espaço</label>
                   <Select value={spaceType} onValueChange={setSpaceType}>
@@ -127,7 +230,7 @@ const Simulator = () => {
               <Button
                 className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base h-12"
                 onClick={handleSimulate}
-                disabled={items.length === 0 || !period}
+                disabled={items.length === 0 || days < 1}
               >
                 <Search size={18} className="mr-2" />
                 Simular agora
@@ -159,10 +262,19 @@ const Simulator = () => {
                       <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-accent/10 flex items-center justify-center mx-auto mb-1.5 md:mb-2">
                         <DollarSign size={18} className="text-accent" />
                       </div>
-                      <p className="text-[10px] md:text-xs text-muted-foreground">Preço estimado</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground">Preço estimado ({days} dias)</p>
                       <p className="text-base md:text-lg font-bold text-foreground">R${estimatedPrice.toFixed(2)}</p>
                     </div>
                   </div>
+
+                  <Button
+                    className="w-full mt-5 bg-primary hover:bg-primary/90 text-primary-foreground text-base h-12"
+                    onClick={handleFindSpace}
+                  >
+                    <MapPin size={18} className="mr-2" />
+                    Encontrar espaço disponível
+                  </Button>
+
                   <p className="text-[10px] md:text-xs text-muted-foreground mt-3 md:mt-4 text-center">
                     * Valores estimados. O preço final inclui taxa de serviço.
                   </p>
