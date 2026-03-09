@@ -617,9 +617,9 @@ const SearchResults = () => {
                               </div>
                               <p className="text-xl font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
                               <p className="text-[11px] text-muted-foreground mt-0.5">
-                                {space.area} m² × R${bp.dailyRate.toFixed(2)}/dia × {days} {days === 1 ? "dia" : "dias"}
+                                {space.area} m² × {days} {days === 1 ? "dia" : "dias"} → R$ {bp.pricePerM2.toFixed(2).replace(".", ",")}/m²
                               </p>
-                              <p className="text-[10px] text-muted-foreground/60">+ taxa de serviço no checkout</p>
+                              <p className="text-[10px] text-muted-foreground/60">+ taxa de serviço R$ 28,00 no checkout</p>
                             </div>
                             <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm" onClick={(e) => handleSelect(e, space)}>
                               Selecionar

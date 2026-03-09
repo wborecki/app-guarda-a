@@ -1,64 +1,85 @@
 /**
- * GuardaAí – Centralized pricing logic
+ * GuardaAí – Centralized pricing logic (official table)
  *
  * Rules:
- *  • Price is per m² per day, decreasing with longer periods.
+ *  • Price follows a fixed progressive table per 1 m².
  *  • Minimum billable area: 1 m².
- *  • Service fee: 12 % added at checkout.
- *  • Longer reservations = lower proportional daily rate.
+ *  • Service fee: fixed R$ 28,00 per reservation.
+ *  • Longer reservations = lower proportional daily cost.
  */
 
-// ─── Rate tiers ────────────────────────────────────────────────────
-export type RateTier = { minDays: number; maxDays: number; rate: number; label: string };
+// ─── Official progressive table (value for 1 m²) ──────────────────
+const PRICE_TABLE: Record<number, number> = {
+  1: 5.0,
+  2: 8.5,
+  3: 12.0,
+  4: 13.5,
+  5: 15.0,
+  6: 17.0,
+  7: 19.0,
+  8: 21.0,
+  9: 23.0,
+  10: 25.0,
+  11: 27.5,
+  12: 30.0,
+  13: 32.5,
+  14: 35.0,
+  15: 37.5,
+  16: 38.0,
+  17: 38.5,
+  18: 39.0,
+  19: 39.5,
+  20: 40.0,
+  21: 40.5,
+  22: 41.0,
+  23: 41.5,
+  24: 42.0,
+  25: 42.5,
+  26: 43.0,
+  27: 43.5,
+  28: 44.0,
+  29: 44.5,
+  30: 45.0,
+};
 
-export const RATE_TIERS: RateTier[] = [
-  { minDays: 1, maxDays: 6, rate: 2.5, label: "1–6 dias" },
-  { minDays: 7, maxDays: 13, rate: 2.0, label: "7–13 dias" },
-  { minDays: 14, maxDays: 29, rate: 1.8, label: "14–29 dias" },
-  { minDays: 30, maxDays: Infinity, rate: 1.5, label: "30+ dias" },
-];
-
-export const SERVICE_FEE_RATE = 0.12; // 12 %
+export const SERVICE_FEE = 28.0; // R$ fixed per reservation
 export const MIN_AREA = 1; // m²
+export const MONTHLY_PRICE = 45.0; // R$/m² for 30 days
+export const ANNUAL_PRICE = 40.0; // R$/m² "a partir de" for long-term
 
 // ─── Helpers ───────────────────────────────────────────────────────
 
-/** Daily rate per m² based on the reservation length */
-export function getDailyRate(days: number): number {
-  for (const tier of RATE_TIERS) {
-    if (days >= tier.minDays && days <= tier.maxDays) return tier.rate;
-  }
-  return RATE_TIERS[RATE_TIERS.length - 1].rate;
+/** Price per 1 m² for a given number of days (capped at 30) */
+export function getTablePrice(days: number): number {
+  const clamped = Math.min(Math.max(days, 1), 30);
+  return PRICE_TABLE[clamped] ?? PRICE_TABLE[30];
 }
 
-/** Returns the current tier for a given number of days */
-export function getCurrentTier(days: number): RateTier {
-  for (const tier of RATE_TIERS) {
-    if (days >= tier.minDays && days <= tier.maxDays) return tier;
-  }
-  return RATE_TIERS[RATE_TIERS.length - 1];
+/** Effective daily rate per m² for a given number of days */
+export function getDailyRate(days: number): number {
+  return getTablePrice(days) / Math.min(Math.max(days, 1), 30);
 }
 
 /** Full price breakdown for a reservation */
 export interface PriceBreakdown {
   area: number;          // m²
   days: number;
-  dailyRate: number;     // R$/m²/day
-  subtotal: number;      // area × dailyRate × days
-  serviceFee: number;    // subtotal × 12%
+  pricePerM2: number;    // table value for 1 m² at this # of days
+  dailyRate: number;     // pricePerM2 / days (effective per-day rate)
+  subtotal: number;      // pricePerM2 × area
+  serviceFee: number;    // R$ 28,00 fixed
   total: number;         // subtotal + serviceFee
-  tierLabel: string;
 }
 
 export function calculatePrice(area: number, days: number): PriceBreakdown {
   const effectiveArea = Math.max(area, MIN_AREA);
-  const dailyRate = getDailyRate(days);
-  const subtotal = Math.round(effectiveArea * dailyRate * days * 100) / 100;
-  const serviceFee = Math.round(subtotal * SERVICE_FEE_RATE * 100) / 100;
-  const total = Math.round((subtotal + serviceFee) * 100) / 100;
-  const tier = getCurrentTier(days);
+  const effectiveDays = Math.max(days, 1);
+  const pricePerM2 = getTablePrice(effectiveDays);
+  const dailyRate = Math.round((pricePerM2 / Math.min(effectiveDays, 30)) * 100) / 100;
+  const subtotal = Math.round(pricePerM2 * effectiveArea * 100) / 100;
+  const total = Math.round((subtotal + SERVICE_FEE) * 100) / 100;
 
-  return { area: effectiveArea, days, dailyRate, subtotal, serviceFee, total, tierLabel: tier.label };
+  return { area: effectiveArea, days: effectiveDays, pricePerM2, dailyRate, subtotal, serviceFee: SERVICE_FEE, total };
 }
 
 /** Format currency BRL */
@@ -68,6 +89,14 @@ export function formatBRL(value: number): string {
 
 /** Short pricing explanation used across the site */
 export const PRICING_EXPLANATION =
-  "O valor é calculado com base no espaço reservado e no período. Quanto maior o período, menor o valor proporcional por dia. A taxa de serviço (12%) é adicionada no checkout.";
+  "O valor é calculado com base no espaço reservado (mínimo de 1 m²) e no tempo da reserva. Quanto maior o período, menor o valor proporcional por dia. A taxa de serviço fixa de R$ 28,00 é adicionada no checkout.";
 
 export const PRICING_HINT_SHORT = "Reservas mais longas têm valor proporcional menor por dia.";
+
+/** Key price points for display */
+export const PRICE_HIGHLIGHTS = [
+  { days: 1, label: "1 dia", price: 5.0 },
+  { days: 7, label: "7 dias", price: 19.0 },
+  { days: 15, label: "15 dias", price: 37.5 },
+  { days: 30, label: "30 dias", price: 45.0 },
+];

@@ -12,7 +12,7 @@ import ItemDimensionInput, { type AddedItem } from "@/components/guardaai/ItemDi
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Package, Search, Ruler, DollarSign, Zap, CalendarIcon, MapPin, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { calculatePrice, PRICING_HINT_SHORT, getDailyRate } from "@/lib/pricing";
+import { calculatePrice, PRICING_HINT_SHORT, SERVICE_FEE } from "@/lib/pricing";
 
 const Simulator = () => {
   const navigate = useNavigate();
@@ -259,16 +259,16 @@ const Simulator = () => {
                   {/* Rate tier info */}
                   <div className="mt-4 p-3 rounded-lg bg-background/60 border border-border/40">
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Faixa aplicada</span>
-                      <span className="font-semibold text-foreground">{price.tierLabel}</span>
+                      <span className="text-muted-foreground">Valor por m² ({days} {days === 1 ? "dia" : "dias"})</span>
+                      <span className="font-semibold text-foreground">R$ {price.pricePerM2.toFixed(2).replace(".", ",")}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Valor por m²/dia</span>
-                      <span className="font-semibold text-foreground">R${price.dailyRate.toFixed(2)}</span>
+                      <span className="text-muted-foreground">Valor efetivo por dia</span>
+                      <span className="font-semibold text-foreground">R$ {price.dailyRate.toFixed(2).replace(".", ",")}/m²</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">+ Taxa de serviço (12%)</span>
-                      <span className="font-semibold text-muted-foreground">adicionada no checkout</span>
+                      <span className="text-muted-foreground">+ Taxa de serviço fixa</span>
+                      <span className="font-semibold text-muted-foreground">R$ {SERVICE_FEE.toFixed(2).replace(".", ",")} no checkout</span>
                     </div>
                   </div>
 
@@ -283,7 +283,7 @@ const Simulator = () => {
                   <div className="flex items-start gap-1.5 mt-3 md:mt-4 justify-center">
                     <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
                     <p className="text-[10px] md:text-xs text-muted-foreground text-center">
-                      {PRICING_HINT_SHORT} O preço final inclui taxa de serviço de 12%.
+                      {PRICING_HINT_SHORT} Taxa de serviço fixa de R$ {SERVICE_FEE.toFixed(2).replace(".", ",")} adicionada no checkout.
                     </p>
                   </div>
                 </motion.div>
