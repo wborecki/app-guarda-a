@@ -26,7 +26,7 @@ const UseCases = () => {
             Para quem é o GuardaAí?
           </h2>
           <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto">
-            Soluções para diferentes situações do dia a dia.
+            Soluções para momentos em que falta espaço, sobra coisa ou você precisa guardar algo por um tempo.
           </p>
         </motion.div>
 
