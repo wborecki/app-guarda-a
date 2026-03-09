@@ -17,7 +17,7 @@ const Simulator = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<AddedItem[]>([]);
   const [location, setLocation] = useState("");
-  const [days, setDays] = useState<number>(1);
+  
   const [spaceType, setSpaceType] = useState("");
   const [usage, setUsage] = useState("");
   const [showResult, setShowResult] = useState(false);
