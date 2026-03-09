@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ const Simulator = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<AddedItem[]>([]);
   const [location, setLocation] = useState("");
-  const [days, setDays] = useState<number>(1);
+  
   const [spaceType, setSpaceType] = useState("");
   const [usage, setUsage] = useState("");
   const [showResult, setShowResult] = useState(false);
@@ -33,11 +33,13 @@ const Simulator = () => {
   );
   const totalVol = items.reduce((sum, i) => sum + ((i.altura / 100) * (i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0);
 
+  const days = (deliveryDate && pickupDate) ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
+
   const dailyRate = days >= 30 ? 1.5 : 2;
   const estimatedPrice = totalArea * dailyRate * days;
 
   const handleSimulate = () => {
-    if (items.length > 0 && days >= 1) {
+    if (items.length > 0 && deliveryDate && pickupDate) {
       setShowResult(true);
     }
   };
@@ -100,27 +102,14 @@ const Simulator = () => {
                 <ItemDimensionInput items={items} onItemsChange={handleItemsChange} />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Cidade ou bairro</label>
-                  <LocationAutocomplete
-                    value={location}
-                    onChange={setLocation}
-                    placeholder="Ex: São Paulo, Pinheiros"
-                    className="h-11 md:h-10"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Quantos dias?</label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={days}
-                    onChange={(e) => { setDays(Math.max(1, parseInt(e.target.value) || 1)); setShowResult(false); }}
-                    placeholder="Número de dias"
-                    className="h-11 md:h-10"
-                  />
-                </div>
+              <div className="mb-5 md:mb-4">
+                <label className="text-sm font-medium text-foreground mb-2 block">Cidade ou bairro</label>
+                <LocationAutocomplete
+                  value={location}
+                  onChange={setLocation}
+                  placeholder="Ex: São Paulo, Pinheiros"
+                  className="h-11 md:h-10"
+                />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
@@ -230,7 +219,7 @@ const Simulator = () => {
               <Button
                 className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base h-12"
                 onClick={handleSimulate}
-                disabled={items.length === 0 || days < 1}
+                disabled={items.length === 0 || !deliveryDate || !pickupDate}
               >
                 <Search size={18} className="mr-2" />
                 Simular agora
