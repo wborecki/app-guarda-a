@@ -317,7 +317,7 @@ const CardCarousel = ({ photos, name }: { photos: string[]; name: string }) => {
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  
   const state = location.state as {
     items?: any[];
     location?: string;
