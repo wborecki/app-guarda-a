@@ -5,7 +5,7 @@ import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock, ChevronLeft, ChevronRight, Navigation } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo } from "react";
 
