@@ -2,7 +2,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Star, MapPin, Shield, Ruler, ChevronLeft, ChevronRight, Calendar, MessageSquare, User } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Shield, ChevronLeft, ChevronRight, MessageSquare, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
@@ -60,7 +60,12 @@ const SpaceDetails = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft size={20} />
           </Button>
-          <h1 className="text-base font-semibold text-foreground truncate">{space.name}</h1>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-base font-semibold text-foreground truncate">{space.name}</h1>
+            <p className="text-xs text-muted-foreground truncate">
+              {space.neighborhood}, {space.city}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -95,24 +100,24 @@ const SpaceDetails = () => {
           {space.photos.map((_: string, i: number) => (
             <div
               key={i}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                i === selectedIndex ? "bg-background" : "bg-background/50"
+              className={`w-2 h-2 rounded-full transition-all ${
+                i === selectedIndex ? "bg-background w-4" : "bg-background/50"
               }`}
             />
           ))}
         </div>
-        <div className="absolute top-3 right-3 bg-background/80 rounded-full px-3 py-1 text-xs font-medium text-foreground">
+        <div className="absolute top-3 right-3 bg-background/80 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-foreground">
           {selectedIndex + 1}/{space.photos.length}
         </div>
       </div>
 
-      <div className="container py-6 space-y-6">
+      <div className="container py-6 space-y-6 max-w-2xl">
         {/* Space Info */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-start justify-between mb-2">
             <div>
               <h2 className="text-xl font-bold text-foreground">{space.name}</h2>
-              <p className="text-sm text-muted-foreground">{space.type} · {space.area} m² disponíveis</p>
+              <p className="text-sm text-muted-foreground">{space.type} · {space.area} m²</p>
             </div>
             <div className="flex items-center gap-1">
               <Star size={16} className="text-accent fill-accent" />
@@ -124,14 +129,14 @@ const SpaceDetails = () => {
           <div className="flex items-center gap-1 text-sm text-muted-foreground mb-4">
             <MapPin size={14} />
             <span>{space.address}</span>
-            <span className="ml-2 text-primary font-medium">{space.distance}</span>
+            <span className="ml-2 text-primary font-semibold">{space.distance}</span>
           </div>
 
           <p className="text-sm text-muted-foreground leading-relaxed mb-4">{space.description}</p>
 
           <div className="flex flex-wrap gap-2">
             {space.features.map((f: string) => (
-              <span key={f} className="text-xs px-3 py-1 rounded-full bg-secondary text-secondary-foreground">
+              <span key={f} className="text-xs px-3 py-1 rounded-md bg-secondary text-secondary-foreground font-medium">
                 {f}
               </span>
             ))}
@@ -148,8 +153,8 @@ const SpaceDetails = () => {
                   <p className="text-lg font-bold text-foreground">R$ {space.pricePerDay.toFixed(2)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-muted-foreground">{days} dias</p>
-                  <p className="text-2xl font-bold text-primary">R$ {totalPrice.toFixed(2)}</p>
+                  <p className="text-sm text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</p>
+                  <p className="text-2xl font-extrabold text-primary">R$ {totalPrice.toFixed(0)}</p>
                   <p className="text-xs text-muted-foreground">total estimado</p>
                 </div>
               </div>
@@ -169,7 +174,7 @@ const SpaceDetails = () => {
                 <img
                   src={space.ownerPhoto}
                   alt={space.owner}
-                  className="w-14 h-14 rounded-full object-cover flex-shrink-0"
+                  className="w-14 h-14 rounded-full object-cover flex-shrink-0 bg-muted"
                 />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -198,11 +203,11 @@ const SpaceDetails = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-foreground text-sm">{review.name}</span>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-0.5">
                       {Array.from({ length: 5 }).map((_, si) => (
                         <Star
                           key={si}
-                          size={12}
+                          size={11}
                           className={si < review.rating ? "text-accent fill-accent" : "text-muted-foreground/30"}
                         />
                       ))}
@@ -221,14 +226,14 @@ const SpaceDetails = () => {
 
       {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-20">
-        <div className="container flex items-center justify-between">
+        <div className="container max-w-2xl flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-foreground">R$ {totalPrice.toFixed(2)}</p>
-            <p className="text-xs text-muted-foreground">{days} dias · {space.area} m²</p>
+            <p className="text-2xl font-extrabold text-foreground">R$ {totalPrice.toFixed(0)}</p>
+            <p className="text-xs text-muted-foreground">{days} {days === 1 ? "dia" : "dias"} · {space.area} m²</p>
           </div>
           <Button
             size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold"
             onClick={handleSelect}
           >
             Selecionar este espaço
