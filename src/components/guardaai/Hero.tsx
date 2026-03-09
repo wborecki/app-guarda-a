@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Package, ArrowRight, TrendingDown, MapPin, Briefcase, Home } from "lucide-react";
-import heroBg from "@/assets/imagem_fundo_site_guarda_ai.jpg";
+import heroBg from "@/assets/hero-bg-new.jpg";
 
 const highlights = [
   { icon: TrendingDown, text: "Mais barato que self storage tradicional" },
