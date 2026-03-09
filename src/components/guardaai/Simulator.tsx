@@ -10,14 +10,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import ItemDimensionInput, { type AddedItem } from "@/components/guardaai/ItemDimensionInput";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, Search, Ruler, DollarSign, Zap, CalendarIcon, MapPin } from "lucide-react";
+import { Package, Search, Ruler, DollarSign, Zap, CalendarIcon, MapPin, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { calculatePrice, PRICING_HINT_SHORT, getDailyRate } from "@/lib/pricing";
 
 const Simulator = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<AddedItem[]>([]);
   const [location, setLocation] = useState("");
-  
+
   const [spaceType, setSpaceType] = useState("");
   const [usage, setUsage] = useState("");
   const [showResult, setShowResult] = useState(false);
@@ -35,8 +36,7 @@ const Simulator = () => {
 
   const days = (deliveryDate && pickupDate) ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
 
-  const dailyRate = days >= 30 ? 1.5 : 2;
-  const estimatedPrice = totalArea * dailyRate * days;
+  const price = calculatePrice(totalArea, days);
 
   const handleSimulate = () => {
     if (items.length > 0 && deliveryDate && pickupDate) {
@@ -59,7 +59,7 @@ const Simulator = () => {
         usage,
         totalArea,
         totalVol,
-        estimatedPrice,
+        estimatedPrice: price.subtotal,
         deliveryDate: deliveryDate?.toISOString(),
         deliveryTime,
         pickupDate: pickupDate?.toISOString(),
@@ -251,8 +251,24 @@ const Simulator = () => {
                       <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-accent/10 flex items-center justify-center mx-auto mb-1.5 md:mb-2">
                         <DollarSign size={18} className="text-accent" />
                       </div>
-                      <p className="text-[10px] md:text-xs text-muted-foreground">Preço estimado ({days} dias)</p>
-                      <p className="text-base md:text-lg font-bold text-foreground">R${estimatedPrice.toFixed(2)}</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground">Estimativa ({days} dias)</p>
+                      <p className="text-base md:text-lg font-bold text-foreground">R${price.subtotal.toFixed(2)}</p>
+                    </div>
+                  </div>
+
+                  {/* Rate tier info */}
+                  <div className="mt-4 p-3 rounded-lg bg-background/60 border border-border/40">
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-muted-foreground">Faixa aplicada</span>
+                      <span className="font-semibold text-foreground">{price.tierLabel}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-muted-foreground">Valor por m²/dia</span>
+                      <span className="font-semibold text-foreground">R${price.dailyRate.toFixed(2)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">+ Taxa de serviço (12%)</span>
+                      <span className="font-semibold text-muted-foreground">adicionada no checkout</span>
                     </div>
                   </div>
 
@@ -264,9 +280,12 @@ const Simulator = () => {
                     Encontrar espaço disponível
                   </Button>
 
-                  <p className="text-[10px] md:text-xs text-muted-foreground mt-3 md:mt-4 text-center">
-                    * Valores estimados. O preço final inclui taxa de serviço.
-                  </p>
+                  <div className="flex items-start gap-1.5 mt-3 md:mt-4 justify-center">
+                    <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
+                    <p className="text-[10px] md:text-xs text-muted-foreground text-center">
+                      {PRICING_HINT_SHORT} O preço final inclui taxa de serviço de 12%.
+                    </p>
+                  </div>
                 </motion.div>
               )}
 
