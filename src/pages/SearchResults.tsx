@@ -634,6 +634,16 @@ const SearchResults = () => {
             })
           )}
         </div>
+
+        {/* Pricing hint */}
+        {filteredSortedSpaces.length > 0 && (
+          <div className="flex items-start gap-1.5 mt-5 justify-center">
+            <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
+            <p className="text-[10px] text-muted-foreground/60 text-center max-w-md">
+              {PRICING_HINT_SHORT} Valores estimados antes da taxa de serviço (12%), adicionada no checkout.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* ═══ Mobile Filter Drawer ═══ */}
