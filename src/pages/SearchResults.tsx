@@ -477,7 +477,7 @@ const SearchResults = () => {
                           <Button
                             size="sm"
                             className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm"
-                            onClick={(e) => handleSelect(e, space.id)}
+                            onClick={(e) => handleSelect(e, space)}
                           >
                             Selecionar
                           </Button>
