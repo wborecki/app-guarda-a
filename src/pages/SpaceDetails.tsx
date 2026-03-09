@@ -402,9 +402,18 @@ const SpaceDetails = () => {
                     </div>
 
                     {/* Total */}
-                    <div className="flex justify-between items-center mb-5">
+                    <div className="flex justify-between items-center mb-2">
                       <span className="font-bold text-foreground">Total estimado</span>
                       <span className="text-2xl font-extrabold text-primary">R$ {totalPrice.toFixed(2)}</span>
+                    </div>
+
+                    {/* Tier hint */}
+                    <div className="flex items-start gap-1.5 mb-5 p-2.5 rounded-lg bg-secondary/50">
+                      <Info size={12} className="text-muted-foreground/50 shrink-0 mt-0.5" />
+                      <div className="text-[11px] text-muted-foreground leading-relaxed">
+                        <span className="font-medium text-foreground">Faixa: {bp.tierLabel}</span> · R${bp.dailyRate.toFixed(2)}/m²/dia
+                        <br />{PRICING_HINT_SHORT}
+                      </div>
                     </div>
 
                     {/* CTAs */}
