@@ -325,7 +325,7 @@ const SearchResults = () => {
 
     // Filters
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
-    if (filters.maxPrice !== null) result = result.filter(s => s.pricePerDay * days <= filters.maxPrice!);
+    if (filters.maxPrice !== null) result = result.filter(s => calculatePrice(s.area, days).subtotal <= filters.maxPrice!);
     if (filters.maxDistance !== null) result = result.filter(s => s.distanceNum <= filters.maxDistance!);
     if (filters.minRating !== null) result = result.filter(s => s.rating >= filters.minRating!);
     if (filters.features.length > 0) result = result.filter(s => filters.features.every(f => s.features.includes(f)));
