@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import HostLanding from "./pages/HostLanding";
 import Login from "./pages/Login";
 import SearchResults from "./pages/SearchResults";
+import SpaceDetails from "./pages/SpaceDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
