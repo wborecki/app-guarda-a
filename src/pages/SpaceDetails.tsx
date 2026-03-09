@@ -469,8 +469,8 @@ const SpaceDetails = () => {
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-30 lg:hidden">
         <div className="container max-w-6xl flex items-center justify-between gap-4">
           <div>
-            <p className="text-xl font-extrabold text-foreground">R$ {totalPrice.toFixed(2)}</p>
-            <p className="text-[11px] text-muted-foreground">{days} {days === 1 ? "dia" : "dias"} · {bp.tierLabel} · taxa inclusa</p>
+            <p className="text-xl font-extrabold text-foreground">R$ {totalPrice.toFixed(2).replace(".", ",")}</p>
+            <p className="text-[11px] text-muted-foreground">{days} {days === 1 ? "dia" : "dias"} · + taxa R$ {SERVICE_FEE.toFixed(0)}</p>
           </div>
           <Button
             size="lg"
