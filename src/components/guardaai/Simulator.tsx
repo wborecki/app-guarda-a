@@ -102,9 +102,9 @@ const Simulator = () => {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Cidade ou bairro</label>
-                  <Input
+                  <LocationAutocomplete
                     value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    onChange={setLocation}
                     placeholder="Ex: São Paulo, Pinheiros"
                     className="h-11 md:h-10"
                   />
