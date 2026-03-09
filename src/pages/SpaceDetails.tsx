@@ -12,7 +12,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
-import { calculatePrice, PRICING_HINT_SHORT, RATE_TIERS } from "@/lib/pricing";
+import { calculatePrice, PRICING_HINT_SHORT, SERVICE_FEE } from "@/lib/pricing";
 
 const SpaceDetails = () => {
   const location = useLocation();
