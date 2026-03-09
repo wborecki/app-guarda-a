@@ -392,28 +392,30 @@ const SpaceDetails = () => {
                     {/* Pricing breakdown */}
                     <div className="space-y-2 mb-4 pb-4 border-b border-border/50">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">{space.area} m² × R${bp.dailyRate.toFixed(2)}/dia × {days} {days === 1 ? "dia" : "dias"}</span>
-                        <span className="text-foreground">R$ {subtotal.toFixed(2)}</span>
+                        <span className="text-muted-foreground">{space.area} m² × {days} {days === 1 ? "dia" : "dias"}</span>
+                        <span className="text-foreground">R$ {subtotal.toFixed(2).replace(".", ",")}</span>
+                      </div>
+                      <div className="text-[11px] text-muted-foreground/70 pl-0.5">
+                        Tabela: R$ {bp.pricePerM2.toFixed(2).replace(".", ",")}/m² para {days} {days === 1 ? "dia" : "dias"} (≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m²/dia)
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Taxa de serviço (12%)</span>
-                        <span className="text-foreground">R$ {serviceFee.toFixed(2)}</span>
+                        <span className="text-muted-foreground">Taxa de serviço (fixa)</span>
+                        <span className="text-foreground">R$ {SERVICE_FEE.toFixed(2).replace(".", ",")}</span>
                       </div>
                     </div>
 
                     {/* Total */}
                     <div className="flex justify-between items-center mb-2">
                       <span className="font-bold text-foreground">Total estimado</span>
-                      <span className="text-2xl font-extrabold text-primary">R$ {totalPrice.toFixed(2)}</span>
+                      <span className="text-2xl font-extrabold text-primary">R$ {totalPrice.toFixed(2).replace(".", ",")}</span>
                     </div>
 
-                    {/* Tier hint */}
+                    {/* Hint */}
                     <div className="flex items-start gap-1.5 mb-5 p-2.5 rounded-lg bg-secondary/50">
                       <Info size={12} className="text-muted-foreground/50 shrink-0 mt-0.5" />
-                      <div className="text-[11px] text-muted-foreground leading-relaxed">
-                        <span className="font-medium text-foreground">Faixa: {bp.tierLabel}</span> · R${bp.dailyRate.toFixed(2)}/m²/dia
-                        <br />{PRICING_HINT_SHORT}
-                      </div>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">
+                        {PRICING_HINT_SHORT}
+                      </p>
                     </div>
 
                     {/* CTAs */}
