@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import SearchResults from "./pages/SearchResults";
 import SpaceDetails from "./pages/SpaceDetails";
 import NotFound from "./pages/NotFound";
+import Checkout from "./pages/Checkout";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/entrar" element={<Login />} />
           <Route path="/buscar" element={<SearchResults />} />
           <Route path="/espaco/:id" element={<SpaceDetails />} />
+          <Route path="/checkout" element={<Checkout />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

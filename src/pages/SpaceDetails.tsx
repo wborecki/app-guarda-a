@@ -71,9 +71,13 @@ const SpaceDetails = () => {
   const totalPrice = bp.total;
 
   const handleContinue = () => {
-    toast({
-      title: "Reserva em andamento",
-      description: "Em breve você poderá finalizar o pagamento. Obrigado pelo interesse no GuardaAí!",
+    navigate("/checkout", {
+      state: {
+        space,
+        reservedArea: effectiveReservedArea,
+        days,
+        simulation,
+      },
     });
   };
 
