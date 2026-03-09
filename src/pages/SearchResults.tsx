@@ -325,7 +325,7 @@ const SearchResults = () => {
 
     // Filters
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
-    if (filters.maxPrice !== null) result = result.filter(s => calculatePrice(s.area, days).subtotal <= filters.maxPrice!);
+    if (filters.maxPrice !== null) result = result.filter(s => calculatePrice(Math.max(totalArea, 1), days).subtotal <= filters.maxPrice!);
     if (filters.maxDistance !== null) result = result.filter(s => s.distanceNum <= filters.maxDistance!);
     if (filters.minRating !== null) result = result.filter(s => s.rating >= filters.minRating!);
     if (filters.features.length > 0) result = result.filter(s => filters.features.every(f => s.features.includes(f)));
@@ -333,7 +333,7 @@ const SearchResults = () => {
     // Sort
     switch (sortBy) {
       case "proximity": result.sort((a, b) => a.distanceNum - b.distanceNum); break;
-      case "price_asc": result.sort((a, b) => calculatePrice(a.area, days).subtotal - calculatePrice(b.area, days).subtotal); break;
+      case "price_asc": result.sort((a, b) => a.area - b.area); break;
       case "rating": result.sort((a, b) => b.rating - a.rating); break;
       case "area_desc": result.sort((a, b) => b.area - a.area); break;
       case "relevance": result.sort((a, b) => (b.rating * b.reviews) - (a.rating * a.reviews)); break;
@@ -579,7 +579,8 @@ const SearchResults = () => {
             </motion.div>
           ) : (
             filteredSortedSpaces.map((space, index) => {
-              const bp = calculatePrice(space.area, days);
+              const reservedArea = Math.max(totalArea, 1);
+              const bp = calculatePrice(reservedArea, days);
               return (
                 <motion.div key={space.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
                   <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer border-border/60" onClick={() => handleCardClick(space)}>
@@ -602,7 +603,11 @@ const SearchResults = () => {
                                 <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
                               </div>
                             </div>
-                            <p className="text-xs text-muted-foreground mb-3">{space.type} · {space.area} m² · {space.neighborhood}, {space.city}</p>
+                            <p className="text-xs text-muted-foreground mb-2">{space.type} · {space.neighborhood}, {space.city}</p>
+                            <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
+                              <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m²</span>
+                              <span className="text-primary font-semibold">Disponível: {space.area} m²</span>
+                            </div>
                             <div className="flex flex-wrap gap-1.5 mb-3">
                               {space.features.map((f) => (
                                 <span key={f} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{f}</span>
@@ -617,9 +622,9 @@ const SearchResults = () => {
                               </div>
                               <p className="text-xl font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
                               <p className="text-[11px] text-muted-foreground mt-0.5">
-                                {space.area} m² × {days} {days === 1 ? "dia" : "dias"} → R$ {bp.pricePerM2.toFixed(2).replace(".", ",")}/m²
+                                {reservedArea} m² reservado{reservedArea > 1 ? "s" : ""} × {days} {days === 1 ? "dia" : "dias"}
                               </p>
-                              <p className="text-[10px] text-muted-foreground/60">+ taxa de serviço R$ 28,00 no checkout</p>
+                              <p className="text-[10px] text-muted-foreground/60">+ taxa fixa R$ 28,00 no checkout</p>
                             </div>
                             <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm" onClick={(e) => handleSelect(e, space)}>
                               Selecionar

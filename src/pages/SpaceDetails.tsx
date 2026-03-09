@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   ArrowLeft, Star, MapPin, Shield, ChevronLeft, ChevronRight,
   MessageSquare, User, Clock, CheckCircle2, Lock, FileText,
-  Camera, Package, Calendar, Pencil, Plus, Minus, Info
+  Camera, Package, Calendar, Pencil, Plus, Minus, Info, Ruler
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import useEmblaCarousel from "embla-carousel-react";
@@ -22,14 +22,15 @@ const SpaceDetails = () => {
   const space = (location.state as any)?.space;
   const simulation = (location.state as any)?.simulation;
   const initialDays = simulation?.days || 1;
+  const initialReservedArea = Math.max(simulation?.totalArea || 1, 1);
 
   const [days, setDays] = useState(initialDays);
+  const [reservedArea, setReservedArea] = useState(initialReservedArea);
   const [editingReservation, setEditingReservation] = useState(false);
 
   // Gallery carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // Thumbnail carousel
   const [thumbRef, thumbApi] = useEmblaCarousel({ containScroll: "keepSnaps", dragFree: true });
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
@@ -57,7 +58,14 @@ const SpaceDetails = () => {
     );
   }
 
-  const bp = calculatePrice(space.area, days);
+  // Available capacity = total - already occupied (simulated)
+  const occupiedArea = Math.max(space.area * 0.0, 0); // placeholder: no other reservations yet
+  const availableArea = space.area - occupiedArea;
+
+  // Clamp reserved area to available
+  const effectiveReservedArea = Math.min(Math.max(reservedArea, 1), availableArea);
+
+  const bp = calculatePrice(effectiveReservedArea, days);
   const subtotal = bp.subtotal;
   const serviceFee = bp.serviceFee;
   const totalPrice = bp.total;
@@ -69,7 +77,6 @@ const SpaceDetails = () => {
     });
   };
 
-  // Extended reviews for this page
   const allReviews = [
     { name: "Pedro A.", rating: 5, date: "2024-01-15", text: "Espaço exatamente como descrito, fácil acesso e muito perto de casa. Super recomendo." },
     { name: "Lucia R.", rating: 5, date: "2024-02-20", text: "Usei durante uma reforma e foi tudo muito tranquilo. Proprietário muito atencioso." },
@@ -88,6 +95,11 @@ const SpaceDetails = () => {
       ? ["Piso nivelado", "Ambiente seco", "Sem umidade"].filter(f => !space.features.includes(f)).slice(0, 3 - Math.max(0, space.features.length - 3))
       : []),
   ];
+
+  const adjustArea = (delta: number) => {
+    const next = Math.round((reservedArea + delta) * 10) / 10;
+    setReservedArea(Math.min(Math.max(next, 1), availableArea));
+  };
 
   return (
     <div className="min-h-screen bg-background pb-28 lg:pb-8">
@@ -134,16 +146,10 @@ const SpaceDetails = () => {
                     ))}
                   </div>
                 </div>
-                <button
-                  onClick={scrollPrev}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-2 shadow-md transition-opacity"
-                >
+                <button onClick={scrollPrev} className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-2 shadow-md transition-opacity">
                   <ChevronLeft size={20} className="text-foreground" />
                 </button>
-                <button
-                  onClick={scrollNext}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-2 shadow-md transition-opacity"
-                >
+                <button onClick={scrollNext} className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-2 shadow-md transition-opacity">
                   <ChevronRight size={20} className="text-foreground" />
                 </button>
                 <div className="absolute bottom-3 right-3 bg-background/85 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-foreground flex items-center gap-1.5">
@@ -174,7 +180,7 @@ const SpaceDetails = () => {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <h2 className="text-xl font-bold text-foreground">{space.name}</h2>
-                  <p className="text-sm text-muted-foreground mt-0.5">{space.type} · {space.area} m²</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{space.type}</p>
                 </div>
                 <div className="flex items-center gap-1 bg-accent/10 rounded-lg px-2.5 py-1.5 flex-shrink-0">
                   <Star size={14} className="text-accent fill-accent" />
@@ -187,6 +193,22 @@ const SpaceDetails = () => {
                 <MapPin size={14} className="text-primary flex-shrink-0" />
                 <span>{space.address}</span>
                 <span className="ml-1 text-primary font-semibold">{space.distance}</span>
+              </div>
+
+              {/* Capacity info */}
+              <div className="flex items-center gap-4 mb-4 p-3 rounded-lg bg-secondary/50 border border-border/40">
+                <div className="flex items-center gap-2">
+                  <Ruler size={14} className="text-primary" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Capacidade total</p>
+                    <p className="text-sm font-bold text-foreground">{space.area} m²</p>
+                  </div>
+                </div>
+                <div className="w-px h-8 bg-border/60" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Disponível agora</p>
+                  <p className="text-sm font-bold text-primary">{availableArea} m²</p>
+                </div>
               </div>
 
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">{space.description}</p>
@@ -212,11 +234,7 @@ const SpaceDetails = () => {
               <Card>
                 <CardContent className="p-4 sm:p-5">
                   <div className="flex items-start gap-4">
-                    <img
-                      src={space.ownerPhoto}
-                      alt={space.owner}
-                      className="w-14 h-14 rounded-full object-cover flex-shrink-0 bg-muted"
-                    />
+                    <img src={space.ownerPhoto} alt={space.owner} className="w-14 h-14 rounded-full object-cover flex-shrink-0 bg-muted" />
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className="font-bold text-foreground">{space.owner}</h4>
@@ -255,11 +273,7 @@ const SpaceDetails = () => {
                         <span className="font-semibold text-foreground text-sm">{review.name}</span>
                         <div className="flex items-center gap-0.5">
                           {Array.from({ length: 5 }).map((_, si) => (
-                            <Star
-                              key={si}
-                              size={11}
-                              className={si < review.rating ? "text-accent fill-accent" : "text-muted-foreground/30"}
-                            />
+                            <Star key={si} size={11} className={si < review.rating ? "text-accent fill-accent" : "text-muted-foreground/30"} />
                           ))}
                         </div>
                       </div>
@@ -318,10 +332,6 @@ const SpaceDetails = () => {
                         <span className="text-muted-foreground">Local</span>
                         <span className="text-foreground font-medium">{space.neighborhood}, {space.city}</span>
                       </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Área</span>
-                        <span className="text-foreground font-medium">{space.area} m²</span>
-                      </div>
                       {simulation?.deliveryDate && (
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Entrada</span>
@@ -342,10 +352,10 @@ const SpaceDetails = () => {
                       )}
                     </div>
 
-                    {/* Period editor */}
+                    {/* Reservation editor: area + period */}
                     <div className="mb-4 pb-4 border-b border-border/50">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-muted-foreground">Período</span>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-semibold text-foreground">Sua reserva</span>
                         {!editingReservation && (
                           <button
                             onClick={() => setEditingReservation(true)}
@@ -357,50 +367,91 @@ const SpaceDetails = () => {
                       </div>
 
                       {editingReservation ? (
-                        <div className="flex items-center gap-3 bg-secondary/50 rounded-lg p-3">
-                          <button
-                            onClick={() => setDays(Math.max(1, days - 1))}
-                            className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center hover:bg-muted transition-colors"
-                          >
-                            <Minus size={14} className="text-foreground" />
-                          </button>
-                          <div className="flex-1 text-center">
-                            <span className="text-2xl font-bold text-foreground">{days}</span>
-                            <span className="text-sm text-muted-foreground ml-1">{days === 1 ? "dia" : "dias"}</span>
+                        <div className="space-y-4">
+                          {/* Area editor */}
+                          <div>
+                            <label className="text-xs text-muted-foreground mb-1.5 block">Área reservada (m²)</label>
+                            <div className="flex items-center gap-3 bg-secondary/50 rounded-lg p-3">
+                              <button
+                                onClick={() => adjustArea(-1)}
+                                disabled={effectiveReservedArea <= 1}
+                                className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-40"
+                              >
+                                <Minus size={14} className="text-foreground" />
+                              </button>
+                              <div className="flex-1 text-center">
+                                <span className="text-2xl font-bold text-foreground">{effectiveReservedArea}</span>
+                                <span className="text-sm text-muted-foreground ml-1">m²</span>
+                              </div>
+                              <button
+                                onClick={() => adjustArea(1)}
+                                disabled={effectiveReservedArea >= availableArea}
+                                className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-40"
+                              >
+                                <Plus size={14} className="text-foreground" />
+                              </button>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground mt-1">Máximo disponível: {availableArea} m²</p>
                           </div>
+
+                          {/* Days editor */}
+                          <div>
+                            <label className="text-xs text-muted-foreground mb-1.5 block">Período (dias)</label>
+                            <div className="flex items-center gap-3 bg-secondary/50 rounded-lg p-3">
+                              <button
+                                onClick={() => setDays(Math.max(1, days - 1))}
+                                className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                              >
+                                <Minus size={14} className="text-foreground" />
+                              </button>
+                              <div className="flex-1 text-center">
+                                <span className="text-2xl font-bold text-foreground">{days}</span>
+                                <span className="text-sm text-muted-foreground ml-1">{days === 1 ? "dia" : "dias"}</span>
+                              </div>
+                              <button
+                                onClick={() => setDays(days + 1)}
+                                className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                              >
+                                <Plus size={14} className="text-foreground" />
+                              </button>
+                            </div>
+                          </div>
+
                           <button
-                            onClick={() => setDays(days + 1)}
-                            className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                            onClick={() => setEditingReservation(false)}
+                            className="text-xs text-primary font-semibold hover:underline"
                           >
-                            <Plus size={14} className="text-foreground" />
+                            Confirmar
                           </button>
                         </div>
                       ) : (
-                        <span className="text-sm font-medium text-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
-                      )}
-
-                      {editingReservation && (
-                        <button
-                          onClick={() => setEditingReservation(false)}
-                          className="text-xs text-primary font-semibold mt-2 hover:underline"
-                        >
-                          Confirmar
-                        </button>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Área reservada</span>
+                            <span className="text-foreground font-medium">{effectiveReservedArea} m²</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Período</span>
+                            <span className="text-foreground font-medium">{days} {days === 1 ? "dia" : "dias"}</span>
+                          </div>
+                        </div>
                       )}
                     </div>
 
                     {/* Pricing breakdown */}
                     <div className="space-y-2 mb-4 pb-4 border-b border-border/50">
+                      <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Cálculo</h4>
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">{space.area} m² × {days} {days === 1 ? "dia" : "dias"}</span>
-                        <span className="text-foreground">R$ {subtotal.toFixed(2).replace(".", ",")}</span>
+                        <span className="text-muted-foreground">Preço do espaço</span>
+                        <span className="text-foreground font-medium">R$ {subtotal.toFixed(2).replace(".", ",")}</span>
                       </div>
                       <div className="text-[11px] text-muted-foreground/70 pl-0.5">
-                        Tabela: R$ {bp.pricePerM2.toFixed(2).replace(".", ",")}/m² para {days} {days === 1 ? "dia" : "dias"} (≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m²/dia)
+                        {effectiveReservedArea} m² × {days} {days === 1 ? "dia" : "dias"} → R$ {bp.pricePerM2.toFixed(2).replace(".", ",")}/m²
+                        {days > 1 && <> (≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m²/dia)</>}
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Taxa de serviço (fixa)</span>
-                        <span className="text-foreground">R$ {SERVICE_FEE.toFixed(2).replace(".", ",")}</span>
+                        <span className="text-foreground font-medium">R$ {SERVICE_FEE.toFixed(2).replace(".", ",")}</span>
                       </div>
                     </div>
 
@@ -432,22 +483,24 @@ const SpaceDetails = () => {
                       className="w-full text-center text-sm text-primary font-semibold mt-3 hover:underline flex items-center justify-center gap-1.5"
                     >
                       <Package size={14} />
-                      {editingReservation ? "Fechar edição" : "Editar simulação"}
+                      {editingReservation ? "Fechar edição" : "Editar reserva"}
                     </button>
                   </CardContent>
                 </Card>
               </motion.div>
 
-              {/* Add items hint */}
+              {/* Add items card */}
               <Card className="border-dashed border-border/60">
                 <CardContent className="p-4">
                   <button
-                    onClick={() =>
+                    onClick={() => {
+                      adjustArea(1);
+                      setEditingReservation(true);
                       toast({
-                        title: "Em breve",
-                        description: "A funcionalidade de adicionar mais itens estará disponível em breve.",
-                      })
-                    }
+                        title: "Área aumentada",
+                        description: `Área reservada ajustada para ${Math.min(effectiveReservedArea + 1, availableArea)} m². Edite conforme sua necessidade.`,
+                      });
+                    }}
                     className="w-full flex items-center gap-3 text-left group"
                   >
                     <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
@@ -455,7 +508,7 @@ const SpaceDetails = () => {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Adicionar mais itens</p>
-                      <p className="text-xs text-muted-foreground">Precisa de mais espaço? Ajuste sua necessidade.</p>
+                      <p className="text-xs text-muted-foreground">Precisa de mais espaço? Aumente a área reservada.</p>
                     </div>
                   </button>
                 </CardContent>
@@ -470,7 +523,7 @@ const SpaceDetails = () => {
         <div className="container max-w-6xl flex items-center justify-between gap-4">
           <div>
             <p className="text-xl font-extrabold text-foreground">R$ {totalPrice.toFixed(2).replace(".", ",")}</p>
-            <p className="text-[11px] text-muted-foreground">{days} {days === 1 ? "dia" : "dias"} · + taxa R$ {SERVICE_FEE.toFixed(0)}</p>
+            <p className="text-[11px] text-muted-foreground">{effectiveReservedArea} m² · {days} {days === 1 ? "dia" : "dias"}</p>
           </div>
           <Button
             size="lg"
