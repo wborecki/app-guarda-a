@@ -39,7 +39,7 @@ const Simulator = () => {
   const estimatedPrice = totalArea * dailyRate * days;
 
   const handleSimulate = () => {
-    if (items.length > 0 && days >= 1) {
+    if (items.length > 0 && deliveryDate && pickupDate) {
       setShowResult(true);
     }
   };
