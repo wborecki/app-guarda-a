@@ -354,7 +354,63 @@ const SearchResults = () => {
   const totalVol = state?.totalVol || 0;
   const userLocation = state?.location || "Não informado";
   const shortLocation = useMemo(() => shortenLocation(userLocation), [userLocation]);
-  const allSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
+  const templateSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
+
+  // Fetch real published spaces from database
+  const [dbSpaces, setDbSpaces] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchPublished = async () => {
+      const { data } = await supabase
+        .from("spaces")
+        .select("*")
+        .eq("status", "published");
+      if (!data || data.length === 0) { setDbSpaces([]); return; }
+
+      const typeMap: Record<string, string> = {
+        garagem: "Garagem", quarto: "Quarto", deposito: "Depósito",
+        "area-coberta": "Área coberta", galpao: "Galpão", comercial: "Espaço comercial",
+      };
+
+      const mapped = data.map((s, i) => {
+        const locParts = (s.location || "").split(",").map((p: string) => p.trim());
+        const neighborhood = locParts[0] || "Centro";
+        const city = locParts.length >= 4 ? locParts[3] : locParts[1] || "";
+        const vol = s.volume || (s.width * s.length * s.height) || 0;
+        const dailyRate = getDailyRate(Math.max(vol, 1));
+
+        return {
+          id: `db-${s.id}`,
+          dbId: s.id,
+          name: `${typeMap[s.space_type] || s.space_type} disponível`,
+          type: typeMap[s.space_type] || s.space_type || "Espaço",
+          area: Number(vol) || 8,
+          pricePerDay: dailyRate,
+          description: s.description || "Espaço disponível para guardar seus itens com segurança.",
+          photos: s.photos && s.photos.length > 0 ? s.photos : ["/placeholder.svg"],
+          features: [
+            s.covered ? "Coberto" : null,
+            s.closed ? "Fechado" : null,
+            s.easy_access ? "Fácil acesso" : null,
+            s.security_features ? s.security_features.split(",")[0]?.trim() : null,
+          ].filter(Boolean) as string[],
+          owner: "Anfitrião", ownerPhoto: `https://i.pravatar.cc/100?img=${30 + i}`,
+          ownerSince: new Date(s.created_at).getFullYear().toString(),
+          ownerDescription: "Anfitrião verificado na plataforma.",
+          rating: 0, reviews: 0,
+          address: `${neighborhood}`,
+          neighborhood, city,
+          distance: "—", distanceNum: 999,
+          reviewsList: [],
+          lat: 0, lng: 0,
+          isReal: true,
+        };
+      });
+      setDbSpaces(mapped);
+    };
+    fetchPublished();
+  }, []);
+
+  const allSpaces = useMemo(() => [...dbSpaces, ...templateSpaces], [dbSpaces, templateSpaces]);
 
   // ── State ──
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
