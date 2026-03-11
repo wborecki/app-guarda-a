@@ -136,7 +136,7 @@ const DashboardOverview = () => {
               icon={Search}
               title="Encontrar espaço"
               description="Busque espaços perto de você"
-              href="/"
+              href="/buscar"
             />
             <QuickAction
               icon={Plus}
