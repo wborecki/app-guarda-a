@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { Home, ArrowRight } from "lucide-react";
 
 const examples = [
-  { area: "3 m²", income: "R$ 135/mês", desc: "Uma garagem pequena" },
-  { area: "5 m²", income: "R$ 225/mês", desc: "Um quarto vazio" },
-  { area: "10 m²", income: "R$ 450/mês", desc: "Um depósito médio" },
+  { area: "3 m³", income: "R$ 135/mês", desc: "Uma garagem pequena" },
+  { area: "5 m³", income: "R$ 225/mês", desc: "Um quarto vazio" },
+  { area: "10 m³", income: "R$ 450/mês", desc: "Um depósito médio" },
 ];
 
 const ForHosts = () => {
