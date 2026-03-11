@@ -487,7 +487,7 @@ const SearchResults = () => {
     navigate(`/espaco/${space.id}`, { state: { space, simulation: state } });
   };
 
-  const handlePinClick = (id: number) => {
+  const handlePinClick = (id: number | string) => {
     const space = filteredSortedSpaces.find((s) => s.id === id);
     if (space) {
       // On mobile map view, switch to list and scroll
