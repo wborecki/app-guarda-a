@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -17,10 +17,11 @@ import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/hooks/use-toast";
 import {
   Home, ArrowRight, Camera, FileText, Ban, UserX, Clock,
   Warehouse, BedDouble, Container, Tent, Building2, Store,
-  Shield, Upload, CheckCircle2, DollarSign, MapPin, CalendarCheck, Lock, Eye
+  Shield, Upload, CheckCircle2, DollarSign, MapPin, CalendarCheck, Lock, Eye, X
 } from "lucide-react";
 
 const spaceTypes = [
@@ -67,6 +68,9 @@ const HostLanding = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
+  const [photos, setPhotos] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [form, setForm] = useState({
     location: "",
     spaceType: "", spaceCategory: "",
@@ -77,6 +81,23 @@ const HostLanding = () => {
     accessType: "",
     notes: "",
   });
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const total = photos.length + files.length;
+    if (total > 5) {
+      toast({ title: "Limite de fotos", description: "Você pode enviar no máximo 5 fotos.", variant: "destructive" });
+      const allowed = files.slice(0, 5 - photos.length);
+      setPhotos(prev => [...prev, ...allowed]);
+    } else {
+      setPhotos(prev => [...prev, ...files]);
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
+  };
 
   const isLoggedIn = !!user;
 
@@ -95,8 +116,9 @@ const HostLanding = () => {
       : form.availability === "weekdays" ? "Dias úteis"
       : form.availability === "weekends" ? "Finais de semana"
       : "Personalizada";
+    const photosNote = photos.length > 0 ? `\nFotos: ${photos.length} foto(s) selecionada(s) — enviarei na conversa` : "";
     const message = encodeURIComponent(
-      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
+      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}${photosNote}`
     );
     window.open(`https://wa.me/5511994541862?text=${message}`, "_blank");
   };
@@ -370,9 +392,31 @@ const HostLanding = () => {
                           />
                           <label className="flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-border hover:border-accent/40 transition-colors cursor-pointer bg-secondary/20">
                             <Upload size={16} className="text-muted-foreground" />
-                            <span className="text-xs text-muted-foreground">Enviar fotos do espaço (máx. 5)</span>
-                            <input type="file" accept="image/*" multiple className="hidden" />
+                            <span className="text-xs text-muted-foreground">
+                              {photos.length === 0 ? "Enviar fotos do espaço (máx. 5)" : `${photos.length}/5 foto(s) selecionada(s)`}
+                            </span>
+                            <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoChange} />
                           </label>
+                          {photos.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {photos.map((photo, i) => (
+                                <div key={i} className="relative group">
+                                  <img
+                                    src={URL.createObjectURL(photo)}
+                                    alt={`Foto ${i + 1}`}
+                                    className="w-16 h-16 rounded-lg object-cover border border-border"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => removePhoto(i)}
+                                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                    <X size={12} />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
 
                         {/* Navigation */}
