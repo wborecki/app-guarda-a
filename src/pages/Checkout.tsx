@@ -375,7 +375,8 @@ const Checkout = () => {
                           <ul className="space-y-1.5 text-xs text-muted-foreground">
                             <li className="flex items-start gap-2"><CheckCircle2 size={12} className="text-primary shrink-0 mt-0.5" /> Fotografe cada item de forma clara e legível</li>
                             <li className="flex items-start gap-2"><CheckCircle2 size={12} className="text-primary shrink-0 mt-0.5" /> Inclua pelo menos 1 foto (máx. 10)</li>
-                            <li className="flex items-start gap-2"><CheckCircle2 size={12} className="text-primary shrink-0 mt-0.5" /> As fotos podem ser usadas para análise automatizada</li>
+                            <li className="flex items-start gap-2"><ShieldAlert size={12} className="text-amber-500 shrink-0 mt-0.5" /> Itens proibidos serão bloqueados automaticamente</li>
+                            <li className="flex items-start gap-2"><Info size={12} className="text-muted-foreground shrink-0 mt-0.5" /> Enviar fotos não significa aprovação automática</li>
                           </ul>
                         </div>
 
