@@ -96,7 +96,7 @@ const HostLanding = () => {
       : form.availability === "weekends" ? "Finais de semana"
       : "Personalizada";
     const message = encodeURIComponent(
-      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nBairro: ${form.neighborhood}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
+      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
     );
     window.open(`https://wa.me/5511994541862?text=${message}`, "_blank");
   };
