@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Package, ArrowRight, TrendingDown, MapPin, Briefcase, Home } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Package, Search, MapPin, CalendarIcon, Box, ArrowRight, TrendingDown, Briefcase, Home } from "lucide-react";
+import { differenceInDays } from "date-fns";
 import heroBg from "@/assets/hero-bg-new.jpg";
+import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
+import DateRangePicker from "@/components/guardaai/DateRangePicker";
 
 const highlights = [
   { icon: TrendingDown, text: "Mais barato que self storage tradicional" },
@@ -12,9 +16,30 @@ const highlights = [
 ];
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const [location, setLocation] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
+  const [pickupDate, setPickupDate] = useState<Date | undefined>();
+  const [volume, setVolume] = useState("");
+
+  const days = deliveryDate && pickupDate ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
+
+  const handleSearch = () => {
+    const totalVol = parseFloat(volume) || 0;
+    navigate("/buscar", {
+      state: {
+        location: location || "São Paulo",
+        deliveryDate: deliveryDate?.toISOString(),
+        pickupDate: pickupDate?.toISOString(),
+        totalVol,
+        days: days || 1,
+      },
+    });
+  };
+
   return (
     <section className="relative isolate overflow-hidden">
-      {/* Background image - hidden on mobile for cleaner look */}
+      {/* Background image - hidden on mobile */}
       <div
         className="absolute inset-0 z-0 hidden md:block"
         style={{
@@ -25,7 +50,6 @@ const Hero = () => {
         }}
         aria-hidden="true"
       />
-
       <div
         className="absolute inset-0 z-10 hidden md:block"
         style={{
@@ -33,7 +57,6 @@ const Hero = () => {
             "linear-gradient(90deg, hsl(var(--background) / 0.98) 0%, hsl(var(--background) / 0.93) 28%, hsl(var(--background) / 0.72) 48%, hsl(var(--background) / 0.38) 64%, hsl(var(--background) / 0.16) 78%, transparent 100%)",
         }}
       />
-
       <div
         className="absolute inset-x-0 bottom-0 h-24 z-10 hidden md:block"
         style={{
@@ -41,8 +64,7 @@ const Hero = () => {
         }}
         aria-hidden="true"
       />
-
-      {/* Mobile: subtle gradient bg instead of image */}
+      {/* Mobile gradient */}
       <div
         className="absolute inset-0 z-0 md:hidden"
         style={{
@@ -68,64 +90,169 @@ const Hero = () => {
               <span className="text-primary">Pague menos.</span>
             </h1>
 
-            <p className="text-lg md:text-2xl font-semibold text-foreground/80 mb-1.5 md:mb-2">
-              O jeito mais barato de guardar suas coisas.
-            </p>
-
             <p className="text-sm md:text-lg text-muted-foreground mb-6 md:mb-8 max-w-lg">
               Encontre espaços para armazenar seus objetos perto de você, por diárias ou mensalidades.
             </p>
 
-            {/* Mobile: chips layout. Desktop: grid cards */}
-            <div className="hidden md:grid grid-cols-2 gap-3 mb-8">
-              {highlights.map((h, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-card/75 backdrop-blur-sm border border-border/50 hover:shadow-sm transition-shadow"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <h.icon size={18} className="text-primary" />
+            {/* ── Search Bar ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="bg-card/90 backdrop-blur-md border border-border/60 rounded-2xl shadow-lg p-4 md:p-5 mb-5"
+            >
+              {/* Desktop: inline row */}
+              <div className="hidden md:flex items-end gap-3">
+                {/* Location */}
+                <div className="flex-1 min-w-0">
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+                    <MapPin size={12} className="text-primary" />
+                    Onde quer guardar?
+                  </label>
+                  <LocationAutocomplete
+                    value={location}
+                    onChange={setLocation}
+                    placeholder="Ex: São Paulo, Curitiba..."
+                    className="h-10 text-sm"
+                  />
+                </div>
+
+                {/* Separator */}
+                <div className="w-px h-10 bg-border/60 shrink-0" />
+
+                {/* Dates */}
+                <div className="w-[220px] shrink-0">
+                  <DateRangePicker
+                    deliveryDate={deliveryDate}
+                    pickupDate={pickupDate}
+                    onDeliveryChange={setDeliveryDate}
+                    onPickupChange={setPickupDate}
+                    compact
+                  />
+                </div>
+
+                {/* Separator */}
+                <div className="w-px h-10 bg-border/60 shrink-0" />
+
+                {/* Volume */}
+                <div className="w-[120px] shrink-0">
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+                    <Box size={12} className="text-primary" />
+                    Volume
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      value={volume}
+                      onChange={(e) => setVolume(e.target.value)}
+                      placeholder="Ex: 2"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 pr-8"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">m³</span>
                   </div>
-                  <span className="text-sm font-medium text-foreground">{h.text}</span>
-                </motion.div>
-              ))}
+                </div>
+
+                {/* CTA */}
+                <Button
+                  onClick={handleSearch}
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground h-10 px-6 shrink-0 shadow-md"
+                >
+                  <Search size={16} className="mr-1.5" />
+                  Buscar
+                </Button>
+              </div>
+
+              {/* Mobile: stacked */}
+              <div className="flex flex-col gap-3 md:hidden">
+                {/* Location */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+                    <MapPin size={12} className="text-primary" />
+                    Onde quer guardar?
+                  </label>
+                  <LocationAutocomplete
+                    value={location}
+                    onChange={setLocation}
+                    placeholder="Ex: São Paulo, Curitiba..."
+                    className="h-11"
+                  />
+                </div>
+
+                {/* Dates */}
+                <DateRangePicker
+                  deliveryDate={deliveryDate}
+                  pickupDate={pickupDate}
+                  onDeliveryChange={setDeliveryDate}
+                  onPickupChange={setPickupDate}
+                  compact
+                />
+
+                {/* Volume */}
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+                    <Box size={12} className="text-primary" />
+                    Volume estimado
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.5"
+                      value={volume}
+                      onChange={(e) => setVolume(e.target.value)}
+                      placeholder="Ex: 2"
+                      className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 pr-10"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">m³</span>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <Button
+                  onClick={handleSearch}
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground h-12 text-base w-full shadow-lg group"
+                >
+                  <Search size={18} className="mr-2" />
+                  Buscar espaços
+                  <ArrowRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+            </motion.div>
+
+            {/* Secondary links */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-6 md:mb-8">
+              <Button
+                size="sm"
+                variant="outline"
+                className="text-sm border-primary text-primary hover:bg-primary/5 bg-background/40 backdrop-blur-sm"
+                asChild
+              >
+                <Link to="/anunciar">Quero anunciar meu espaço</Link>
+              </Button>
+              <a
+                href="#simulador"
+                className="text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
+              >
+                Quer mais detalhe? Use nosso simulador completo ↓
+              </a>
             </div>
 
             {/* Mobile chips */}
-            <div className="flex flex-wrap gap-2 mb-6 md:hidden">
+            <div className="flex flex-wrap gap-2 md:hidden">
               {highlights.map((h, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 + i * 0.08 }}
+                  transition={{ delay: 0.5 + i * 0.08 }}
                   className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-card border border-border/60 text-xs font-medium text-foreground"
                 >
                   <h.icon size={13} className="text-primary shrink-0" />
                   {h.text}
                 </motion.div>
               ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-base px-8 group shadow-lg h-12 md:h-11" asChild>
-                <a href="#simulador">
-                  Quero guardar meus objetos
-                  <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </a>
-              </Button>
-
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-base px-8 border-primary text-primary hover:bg-primary/5 bg-background/40 backdrop-blur-sm h-12 md:h-11"
-                asChild
-              >
-                <Link to="/anunciar">Quero anunciar meu espaço</Link>
-              </Button>
             </div>
           </motion.div>
         </div>
