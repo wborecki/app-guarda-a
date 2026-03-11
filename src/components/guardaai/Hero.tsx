@@ -75,7 +75,7 @@ const Hero = () => {
         aria-hidden="true"
       />
 
-      <div className="container relative z-20 min-h-[auto] md:min-h-[92vh] flex items-center py-20 pt-32 md:py-0">
+      <div className="container relative z-20 min-h-[auto] md:min-h-[92vh] flex items-center py-16 pt-24 md:py-0">
         <div className="max-w-[720px] w-full md:py-20">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -84,7 +84,7 @@ const Hero = () => {
             className="space-y-0"
           >
             {/* ── BLOCO 1: Selo + Headline + Subtítulo ── */}
-            <div className="mb-10 md:mb-14">
+            <div className="mb-8 md:mb-11">
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 border border-primary/20">
                 <Package size={14} />
@@ -109,7 +109,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.45 }}
-                className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-5 md:mb-6"
+                className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-4 md:mb-5"
               >
                 {/* ── Desktop layout ── */}
                 <div className="hidden md:block p-2.5">
