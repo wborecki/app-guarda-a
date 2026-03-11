@@ -436,7 +436,7 @@ const SearchResults = () => {
           <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}><ArrowLeft size={20} /></Button>
           <div className="flex-1 min-w-0">
             <h1 className="text-lg font-bold text-foreground">Espaços disponíveis</h1>
-            <p className="text-sm text-muted-foreground truncate">{shortLocation} · {totalArea.toFixed(1)} m² · {days} {days === 1 ? "dia" : "dias"}</p>
+            <p className="text-sm text-muted-foreground truncate">{shortLocation} · {totalVol.toFixed(1)} m³ · {days} {days === 1 ? "dia" : "dias"}</p>
           </div>
           <span className="text-xs font-medium text-muted-foreground bg-secondary rounded-full px-2.5 py-1 hidden sm:block">
             {filteredSortedSpaces.length} resultado{filteredSortedSpaces.length !== 1 ? "s" : ""}

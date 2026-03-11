@@ -128,7 +128,7 @@ const HostLanding = () => {
                 </motion.div>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground text-center mt-6">* Valores ilustrativos com base em R$45/m² por mês.</p>
+            <p className="text-xs text-muted-foreground text-center mt-6">* Valores ilustrativos com base em R$45/m³ por mês.</p>
           </div>
         </section>
 
