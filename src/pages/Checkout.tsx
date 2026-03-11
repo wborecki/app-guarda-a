@@ -123,20 +123,105 @@ const Checkout = () => {
     URL.revokeObjectURL(photoPreviews[index]);
     setPhotos((prev) => prev.filter((_, i) => i !== index));
     setPhotoPreviews((prev) => prev.filter((_, i) => i !== index));
-    if (analysisStatus !== "pending") setAnalysisStatus("pending");
+    if (analysisStatus !== "pending") {
+      setAnalysisStatus("pending");
+      setAnalysisResult(null);
+    }
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (photos.length === 0) {
       toast({ title: "Envie pelo menos uma foto", variant: "destructive" });
       return;
     }
     setAnalysisStatus("analyzing");
-    // Simulated auto-approval (ready for future AI integration)
-    setTimeout(() => {
-      setAnalysisStatus("approved");
-      toast({ title: "Itens analisados ✓", description: "Nenhuma irregularidade detectada." });
-    }, 2500);
+    setAnalysisResult(null);
+
+    try {
+      // Convert photos to base64
+      const imagePromises = photos.map((file) => {
+        return new Promise<{ base64: string; mimeType: string }>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const dataUrl = reader.result as string;
+            const base64 = dataUrl.split(",")[1];
+            resolve({ base64, mimeType: file.type || "image/jpeg" });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const images = await Promise.all(imagePromises);
+
+      const { data, error } = await supabase.functions.invoke("analyze-items", {
+        body: {
+          images,
+          reservationRef: reservationId,
+        },
+      });
+
+      if (error) {
+        console.error("Analysis error:", error);
+        setAnalysisStatus("review");
+        setAnalysisResult({
+          reason: "Não foi possível concluir a análise automática. Seus itens serão avaliados manualmente.",
+          detected_items: [],
+          flagged_items: [],
+          confidence: 0,
+        });
+        toast({
+          title: "Análise inconclusiva",
+          description: "Seus itens foram encaminhados para revisão manual.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const result = data as {
+        verdict: string;
+        confidence: number;
+        reason: string;
+        detected_items: string[];
+        flagged_items: string[];
+      };
+
+      setAnalysisResult(result);
+
+      if (result.verdict === "approved") {
+        setAnalysisStatus("approved");
+        toast({ title: "Itens aprovados ✓", description: result.reason });
+      } else if (result.verdict === "blocked") {
+        setAnalysisStatus("blocked");
+        toast({
+          title: "Itens proibidos detectados",
+          description: result.reason,
+          variant: "destructive",
+        });
+      } else {
+        // review or any other status
+        setAnalysisStatus("review");
+        toast({
+          title: "Análise pendente de revisão",
+          description: result.reason,
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      console.error("Analysis failed:", err);
+      setAnalysisStatus("review");
+      setAnalysisResult({
+        reason: "Erro ao analisar as fotos. Encaminhado para revisão manual por segurança.",
+        detected_items: [],
+        flagged_items: [],
+        confidence: 0,
+      });
+      toast({
+        title: "Erro na análise",
+        description: "Seus itens foram encaminhados para revisão manual por segurança.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handlePay = () => {
