@@ -151,6 +151,102 @@ export type Database = {
         }
         Relationships: []
       }
+      spaces: {
+        Row: {
+          access_hours: string | null
+          access_type: string | null
+          availability: string | null
+          available_days: string[] | null
+          beneficiary_name: string | null
+          closed: boolean | null
+          covered: boolean | null
+          created_at: string
+          description: string | null
+          document_number: string | null
+          easy_access: boolean | null
+          height: number | null
+          id: string
+          length: number | null
+          location: string
+          notes: string | null
+          onboarding_step: number | null
+          photos: string[] | null
+          pix_key: string | null
+          pix_key_type: string | null
+          rules: string | null
+          security_features: string | null
+          space_category: string | null
+          space_type: string
+          status: string
+          updated_at: string
+          user_id: string
+          volume: number | null
+          width: number | null
+        }
+        Insert: {
+          access_hours?: string | null
+          access_type?: string | null
+          availability?: string | null
+          available_days?: string[] | null
+          beneficiary_name?: string | null
+          closed?: boolean | null
+          covered?: boolean | null
+          created_at?: string
+          description?: string | null
+          document_number?: string | null
+          easy_access?: boolean | null
+          height?: number | null
+          id?: string
+          length?: number | null
+          location?: string
+          notes?: string | null
+          onboarding_step?: number | null
+          photos?: string[] | null
+          pix_key?: string | null
+          pix_key_type?: string | null
+          rules?: string | null
+          security_features?: string | null
+          space_category?: string | null
+          space_type?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          volume?: number | null
+          width?: number | null
+        }
+        Update: {
+          access_hours?: string | null
+          access_type?: string | null
+          availability?: string | null
+          available_days?: string[] | null
+          beneficiary_name?: string | null
+          closed?: boolean | null
+          covered?: boolean | null
+          created_at?: string
+          description?: string | null
+          document_number?: string | null
+          easy_access?: boolean | null
+          height?: number | null
+          id?: string
+          length?: number | null
+          location?: string
+          notes?: string | null
+          onboarding_step?: number | null
+          photos?: string[] | null
+          pix_key?: string | null
+          pix_key_type?: string | null
+          rules?: string | null
+          security_features?: string | null
+          space_category?: string | null
+          space_type?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          volume?: number | null
+          width?: number | null
+        }
+        Relationships: []
+      }
       terms_acceptances: {
         Row: {
           accepted_at: string
