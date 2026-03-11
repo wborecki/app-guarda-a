@@ -74,7 +74,7 @@ function createPinIcon(isHighlighted: boolean, price?: string) {
 }
 
 export interface MapSpace {
-  id: number;
+  id: number | string;
   name: string;
   type: string;
   neighborhood: string;
@@ -90,9 +90,9 @@ export interface MapSpace {
 
 interface SpaceMapProps {
   spaces: MapSpace[];
-  highlightedId: number | null;
-  onPinHover: (id: number | null) => void;
-  onPinClick: (id: number) => void;
+  highlightedId: number | string | null;
+  onPinHover: (id: number | string | null) => void;
+  onPinClick: (id: number | string) => void;
   className?: string;
 }
 
@@ -104,8 +104,8 @@ const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyrigh
 export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick, className }: SpaceMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<Map<number, L.Marker>>(new Map());
-  const spacePricesRef = useRef<Map<number, string>>(new Map());
+  const markersRef = useRef<Map<number | string, L.Marker>>(new Map());
+  const spacePricesRef = useRef<Map<number | string, string>>(new Map());
 
   // Initialize map
   useEffect(() => {

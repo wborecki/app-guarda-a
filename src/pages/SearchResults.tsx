@@ -12,6 +12,7 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
 import { calculatePrice, getDailyRate, PRICING_HINT_SHORT } from "@/lib/pricing";
+import { supabase } from "@/integrations/supabase/client";
 
 // Lazy-load map for performance
 const SpaceMap = lazy(() => import("@/components/guardaai/SpaceMap"));
@@ -353,15 +354,71 @@ const SearchResults = () => {
   const totalVol = state?.totalVol || 0;
   const userLocation = state?.location || "Não informado";
   const shortLocation = useMemo(() => shortenLocation(userLocation), [userLocation]);
-  const allSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
+  const templateSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
+
+  // Fetch real published spaces from database
+  const [dbSpaces, setDbSpaces] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchPublished = async () => {
+      const { data } = await supabase
+        .from("spaces")
+        .select("*")
+        .eq("status", "published");
+      if (!data || data.length === 0) { setDbSpaces([]); return; }
+
+      const typeMap: Record<string, string> = {
+        garagem: "Garagem", quarto: "Quarto", deposito: "Depósito",
+        "area-coberta": "Área coberta", galpao: "Galpão", comercial: "Espaço comercial",
+      };
+
+      const mapped = data.map((s, i) => {
+        const locParts = (s.location || "").split(",").map((p: string) => p.trim());
+        const neighborhood = locParts[0] || "Centro";
+        const city = locParts.length >= 4 ? locParts[3] : locParts[1] || "";
+        const vol = s.volume || (s.width * s.length * s.height) || 0;
+        const dailyRate = getDailyRate(Math.max(vol, 1));
+
+        return {
+          id: `db-${s.id}`,
+          dbId: s.id,
+          name: `${typeMap[s.space_type] || s.space_type} disponível`,
+          type: typeMap[s.space_type] || s.space_type || "Espaço",
+          area: Number(vol) || 8,
+          pricePerDay: dailyRate,
+          description: s.description || "Espaço disponível para guardar seus itens com segurança.",
+          photos: s.photos && s.photos.length > 0 ? s.photos : ["/placeholder.svg"],
+          features: [
+            s.covered ? "Coberto" : null,
+            s.closed ? "Fechado" : null,
+            s.easy_access ? "Fácil acesso" : null,
+            s.security_features ? s.security_features.split(",")[0]?.trim() : null,
+          ].filter(Boolean) as string[],
+          owner: "Anfitrião", ownerPhoto: `https://i.pravatar.cc/100?img=${30 + i}`,
+          ownerSince: new Date(s.created_at).getFullYear().toString(),
+          ownerDescription: "Anfitrião verificado na plataforma.",
+          rating: 0, reviews: 0,
+          address: `${neighborhood}`,
+          neighborhood, city,
+          distance: "—", distanceNum: 999,
+          reviewsList: [],
+          lat: 0, lng: 0,
+          isReal: true,
+        };
+      });
+      setDbSpaces(mapped);
+    };
+    fetchPublished();
+  }, []);
+
+  const allSpaces = useMemo(() => [...dbSpaces, ...templateSpaces], [dbSpaces, templateSpaces]);
 
   // ── State ──
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
   const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | null>(null);
+  const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | string | null>(null);
   const [mobileView, setMobileView] = useState<"list" | "map">("list");
-  const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const cardRefs = useRef<Record<number | string, HTMLDivElement | null>>({});
 
   // ── Filter + Sort logic ──
   const filteredSortedSpaces = useMemo(() => {
@@ -384,24 +441,26 @@ const SearchResults = () => {
 
   // ── Map spaces ──
   const mapSpaces: MapSpace[] = useMemo(() => {
-    return filteredSortedSpaces.map((s) => {
-      const reservedVol = Math.max(totalVol, 1);
-      const bp = calculatePrice(reservedVol, days);
-      return {
-        id: s.id,
-        name: s.name,
-        type: s.type,
-        neighborhood: s.neighborhood,
-        city: s.city,
-        distance: s.distance,
-        rating: s.rating,
-        reviews: s.reviews,
-        price: `R$ ${bp.subtotal.toFixed(0)}`,
-        photo: s.photos[0],
-        lat: s.lat,
-        lng: s.lng,
-      };
-    });
+    return filteredSortedSpaces
+      .filter((s) => s.lat !== 0 && s.lng !== 0)
+      .map((s) => {
+        const reservedVol = Math.max(totalVol, 1);
+        const bp = calculatePrice(reservedVol, days);
+        return {
+          id: s.id,
+          name: s.name,
+          type: s.type,
+          neighborhood: s.neighborhood,
+          city: s.city,
+          distance: s.distance,
+          rating: s.rating,
+          reviews: s.reviews,
+          price: `R$ ${bp.subtotal.toFixed(0)}`,
+          photo: s.photos[0],
+          lat: s.lat,
+          lng: s.lng,
+        };
+      });
   }, [filteredSortedSpaces, totalVol, days]);
 
   // ── Active filter chips ──
@@ -430,7 +489,7 @@ const SearchResults = () => {
     navigate(`/espaco/${space.id}`, { state: { space, simulation: state } });
   };
 
-  const handlePinClick = (id: number) => {
+  const handlePinClick = (id: number | string) => {
     const space = filteredSortedSpaces.find((s) => s.id === id);
     if (space) {
       // On mobile map view, switch to list and scroll
@@ -751,11 +810,15 @@ const SearchResults = () => {
                               {/* Title + rating */}
                               <div className="flex items-start justify-between gap-2 mb-0.5">
                                 <h3 className="font-bold text-foreground text-sm leading-snug">{space.name}</h3>
-                                <div className="flex items-center gap-0.5 flex-shrink-0">
-                                  <Star size={11} className="text-accent fill-accent" />
-                                  <span className="text-xs font-bold text-foreground">{space.rating}</span>
-                                  <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
-                                </div>
+                                {space.reviews > 0 ? (
+                                  <div className="flex items-center gap-0.5 flex-shrink-0">
+                                    <Star size={11} className="text-accent fill-accent" />
+                                    <span className="text-xs font-bold text-foreground">{space.rating}</span>
+                                    <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
+                                  </div>
+                                ) : (
+                                  <span className="text-[10px] text-muted-foreground flex-shrink-0">Novo</span>
+                                )}
                               </div>
 
                               {/* Location line — type + neighborhood */}
