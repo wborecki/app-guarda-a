@@ -211,7 +211,7 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
       <p className="text-[10px] md:text-xs text-muted-foreground mt-3 md:mt-4 text-center">
         O sistema calcula automaticamente o volume e encontra o melhor espaço.
       </p>
-    </>
+    </div>
   );
 
   if (embedded) {
