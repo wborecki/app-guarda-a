@@ -227,46 +227,46 @@ const SpaceDetails = () => {
               </motion.div>
 
             {/* ── Space Details ── */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="px-4 lg:px-0">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h2 className="text-xl font-bold text-foreground">{space.name}</h2>
+                  <h2 className="text-lg sm:text-xl font-bold text-foreground">{space.name}</h2>
                   <p className="text-sm text-muted-foreground mt-0.5">{space.type}</p>
                 </div>
-                <div className="flex items-center gap-1 bg-accent/10 rounded-lg px-2.5 py-1.5 flex-shrink-0">
+                <div className="hidden sm:flex items-center gap-1 bg-accent/10 rounded-lg px-2.5 py-1.5 flex-shrink-0">
                   <Star size={14} className="text-accent fill-accent" />
                   <span className="font-bold text-foreground">{avgRating}</span>
                   <span className="text-xs text-muted-foreground">({totalReviews})</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-3 sm:mb-4">
                 <MapPin size={14} className="text-primary flex-shrink-0" />
                 <span>{space.address}</span>
                 <span className="ml-1 text-primary font-semibold">{space.distance}</span>
               </div>
 
               {/* Capacity info */}
-              <div className="flex items-center gap-4 mb-4 p-3 rounded-lg bg-secondary/50 border border-border/40">
+              <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4 p-2.5 sm:p-3 rounded-lg bg-secondary/50 border border-border/40">
                 <div className="flex items-center gap-2">
                   <Ruler size={14} className="text-primary" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Capacidade total</p>
+                    <p className="text-[11px] sm:text-xs text-muted-foreground">Capacidade total</p>
                     <p className="text-sm font-bold text-foreground">{space.area} m³</p>
                   </div>
                 </div>
                 <div className="w-px h-8 bg-border/60" />
                 <div>
-                  <p className="text-xs text-muted-foreground">Disponível agora</p>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground">Disponível agora</p>
                   <p className="text-sm font-bold text-primary">{availableArea} m³</p>
                 </div>
               </div>
 
-              <p className="text-sm text-muted-foreground leading-relaxed mb-5">{space.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-5">{space.description}</p>
 
               {/* Features grid */}
-              <h3 className="text-sm font-semibold text-foreground mb-3">Comodidades e diferenciais</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-2">
+              <h3 className="text-sm font-semibold text-foreground mb-2.5 sm:mb-3">Comodidades e diferenciais</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5 mb-2">
                 {allFeatures.map((f: string) => (
                   <div key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <CheckCircle2 size={14} className="text-primary flex-shrink-0" />
@@ -277,24 +277,24 @@ const SpaceDetails = () => {
             </motion.div>
 
             {/* ── Owner ── */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="px-4 lg:px-0">
               <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <User size={16} className="text-primary" />
                 Sobre o proprietário
               </h3>
               <Card>
-                <CardContent className="p-4 sm:p-5">
-                  <div className="flex items-start gap-4">
-                    <img src={space.ownerPhoto} alt={space.owner} className="w-14 h-14 rounded-full object-cover flex-shrink-0 bg-muted" />
-                    <div className="flex-1">
+                <CardContent className="p-3.5 sm:p-5">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <img src={space.ownerPhoto} alt={space.owner} className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover flex-shrink-0 bg-muted" />
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className="font-bold text-foreground">{space.owner}</h4>
                         <span className="text-[10px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
                           <Shield size={10} /> Verificado
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Na plataforma desde {space.ownerSince} · {totalReviews} avaliações · Responde rápido
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mb-2">
+                        Na plataforma desde {space.ownerSince} · {totalReviews} avaliações
                       </p>
                       <p className="text-sm text-muted-foreground">{space.ownerDescription}</p>
                     </div>
@@ -304,7 +304,7 @@ const SpaceDetails = () => {
             </motion.div>
 
             {/* ── Reviews ── */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="px-4 lg:px-0">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <MessageSquare size={16} className="text-primary" />
@@ -316,10 +316,10 @@ const SpaceDetails = () => {
                   <span className="text-xs text-muted-foreground">média</span>
                 </div>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-2.5 sm:space-y-3">
                 {allReviews.map((review, i) => (
                   <Card key={i}>
-                    <CardContent className="p-4">
+                    <CardContent className="p-3.5 sm:p-4">
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="font-semibold text-foreground text-sm">{review.name}</span>
                         <div className="flex items-center gap-0.5">
@@ -339,14 +339,14 @@ const SpaceDetails = () => {
             </motion.div>
 
             {/* ── Trust / Security ── */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="px-4 lg:px-0">
               <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Shield size={16} className="text-primary" />
                 Segurança e confiança
               </h3>
               <Card className="bg-primary/[0.03] border-primary/10">
-                <CardContent className="p-4 sm:p-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardContent className="p-3.5 sm:p-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                     {[
                       { icon: Camera, text: "Fotos verificadas pela plataforma" },
                       { icon: FileText, text: "Termos de uso aceitos por ambas as partes" },
