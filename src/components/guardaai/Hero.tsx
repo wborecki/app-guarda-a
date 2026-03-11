@@ -252,7 +252,7 @@ const Hero = () => {
                 <span className="hidden sm:inline text-border">|</span>
                 <a
                   href="#simulador"
-                  className="text-sm text-muted-foreground/80 hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
+                  className="text-sm text-muted-foreground sm:text-muted-foreground/85 hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50 text-center sm:text-left"
                 >
                   Precisa calcular em detalhe? Use o simulador ↓
                 </a>
