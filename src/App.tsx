@@ -15,6 +15,7 @@ import TermsRenter from "./pages/TermsRenter";
 import TermsHost from "./pages/TermsHost";
 import ProhibitedItems from "./pages/ProhibitedItems";
 import Contact from "./pages/Contact";
+import QueroGuardar from "./pages/QueroGuardar";
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import DashboardOverview from "./pages/dashboard/DashboardOverview";
 import DashboardReservas from "./pages/dashboard/DashboardReservas";
