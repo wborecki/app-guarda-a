@@ -11,63 +11,65 @@ L.Icon.Default.mergeOptions({
 });
 
 // ─── Pin design system ─────────────────────────────────────────────
-// Primary color from design tokens: hsl(174 62% 38%) ≈ #249E8F
-const PIN_COLOR_DEFAULT = "#249E8F";
-const PIN_COLOR_HIGHLIGHTED = "#F97316"; // accent orange
+const PIN_ORANGE = "#F97316";
+const PIN_ORANGE_DARK = "#EA580C";
+const PIN_ORANGE_LIGHT = "#FB923C";
 
 function createPinIcon(isHighlighted: boolean, price?: string) {
-  const color = isHighlighted ? PIN_COLOR_HIGHLIGHTED : PIN_COLOR_DEFAULT;
   const label = price || "";
 
-  // Price-label pin (pill shape)
-  if (label) {
-    const bg = isHighlighted ? PIN_COLOR_HIGHLIGHTED : "hsl(0 0% 100%)";
-    const fg = isHighlighted ? "#fff" : "hsl(210 25% 12%)";
-    const border = isHighlighted ? PIN_COLOR_HIGHLIGHTED : "hsl(210 20% 85%)";
-    const shadow = isHighlighted
-      ? "0 3px 12px rgba(249,115,22,0.35)"
-      : "0 2px 8px rgba(0,0,0,0.12)";
-    const scale = isHighlighted ? "scale(1.08)" : "scale(1)";
+  // SVG map pin shape — classic teardrop/location marker
+  const w = isHighlighted ? 36 : 30;
+  const h = isHighlighted ? 46 : 38;
+  const fill = isHighlighted ? PIN_ORANGE_DARK : PIN_ORANGE;
+  const stroke = isHighlighted ? "#fff" : "rgba(255,255,255,0.85)";
+  const shadow = isHighlighted
+    ? "filter: drop-shadow(0 4px 8px rgba(234,88,12,0.45));"
+    : "filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));";
+  const anim = "transition: all 0.2s ease;";
 
+  // Pin with price label below
+  if (label) {
     return L.divIcon({
       className: "custom-map-pin",
-      html: `<div style="
-        background: ${bg};
-        color: ${fg};
-        border: 1.5px solid ${border};
-        border-radius: 20px;
-        padding: 4px 10px;
-        font-size: 12px;
-        font-weight: 700;
-        font-family: Inter, system-ui, sans-serif;
-        white-space: nowrap;
-        box-shadow: ${shadow};
-        transform: ${scale};
-        transition: all 0.2s ease;
-        cursor: pointer;
-        line-height: 1.3;
-      ">${label}</div>`,
-      iconSize: [0, 0],
-      iconAnchor: [0, 14],
-      popupAnchor: [0, -20],
+      html: `<div style="display:flex;flex-direction:column;align-items:center;${anim}${isHighlighted ? 'transform:scale(1.12);' : ''}">
+        <svg width="${w}" height="${h}" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg" style="${shadow}${anim}">
+          <path d="M15 38S30 24.27 30 15C30 6.716 23.284 0 15 0S0 6.716 0 15C0 24.27 15 38 15 38Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
+          <circle cx="15" cy="14" r="5.5" fill="white" opacity="0.95"/>
+        </svg>
+        <span style="
+          margin-top: 2px;
+          background: hsl(0 0% 100% / 0.95);
+          color: hsl(210 25% 12%);
+          border: 1px solid hsl(210 20% 88%);
+          border-radius: 6px;
+          padding: 2px 6px;
+          font-size: 10px;
+          font-weight: 700;
+          font-family: Inter, system-ui, sans-serif;
+          white-space: nowrap;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+          line-height: 1.3;
+        ">${label}</span>
+      </div>`,
+      iconSize: [w, h + 18],
+      iconAnchor: [w / 2, h],
+      popupAnchor: [0, -h],
     });
   }
 
-  // Fallback dot pin
-  const size = isHighlighted ? 16 : 12;
+  // Pin without label
   return L.divIcon({
     className: "custom-map-pin",
-    html: `<div style="
-      width: ${size}px; height: ${size}px;
-      background: ${color};
-      border: 2px solid white;
-      border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
-    "></div>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -size / 2],
+    html: `<div style="${anim}${isHighlighted ? 'transform:scale(1.12);' : ''}">
+      <svg width="${w}" height="${h}" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg" style="${shadow}${anim}">
+        <path d="M15 38S30 24.27 30 15C30 6.716 23.284 0 15 0S0 6.716 0 15C0 24.27 15 38 15 38Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
+        <circle cx="15" cy="14" r="5.5" fill="white" opacity="0.95"/>
+      </svg>
+    </div>`,
+    iconSize: [w, h],
+    iconAnchor: [w / 2, h],
+    popupAnchor: [0, -h],
   });
 }
 
