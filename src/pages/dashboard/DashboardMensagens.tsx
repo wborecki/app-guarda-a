@@ -14,7 +14,7 @@ const DashboardMensagens = () => (
         title="Nenhuma mensagem"
         description="Suas conversas com anfitriões e locatários aparecerão aqui. Inicie uma reserva para começar a trocar mensagens."
         actionLabel="Buscar espaço"
-        actionHref="/"
+        actionHref="/buscar"
       />
     </div>
   </div>
