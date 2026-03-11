@@ -123,7 +123,7 @@ export default function DateRangePicker({
     <div className={className}>
       {/* Label */}
       {compact ? (
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+        <label className="text-[10.5px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-1.5 block">
           Período
         </label>
       ) : (
