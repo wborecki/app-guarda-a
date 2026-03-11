@@ -52,7 +52,7 @@ const SpaceDetails = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Espaço não encontrado</p>
-          <Button onClick={() => navigate(-1)}>Voltar</Button>
+          <Button onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")}>Voltar</Button>
         </div>
       </div>
     );
