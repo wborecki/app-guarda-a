@@ -76,7 +76,7 @@ const Hero = () => {
       />
 
       <div className="container relative z-20 min-h-[auto] md:min-h-[92vh] flex items-center py-20 pt-32 md:py-0">
-        <div className="max-w-[720px] w-full md:py-24">
+        <div className="max-w-[720px] w-full md:py-20">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,18 +84,18 @@ const Hero = () => {
             className="space-y-0"
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 md:mb-7 border border-primary/20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-5 border border-primary/20">
               <Package size={14} />
               Self storage descentralizado
             </div>
 
             {/* Headline */}
-            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-5 md:mb-6 tracking-tight">
+            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-4 tracking-tight">
               Guarde perto.<br />
               <span className="text-primary">Pague menos.</span>
             </h1>
 
-            <p className="text-[15px] md:text-[17px] text-muted-foreground mb-10 md:mb-12 max-w-lg leading-relaxed">
+            <p className="text-[15px] md:text-[17px] text-muted-foreground mb-8 max-w-lg leading-relaxed">
               Encontre espaços para armazenar seus objetos perto de você, por diárias ou mensalidades.
             </p>
 
@@ -104,13 +104,13 @@ const Hero = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.45 }}
-              className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-8 md:mb-10"
+              className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-6"
             >
               {/* ── Desktop layout ── */}
-              <div className="hidden md:block p-4">
+              <div className="hidden md:block p-2.5">
                 <div className="flex items-stretch gap-0">
                   {/* Location */}
-                  <div className="flex-[1.5] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
+                  <div className="flex-[1.5] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                     <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Localização
                     </label>
@@ -119,15 +119,15 @@ const Hero = () => {
                       onChange={setLocation}
                       placeholder="Onde quer guardar?"
                       hideGps
-                      className="border-0 shadow-none bg-transparent h-10 px-0 text-[15px] font-medium placeholder:text-muted-foreground/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className="border-0 shadow-none bg-transparent h-9 px-0 text-[15px] font-medium placeholder:text-muted-foreground/50 focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
 
                   {/* Divider */}
-                  <div className="w-px self-stretch my-4 bg-border" />
+                  <div className="w-px self-stretch my-3 bg-border" />
 
                   {/* Dates */}
-                  <div className="flex-[1.2] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
+                  <div className="flex-[1.2] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                     <DateRangePicker
                       deliveryDate={deliveryDate}
                       pickupDate={pickupDate}
@@ -138,10 +138,10 @@ const Hero = () => {
                   </div>
 
                   {/* Divider */}
-                  <div className="w-px self-stretch my-4 bg-border" />
+                  <div className="w-px self-stretch my-3 bg-border" />
 
                   {/* Volume */}
-                  <div className="flex-[0.8] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
+                  <div className="flex-[0.8] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                     <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Volume
                     </label>
@@ -153,7 +153,7 @@ const Hero = () => {
                         value={volume}
                         onChange={(e) => setVolume(e.target.value)}
                         placeholder="Quanto? (m³)"
-                        className="h-10 w-full bg-transparent text-[15px] font-medium placeholder:text-muted-foreground/50 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="h-9 w-full bg-transparent text-[15px] font-medium placeholder:text-muted-foreground/50 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                       {volume && (
                         <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">m³</span>
@@ -162,11 +162,11 @@ const Hero = () => {
                   </div>
 
                   {/* CTA */}
-                  <div className="flex items-center pl-4 pr-1.5">
+                  <div className="flex items-center pl-3 pr-1">
                     <Button
                       onClick={handleSearch}
                       size="lg"
-                      className="bg-accent hover:bg-accent/90 text-accent-foreground h-[52px] px-8 rounded-xl shadow-lg shadow-accent/25 text-[15px] font-bold gap-2.5 transition-all hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]"
+                      className="bg-accent hover:bg-accent/90 text-accent-foreground h-[44px] px-7 rounded-xl shadow-lg shadow-accent/25 text-[15px] font-bold gap-2.5 transition-all hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]"
                     >
                       <Search size={18} />
                       Buscar
@@ -176,7 +176,7 @@ const Hero = () => {
               </div>
 
               {/* ── Mobile layout ── */}
-              <div className="md:hidden p-4 space-y-4">
+              <div className="md:hidden p-3.5 space-y-4">
                 {/* Location */}
                 <div>
                   <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
@@ -235,7 +235,7 @@ const Hero = () => {
             </motion.div>
 
             {/* Secondary links */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
               <Button
                 size="sm"
                 variant="outline"
