@@ -605,8 +605,8 @@ const SearchResults = () => {
                             </div>
                             <p className="text-xs text-muted-foreground mb-2">{space.type} · {space.neighborhood}, {space.city}</p>
                             <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                              <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m²</span>
-                              <span className="text-primary font-semibold">Disponível: {space.area} m²</span>
+                              <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m³</span>
+                              <span className="text-primary font-semibold">Disponível: {space.area} m³</span>
                             </div>
                             <div className="flex flex-wrap gap-1.5 mb-3">
                               {space.features.map((f) => (
