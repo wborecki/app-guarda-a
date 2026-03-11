@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          paid_at: string | null
+          payer_id: string
+          payment_method: string | null
+          platform_fee: number
+          recipient_id: string
+          reservation_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          payer_id: string
+          payment_method?: string | null
+          platform_fee?: number
+          recipient_id: string
+          reservation_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          payer_id?: string
+          payment_method?: string | null
+          platform_fee?: number
+          recipient_id?: string
+          reservation_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -70,6 +120,59 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      reservations: {
+        Row: {
+          created_at: string
+          end_date: string
+          host_id: string
+          id: string
+          notes: string | null
+          renter_id: string
+          space_id: string
+          start_date: string
+          status: string
+          total_price: number
+          updated_at: string
+          volume: number
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          host_id: string
+          id?: string
+          notes?: string | null
+          renter_id: string
+          space_id: string
+          start_date: string
+          status?: string
+          total_price?: number
+          updated_at?: string
+          volume?: number
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          host_id?: string
+          id?: string
+          notes?: string | null
+          renter_id?: string
+          space_id?: string
+          start_date?: string
+          status?: string
+          total_price?: number
+          updated_at?: string
+          volume?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       review_requests: {
         Row: {

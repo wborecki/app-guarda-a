@@ -81,11 +81,16 @@ const DashboardOverview = () => {
 
   const [spacesCount, setSpacesCount] = useState<number | null>(null);
   const [publishedCount, setPublishedCount] = useState<number>(0);
+  const [activeReservations, setActiveReservations] = useState<number | null>(null);
+  const [upcomingReservations, setUpcomingReservations] = useState<number | null>(null);
+  const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
     if (!user) return;
     const fetchStats = async () => {
-      const [allSpaces, published] = await Promise.all([
+      const today = new Date().toISOString().split("T")[0];
+
+      const [allSpaces, published, activeRes, upcomingRes, paymentsReceived, paymentsMade] = await Promise.all([
         supabase
           .from("spaces")
           .select("id", { count: "exact", head: true })
@@ -95,9 +100,46 @@ const DashboardOverview = () => {
           .select("id", { count: "exact", head: true })
           .eq("user_id", user.id)
           .eq("status", "published"),
+        // Active reservations (as renter or host, status confirmed, within date range)
+        supabase
+          .from("reservations")
+          .select("id", { count: "exact", head: true })
+          .or(`renter_id.eq.${user.id},host_id.eq.${user.id}`)
+          .in("status", ["confirmed", "active"])
+          .lte("start_date", today)
+          .gte("end_date", today),
+        // Upcoming reservations (future start_date)
+        supabase
+          .from("reservations")
+          .select("id", { count: "exact", head: true })
+          .or(`renter_id.eq.${user.id},host_id.eq.${user.id}`)
+          .in("status", ["confirmed", "pending"])
+          .gt("start_date", today),
+        // Payments received (as host)
+        supabase
+          .from("payments")
+          .select("amount")
+          .eq("recipient_id", user.id)
+          .eq("status", "paid"),
+        // Payments made (as renter) — not used for balance but could be useful
+        supabase
+          .from("payments")
+          .select("amount")
+          .eq("payer_id", user.id)
+          .eq("status", "paid"),
       ]);
+
       setSpacesCount(allSpaces.count ?? 0);
       setPublishedCount(published.count ?? 0);
+      setActiveReservations(activeRes.count ?? 0);
+      setUpcomingReservations(upcomingRes.count ?? 0);
+
+      // Calculate balance from received payments
+      const totalReceived = (paymentsReceived.data ?? []).reduce(
+        (sum, p) => sum + Number(p.amount || 0),
+        0
+      );
+      setBalance(totalReceived);
     };
     fetchStats();
   }, [user]);
@@ -126,8 +168,14 @@ const DashboardOverview = () => {
         <StatCard
           icon={Package}
           label="Reservas ativas"
-          value="0"
-          subtitle="Em breve"
+          value={activeReservations !== null ? String(activeReservations) : "—"}
+          subtitle={
+            activeReservations === null
+              ? "Carregando..."
+              : activeReservations === 0
+              ? "Nenhuma reserva no momento"
+              : `${activeReservations} em andamento`
+          }
           color="bg-primary/10 text-primary"
         />
         <StatCard
@@ -146,15 +194,21 @@ const DashboardOverview = () => {
         <StatCard
           icon={CalendarDays}
           label="Próximos eventos"
-          value="0"
-          subtitle="Em breve"
+          value={upcomingReservations !== null ? String(upcomingReservations) : "—"}
+          subtitle={
+            upcomingReservations === null
+              ? "Carregando..."
+              : upcomingReservations === 0
+              ? "Sem eventos agendados"
+              : `${upcomingReservations} reserva${upcomingReservations !== 1 ? "s" : ""} futura${upcomingReservations !== 1 ? "s" : ""}`
+          }
           color="bg-blue-100/80 text-blue-600"
         />
         <StatCard
           icon={Wallet}
           label="Saldo disponível"
-          value="R$ 0"
-          subtitle="Em breve"
+          value={balance !== null ? `R$ ${balance.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}` : "—"}
+          subtitle={balance === null ? "Carregando..." : "Balanço atualizado"}
           color="bg-emerald-100/80 text-emerald-600"
         />
       </div>
