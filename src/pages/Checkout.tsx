@@ -359,7 +359,7 @@ const Checkout = () => {
                   transition={{ delay: 0.1 }}
                 >
                   <Card className={verificationComplete ? "border-primary/30" : ""}>
-                    <CardContent className="p-5 sm:p-6">
+                    <CardContent className="p-4 sm:p-6">
                       <h2 className="font-bold text-foreground mb-1 flex items-center gap-2 text-base">
                         <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
                         Verificação dos itens
