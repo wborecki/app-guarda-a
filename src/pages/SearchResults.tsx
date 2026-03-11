@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import {
-  MapPin, Ruler, Calendar, ArrowLeft, Navigation, Info, Map as MapIcon, List,
+  MapPin, Ruler, Calendar, ArrowLeft, Navigation, Info, Map as MapIcon, List, Pencil,
 } from "lucide-react";
 import { useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
 import { calculatePrice, PRICING_HINT_SHORT } from "@/lib/pricing";
@@ -186,66 +186,61 @@ const SearchResults = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SEO title={`Espaços em ${shortLocation}`} description={`Encontre espaços para guardar ${totalVol.toFixed(1)} m³ em ${shortLocation}. Compare preços e reserve online.`} canonical="/buscar" />
+
       {/* ═══ STICKY HEADER ═══ */}
       <div className="bg-card border-b sticky top-0 z-20">
-        <div className="container py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}>
-            <ArrowLeft size={20} />
+        <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3">
+          <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}>
+            <ArrowLeft size={18} />
           </Button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-foreground">Espaços disponíveis</h1>
+            <h1 className="text-sm sm:text-base font-bold text-foreground truncate">Espaços disponíveis</h1>
           </div>
-          <span className="text-xs font-medium text-muted-foreground bg-secondary rounded-full px-2.5 py-1 hidden sm:block">
+          <span className="text-[11px] font-medium text-muted-foreground bg-secondary rounded-full px-2 py-0.5 sm:px-2.5 sm:py-1">
             {filteredSortedSpaces.length} resultado{filteredSortedSpaces.length !== 1 ? "s" : ""}
           </span>
         </div>
       </div>
 
-      {/* ═══ SEARCH SUMMARY BAR ═══ */}
+      {/* ═══ SEARCH SUMMARY BAR — compact on mobile ═══ */}
       <div className="bg-card/80 backdrop-blur-sm border-b">
-        <div className="container py-2.5">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
-            <div className="flex items-center gap-1.5">
-              <MapPin size={13} className="text-primary flex-shrink-0" />
-              <span className="font-semibold text-foreground">{shortLocation}</span>
+        <div className="container py-2 sm:py-2.5">
+          <div className="flex items-center gap-2 sm:gap-x-4 text-xs sm:text-sm overflow-x-auto scrollbar-hide">
+            <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
+              <MapPin size={12} className="text-primary flex-shrink-0" />
+              <span className="font-semibold text-foreground truncate max-w-[120px] sm:max-w-none">{shortLocation}</span>
             </div>
-            <div className="hidden sm:block w-px h-4 bg-border/60" />
-            <div className="flex items-center gap-1.5">
-              <Ruler size={13} className="text-primary flex-shrink-0" />
+            <div className="w-px h-3 sm:h-4 bg-border/60 flex-shrink-0" />
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <Ruler size={12} className="text-primary flex-shrink-0" />
               <span className="text-muted-foreground">{totalVol.toFixed(1)} m³</span>
             </div>
-            {deliveryDate && pickupDate && (
-              <>
-                <div className="hidden sm:block w-px h-4 bg-border/60" />
-                <div className="flex items-center gap-1.5">
-                  <Calendar size={13} className="text-primary flex-shrink-0" />
-                  <span className="text-muted-foreground text-xs">
-                    {format(new Date(deliveryDate), "dd/MM", { locale: pt })}
-                    {deliveryTime ? ` ${deliveryTime}` : ""}
-                    {" → "}
-                    {format(new Date(pickupDate), "dd/MM", { locale: pt })}
-                    {pickupTime ? ` ${pickupTime}` : ""}
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">
-                    {days} {days === 1 ? "dia" : "dias"}
-                  </span>
-                </div>
-              </>
-            )}
-            {!(deliveryDate && pickupDate) && (
-              <>
-                <div className="hidden sm:block w-px h-4 bg-border/60" />
-                <div className="flex items-center gap-1.5">
-                  <Calendar size={13} className="text-primary flex-shrink-0" />
-                  <span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
-                </div>
-              </>
+            <div className="w-px h-3 sm:h-4 bg-border/60 flex-shrink-0" />
+            {deliveryDate && pickupDate ? (
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <Calendar size={12} className="text-primary flex-shrink-0" />
+                <span className="text-muted-foreground">
+                  {format(new Date(deliveryDate), "dd/MM", { locale: pt })}
+                  {" → "}
+                  {format(new Date(pickupDate), "dd/MM", { locale: pt })}
+                </span>
+                <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] sm:text-xs font-bold">
+                  {days}d
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <Calendar size={12} className="text-primary flex-shrink-0" />
+                <span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
+              </div>
             )}
             <button
               onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}
-              className="ml-auto text-xs text-primary font-medium hover:underline hidden sm:block"
+              className="ml-auto flex items-center gap-1 text-[11px] sm:text-xs text-primary font-medium hover:underline flex-shrink-0"
             >
-              Editar busca
+              <Pencil size={10} />
+              <span className="hidden sm:inline">Editar busca</span>
+              <span className="sm:hidden">Editar</span>
             </button>
           </div>
         </div>
@@ -265,21 +260,14 @@ const SearchResults = () => {
 
       {/* ═══ MAIN CONTENT: LIST + MAP ═══ */}
       <div className="flex-1 flex flex-col lg:flex-row">
-        {/* ── Results count bar ── */}
-        <div className="lg:hidden container py-2 flex items-center justify-between border-b bg-background">
-          <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-            <Navigation size={12} className="text-primary" />
-            {filteredSortedSpaces.length} espaço{filteredSortedSpaces.length !== 1 ? "s" : ""}
-          </span>
-        </div>
-
         {/* ── LEFT: Card List ── */}
         <div className={`flex-1 lg:max-w-[55%] xl:max-w-[50%] overflow-y-auto ${mobileView === "map" ? "hidden lg:block" : ""}`}>
-          <div className="container lg:pr-0 py-4 space-y-3">
-            <div className="hidden lg:flex items-center justify-between mb-1">
-              <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+          <div className="container lg:pr-0 py-3 sm:py-4 space-y-2.5 sm:space-y-3">
+            <div className="flex items-center justify-between mb-0.5">
+              <span className="text-[11px] sm:text-xs font-medium text-muted-foreground flex items-center gap-1.5">
                 <Navigation size={12} className="text-primary" />
-                {filteredSortedSpaces.length} espaço{filteredSortedSpaces.length !== 1 ? "s" : ""} · {sortLabels[sortBy].toLowerCase()}
+                {filteredSortedSpaces.length} espaço{filteredSortedSpaces.length !== 1 ? "s" : ""}
+                <span className="hidden sm:inline"> · {sortLabels[sortBy].toLowerCase()}</span>
               </span>
             </div>
 
@@ -308,7 +296,7 @@ const SearchResults = () => {
             )}
 
             {filteredSortedSpaces.length > 0 && (
-              <div className="flex items-start gap-1.5 pt-2 justify-center">
+              <div className="flex items-start gap-1.5 pt-2 pb-16 sm:pb-2 justify-center">
                 <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
                 <p className="text-[10px] text-muted-foreground/60 text-center max-w-md">
                   {PRICING_HINT_SHORT} + taxa fixa de R$ 28,00 no checkout.

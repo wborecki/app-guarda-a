@@ -311,38 +311,39 @@ const Checkout = () => {
 
   // ─── CHECKOUT PAGE ────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-background pb-28 lg:pb-8">
+    <div className="min-h-screen bg-background pb-24 sm:pb-28 lg:pb-8">
       <SEO title="Checkout" description="Finalize sua reserva de espaço na GuardaAí. Pagamento seguro via Pix." noIndex />
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-30">
-        <div className="container py-3 flex items-center gap-3 max-w-5xl">
-          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0">
-            <ArrowLeft size={20} />
+        <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 max-w-5xl">
+          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0 h-8 w-8 sm:h-9 sm:w-9">
+            <ArrowLeft size={18} />
           </Button>
-          <h1 className="text-base font-bold text-foreground">Finalizar reserva</h1>
-          <div className="hidden sm:flex items-center gap-1 ml-auto">
+          <h1 className="text-sm sm:text-base font-bold text-foreground">Finalizar reserva</h1>
+          <div className="flex items-center gap-1 ml-auto">
             {STEPS.map((s, i) => (
-              <div key={s.key} className="flex items-center gap-1">
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+              <div key={s.key} className="flex items-center gap-0.5 sm:gap-1">
+                <span className={`text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full ${
                   i === currentStep
                     ? "bg-primary text-primary-foreground"
                     : i < currentStep
                     ? "bg-primary/20 text-primary"
                     : "bg-secondary text-muted-foreground"
                 }`}>
-                  {s.label}
+                  <span className="hidden sm:inline">{s.label}</span>
+                  <span className="sm:hidden">{i + 1}</span>
                 </span>
-                {i < STEPS.length - 1 && <ChevronRight size={12} className="text-muted-foreground/40" />}
+                {i < STEPS.length - 1 && <ChevronRight size={10} className="text-muted-foreground/40" />}
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="container max-w-5xl py-6">
+      <div className="container max-w-5xl py-4 sm:py-6">
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8">
           {/* ═══ LEFT — Forms ═══ */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Step 1: Auth */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <CheckoutAuth />
@@ -358,7 +359,7 @@ const Checkout = () => {
                   transition={{ delay: 0.1 }}
                 >
                   <Card className={verificationComplete ? "border-primary/30" : ""}>
-                    <CardContent className="p-5 sm:p-6">
+                    <CardContent className="p-4 sm:p-6">
                       <h2 className="font-bold text-foreground mb-1 flex items-center gap-2 text-base">
                         <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
                         Verificação dos itens
@@ -418,7 +419,7 @@ const Checkout = () => {
                                 <img src={preview} alt={`Item ${i + 1}`} className="w-full h-full object-cover" />
                                 <button
                                   onClick={() => handlePhotoRemove(i)}
-                                  className="absolute top-1 right-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                                  className="absolute top-1 right-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shadow-sm"
                                 >
                                   <X size={12} />
                                 </button>
@@ -863,13 +864,13 @@ const Checkout = () => {
 
       {/* Mobile sticky CTA */}
       {user && verificationComplete && (
-        <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-30 lg:hidden">
+        <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden safe-area-bottom">
           <div className="container max-w-5xl">
             <Button
-              size="lg"
+              size="default"
               disabled={processing}
               onClick={handlePay}
-              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base h-13 shadow-lg"
+              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm sm:text-base h-12 sm:h-13 shadow-lg"
             >
               {processing ? (
                 <span className="flex items-center gap-2">
