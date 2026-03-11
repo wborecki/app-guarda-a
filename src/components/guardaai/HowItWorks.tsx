@@ -27,50 +27,50 @@ const fadeIn = {
 const StepCard = ({ step, index, variant }: { step: typeof stepsGuardar[0]; index: number; variant: "primary" | "accent" }) => (
   <motion.div
     key={index}
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 16 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ delay: index * 0.1 }}
-    className="flex items-start gap-4 md:flex-col md:items-center md:text-center p-4"
+    transition={{ delay: index * 0.08 }}
+    className="flex items-start gap-3.5 md:flex-col md:items-center md:text-center py-3 px-1 md:p-4"
   >
-    <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl ${variant === "primary" ? "bg-primary/10" : "bg-accent/10"} flex items-center justify-center shrink-0 relative`}>
-      <step.icon size={22} className={variant === "primary" ? "text-primary" : "text-accent"} />
-      <span className={`absolute -top-1.5 -right-1.5 w-5 h-5 md:w-6 md:h-6 rounded-full ${variant === "primary" ? "bg-primary" : "bg-accent"} text-${variant === "primary" ? "primary" : "accent"}-foreground text-[10px] md:text-xs font-bold flex items-center justify-center`}>
+    <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl ${variant === "primary" ? "bg-primary/8" : "bg-accent/8"} flex items-center justify-center shrink-0 relative`}>
+      <step.icon size={18} className={`md:w-[22px] md:h-[22px] ${variant === "primary" ? "text-primary" : "text-accent"}`} />
+      <span className={`absolute -top-1 -right-1 w-[18px] h-[18px] md:w-6 md:h-6 rounded-full ${variant === "primary" ? "bg-primary" : "bg-accent"} text-${variant === "primary" ? "primary" : "accent"}-foreground text-[9px] md:text-xs font-bold flex items-center justify-center`}>
         {index + 1}
       </span>
     </div>
-    <div>
-      <h3 className="font-semibold text-foreground text-sm mb-0.5">{step.title}</h3>
-      <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+    <div className="min-w-0">
+      <h3 className="font-semibold text-foreground text-[13px] md:text-sm mb-0.5 leading-tight">{step.title}</h3>
+      <p className="text-[11.5px] md:text-xs text-muted-foreground/75 leading-relaxed">{step.desc}</p>
     </div>
   </motion.div>
 );
 
 const HowItWorks = () => {
   return (
-    <section id="como-funciona" className="py-14 md:py-20 bg-secondary/50">
-      <div className="container">
-        <motion.div {...fadeIn} transition={{ duration: 0.5 }} className="text-center mb-8 md:mb-12">
-          <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4">
-            Como funciona o GuardaAí?
+    <section id="como-funciona" className="py-10 md:py-20 bg-secondary/40">
+      <div className="container px-5 md:px-8">
+        <motion.div {...fadeIn} transition={{ duration: 0.5 }} className="text-center mb-7 md:mb-12">
+          <h2 className="text-[1.35rem] md:text-4xl font-bold text-foreground mb-2 md:mb-4 leading-tight">
+            Como funciona?
           </h2>
-          <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-[13px] md:text-lg max-w-2xl mx-auto leading-relaxed">
             Simples, rápido e sem complicação.
           </p>
         </motion.div>
 
         <Tabs defaultValue="guardar" className="max-w-4xl mx-auto">
-          <TabsList className="grid w-full grid-cols-2 mb-6 md:mb-10 h-11 md:h-12">
-            <TabsTrigger value="guardar" className="text-sm md:text-base font-semibold">
+          <TabsList className="grid w-full grid-cols-2 mb-5 md:mb-10 h-10 md:h-12 rounded-xl">
+            <TabsTrigger value="guardar" className="text-[13px] md:text-base font-semibold rounded-lg">
               Quero guardar
             </TabsTrigger>
-            <TabsTrigger value="espaco" className="text-sm md:text-base font-semibold">
+            <TabsTrigger value="espaco" className="text-[13px] md:text-base font-semibold rounded-lg">
               Tenho espaço
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="guardar">
-            <div className="flex flex-col gap-1 md:grid md:grid-cols-5 md:gap-4">
+            <div className="flex flex-col divide-y divide-border/40 md:divide-y-0 md:grid md:grid-cols-5 md:gap-4">
               {stepsGuardar.map((step, i) => (
                 <StepCard key={i} step={step} index={i} variant="primary" />
               ))}
@@ -78,7 +78,7 @@ const HowItWorks = () => {
           </TabsContent>
 
           <TabsContent value="espaco">
-            <div className="flex flex-col gap-1 md:grid md:grid-cols-5 md:gap-4">
+            <div className="flex flex-col divide-y divide-border/40 md:divide-y-0 md:grid md:grid-cols-5 md:gap-4">
               {stepsEspaco.map((step, i) => (
                 <StepCard key={i} step={step} index={i} variant="accent" />
               ))}

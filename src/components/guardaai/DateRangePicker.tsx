@@ -123,7 +123,7 @@ export default function DateRangePicker({
     <div className={className}>
       {/* Label */}
       {compact ? (
-        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+        <label className="text-[10.5px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-1.5 block">
           Período
         </label>
       ) : (
@@ -137,7 +137,7 @@ export default function DateRangePicker({
           {compact ? (
             <button
               type="button"
-              className="h-9 w-full text-left focus:outline-none cursor-pointer"
+              className="h-11 w-full text-left focus:outline-none cursor-pointer flex items-center rounded-xl border border-input bg-background px-3 text-[14px]"
             >
               {compactTriggerContent()}
             </button>

@@ -178,105 +178,112 @@ const Hero = () => {
       </div>
 
       {/* ═══════════════════════════════════════════════
-          MOBILE LAYOUT — redesigned, mobile-first
+          MOBILE LAYOUT — premium mobile-first
           ═══════════════════════════════════════════════ */}
-      <div className="md:hidden relative z-20 px-5 pt-[72px] pb-6">
+      <div className="md:hidden relative z-20 px-5 pt-[62px] pb-10">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          {/* ── Headline block — compact ── */}
-          <div className="mb-5">
-            <h1 className="text-[1.75rem] font-extrabold text-foreground leading-[1.15] tracking-tight mb-2">
-              Guarde perto.<br />
+          {/* ── Headline block ── */}
+          <div className="mb-6 pt-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-semibold mb-4 border border-primary/12">
+              <Package size={12} />
+              Self storage descentralizado
+            </div>
+            <h1 className="text-[1.85rem] font-extrabold text-foreground leading-[1.13] tracking-tight mb-3">
+              Guarde perto.{" "}
               <span className="text-primary">Pague menos.</span>
             </h1>
-            <p className="text-[13px] text-muted-foreground leading-relaxed max-w-[300px]">
-              Espaços para guardar seus objetos perto de você, por diárias ou mensalidades.
+            <p className="text-[13.5px] text-muted-foreground/80 leading-[1.55] max-w-[310px]">
+              Encontre espaços para guardar seus objetos perto de você, por diárias ou mensalidades.
             </p>
           </div>
 
-          {/* ── Search card — lightweight ── */}
+          {/* ── Search card — clean & airy ── */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.4 }}
-            className="rounded-xl bg-card border border-border/80 shadow-lg shadow-foreground/[0.04] mb-4"
+            transition={{ delay: 0.12, duration: 0.45 }}
+            className="rounded-2xl bg-card border border-border/60 shadow-xl shadow-foreground/[0.03] mb-5"
           >
-            <div className="p-3 space-y-2.5">
+            <div className="p-4 space-y-3">
               {/* Location */}
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1 block">
+                <label className="text-[10.5px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-1.5 block">
                   Localização
                 </label>
                 <LocationAutocomplete
                   value={location}
                   onChange={setLocation}
                   placeholder="Onde quer guardar?"
-                  className="h-10 text-[14px] rounded-lg"
+                  className="h-11 text-[14px] rounded-xl border-border/70"
                 />
               </div>
 
-              {/* Dates + Volume — compact row */}
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <DateRangePicker
-                    deliveryDate={deliveryDate}
-                    pickupDate={pickupDate}
-                    onDeliveryChange={setDeliveryDate}
-                    onPickupChange={setPickupDate}
-                    compact
+              {/* Dates */}
+              <div>
+                <DateRangePicker
+                  deliveryDate={deliveryDate}
+                  pickupDate={pickupDate}
+                  onDeliveryChange={setDeliveryDate}
+                  onPickupChange={setPickupDate}
+                  compact
+                />
+              </div>
+
+              {/* Volume */}
+              <div>
+                <label className="text-[10.5px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-1.5 block">
+                  Volume estimado
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    value={volume}
+                    onChange={(e) => setVolume(e.target.value)}
+                    placeholder="Ex: 2.5"
+                    className="flex h-11 w-full rounded-xl border border-input bg-background px-3 py-2 text-[14px] ring-offset-background placeholder:text-muted-foreground/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 pr-10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                </div>
-                <div>
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70 mb-1 block">
-                    Volume
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.5"
-                      value={volume}
-                      onChange={(e) => setVolume(e.target.value)}
-                      placeholder="m³"
-                      className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-[14px] ring-offset-background placeholder:text-muted-foreground/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 pr-9 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    />
-                    <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-muted-foreground/60 font-medium">m³</span>
-                  </div>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-muted-foreground/50 font-medium">m³</span>
                 </div>
               </div>
 
               {/* CTA */}
               <Button
                 onClick={handleSearch}
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground h-11 text-[14px] rounded-lg font-semibold gap-2 shadow-md shadow-accent/15"
+                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground h-12 text-[15px] rounded-xl font-bold gap-2.5 shadow-lg shadow-accent/20 mt-1"
               >
-                <Search size={16} />
+                <Search size={17} />
                 Buscar espaços
               </Button>
             </div>
           </motion.div>
 
-          {/* ── Secondary links — minimal ── */}
+          {/* ── Secondary links — polished row ── */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.35 }}
-            className="flex items-center justify-between px-0.5"
+            transition={{ delay: 0.3 }}
+            className="flex items-center justify-center gap-3 px-1"
           >
             <Link
               to="/anunciar"
-              className="text-[12px] font-medium text-primary hover:underline underline-offset-2"
+              className="inline-flex items-center gap-1 text-[12.5px] font-medium text-primary/90 hover:text-primary transition-colors"
             >
-              Anunciar espaço →
+              Anunciar espaço
+              <ArrowRight size={12} className="opacity-60" />
             </Link>
+            <span className="w-px h-3.5 bg-border" />
             <Link
               to="/quero-guardar"
-              className="text-[12px] text-muted-foreground/60 hover:text-primary transition-colors"
+              className="inline-flex items-center gap-1 text-[12.5px] text-muted-foreground/65 hover:text-primary transition-colors"
             >
-              Simulador detalhado →
+              Simulador detalhado
+              <ArrowRight size={12} className="opacity-50" />
             </Link>
           </motion.div>
         </motion.div>
