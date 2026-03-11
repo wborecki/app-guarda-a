@@ -146,9 +146,9 @@ const Header = () => {
                   {link.label}
                 </Link>
               ) : (
-                <a
+              <a
                   key={link.href}
-                  href={isHostPage ? `/${link.href}` : link.href}
+                  href={isHomePage ? link.href : `/${link.href}`}
                   className="text-base font-medium text-foreground py-3.5 px-4 rounded-xl hover:bg-secondary transition-colors active:bg-secondary"
                   onClick={() => setMobileOpen(false)}
                 >
