@@ -282,6 +282,16 @@ const SearchResults = () => {
         </div>
       </div>
 
+      {/* ═══ DEMO NOTICE (when no real spaces) ═══ */}
+      {!isLoading && !hasRealSpaces && (
+        <div className="bg-accent/10 border-b border-accent/20">
+          <div className="container py-2 flex items-center gap-2 text-xs text-accent">
+            <Info size={13} className="flex-shrink-0" />
+            <span>Exibindo espaços de exemplo. Quando anfitriões publicarem espaços reais, eles aparecerão aqui.</span>
+          </div>
+        </div>
+      )}
+
       {/* ═══ SORT + FILTER BAR ═══ */}
       <FilterBar
         sortBy={sortBy}
