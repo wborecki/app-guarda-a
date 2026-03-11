@@ -278,7 +278,12 @@ const Checkout = () => {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Período</span>
-                  <span className="font-medium text-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
+                  <span className="font-medium text-foreground">
+                    {simulation?.deliveryDate && simulation?.pickupDate
+                      ? `${format(new Date(simulation.deliveryDate), "dd/MM", { locale: ptBR })} → ${format(new Date(simulation.pickupDate), "dd/MM", { locale: ptBR })} · `
+                      : ""
+                    }{days} {days === 1 ? "dia" : "dias"}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Fotos verificadas</span>
@@ -772,10 +777,6 @@ const Checkout = () => {
                         <span className="text-muted-foreground">Volume reservado</span>
                         <span className="text-foreground font-medium">{reservedArea} m³</span>
                       </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Período</span>
-                        <span className="text-foreground font-medium">{days} {days === 1 ? "dia" : "dias"}</span>
-                      </div>
                       {simulation?.deliveryDate && (
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Entrada</span>
@@ -788,6 +789,12 @@ const Checkout = () => {
                           <span className="text-foreground font-medium text-xs">{formatDateHuman(simulation.pickupDate)}</span>
                         </div>
                       )}
+                      <div className="flex justify-between text-sm items-center">
+                        <span className="text-muted-foreground">Período total</span>
+                        <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">
+                          {days} {days === 1 ? "dia" : "dias"}
+                        </span>
+                      </div>
                       {space.owner && (
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Anunciante</span>

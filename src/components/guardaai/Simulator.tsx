@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { format, differenceInDays } from "date-fns";
-import { pt } from "date-fns/locale";
+import { differenceInDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import ItemDimensionInput, { type AddedItem } from "@/components/guardaai/ItemDimensionInput";
+import DateRangePicker from "@/components/guardaai/DateRangePicker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Package, Search, Ruler, DollarSign, Zap, CalendarIcon, MapPin, Info } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Package, Search, DollarSign, Zap, MapPin, Info } from "lucide-react";
 import { calculatePrice, PRICING_HINT_SHORT, SERVICE_FEE } from "@/lib/pricing";
 
 const Simulator = () => {
@@ -110,76 +107,31 @@ const Simulator = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
+              {/* Date Range Picker + Time inputs */}
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-4 mb-5 md:mb-4 items-end">
+                <DateRangePicker
+                  deliveryDate={deliveryDate}
+                  pickupDate={pickupDate}
+                  onDeliveryChange={setDeliveryDate}
+                  onPickupChange={setPickupDate}
+                />
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Data e hora de entrega</label>
-                  <div className="flex gap-2">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "flex-1 justify-start text-left font-normal h-11 md:h-10",
-                            !deliveryDate && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {deliveryDate ? format(deliveryDate, "dd/MM/yyyy", { locale: pt }) : "Data"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={deliveryDate}
-                          onSelect={setDeliveryDate}
-                          disabled={(date) => date < new Date()}
-                          initialFocus
-                          className="p-3 pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <Input
-                      type="time"
-                      value={deliveryTime}
-                      onChange={(e) => setDeliveryTime(e.target.value)}
-                      className="w-24 h-11 md:h-10"
-                    />
-                  </div>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Hora entrada</label>
+                  <Input
+                    type="time"
+                    value={deliveryTime}
+                    onChange={(e) => setDeliveryTime(e.target.value)}
+                    className="w-24 h-11 md:h-10"
+                  />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Data e hora de retirada</label>
-                  <div className="flex gap-2">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "flex-1 justify-start text-left font-normal h-11 md:h-10",
-                            !pickupDate && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {pickupDate ? format(pickupDate, "dd/MM/yyyy", { locale: pt }) : "Data"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={pickupDate}
-                          onSelect={setPickupDate}
-                          disabled={(date) => date < (deliveryDate || new Date())}
-                          initialFocus
-                          className="p-3 pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <Input
-                      type="time"
-                      value={pickupTime}
-                      onChange={(e) => setPickupTime(e.target.value)}
-                      className="w-24 h-11 md:h-10"
-                    />
-                  </div>
+                  <label className="text-xs font-medium text-muted-foreground mb-2 block">Hora retirada</label>
+                  <Input
+                    type="time"
+                    value={pickupTime}
+                    onChange={(e) => setPickupTime(e.target.value)}
+                    className="w-24 h-11 md:h-10"
+                  />
                 </div>
               </div>
 

@@ -499,22 +499,30 @@ const SearchResults = () => {
               <Ruler size={13} className="text-primary flex-shrink-0" />
               <span className="text-muted-foreground">{totalVol.toFixed(1)} m³</span>
             </div>
-            <div className="hidden sm:block w-px h-4 bg-border/60" />
-            <div className="flex items-center gap-1.5">
-              <Calendar size={13} className="text-primary flex-shrink-0" />
-              <span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
-            </div>
-            {state?.deliveryDate && (
+            {state?.deliveryDate && state?.pickupDate && (
               <>
                 <div className="hidden sm:block w-px h-4 bg-border/60" />
                 <div className="flex items-center gap-1.5">
-                  <Clock size={13} className="text-primary flex-shrink-0" />
+                  <Calendar size={13} className="text-primary flex-shrink-0" />
                   <span className="text-muted-foreground text-xs">
                     {format(new Date(state.deliveryDate), "dd/MM", { locale: pt })}
                     {state.deliveryTime ? ` ${state.deliveryTime}` : ""}
-                    {state.pickupDate ? ` → ${format(new Date(state.pickupDate), "dd/MM", { locale: pt })}` : ""}
+                    {" → "}
+                    {format(new Date(state.pickupDate), "dd/MM", { locale: pt })}
                     {state.pickupTime ? ` ${state.pickupTime}` : ""}
                   </span>
+                  <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">
+                    {days} {days === 1 ? "dia" : "dias"}
+                  </span>
+                </div>
+              </>
+            )}
+            {!(state?.deliveryDate && state?.pickupDate) && (
+              <>
+                <div className="hidden sm:block w-px h-4 bg-border/60" />
+                <div className="flex items-center gap-1.5">
+                  <Calendar size={13} className="text-primary flex-shrink-0" />
+                  <span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
                 </div>
               </>
             )}
