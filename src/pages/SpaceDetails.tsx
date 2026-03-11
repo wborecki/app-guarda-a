@@ -22,7 +22,7 @@ const SpaceDetails = () => {
   const space = (location.state as any)?.space;
   const simulation = (location.state as any)?.simulation;
   const initialDays = simulation?.days || 1;
-  const initialReservedArea = Math.max(simulation?.totalArea || 1, 1);
+  const initialReservedArea = Math.max(simulation?.totalVol || 1, 1);
 
   const [days, setDays] = useState(initialDays);
   const [reservedArea, setReservedArea] = useState(initialReservedArea);
