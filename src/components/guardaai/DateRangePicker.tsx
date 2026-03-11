@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { format, differenceInDays, addDays } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,6 +14,8 @@ interface DateRangePickerProps {
   onDeliveryChange: (date: Date | undefined) => void;
   onPickupChange: (date: Date | undefined) => void;
   className?: string;
+  /** Compact mode for inline search bars — hides outer label and day count pill */
+  compact?: boolean;
 }
 
 export default function DateRangePicker({
@@ -22,6 +24,7 @@ export default function DateRangePicker({
   onDeliveryChange,
   onPickupChange,
   className,
+  compact = false,
 }: DateRangePickerProps) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<"start" | "end">("start");
@@ -31,7 +34,6 @@ export default function DateRangePicker({
       ? Math.max(differenceInDays(pickupDate, deliveryDate), 1)
       : 0;
 
-  // Build range for visual highlighting
   const range: DateRange | undefined =
     deliveryDate && pickupDate
       ? { from: deliveryDate, to: pickupDate }
@@ -39,7 +41,6 @@ export default function DateRangePicker({
       ? { from: deliveryDate, to: undefined }
       : undefined;
 
-  // When opening, decide which step
   useEffect(() => {
     if (open) {
       setStep(!deliveryDate ? "start" : "end");
@@ -54,14 +55,11 @@ export default function DateRangePicker({
       onPickupChange(undefined);
       setStep("end");
     } else {
-      // User is picking end date
       if (selectedRange.from && selectedRange.to) {
         onDeliveryChange(selectedRange.from);
         onPickupChange(selectedRange.to);
-        // Auto-close after both dates selected
         setTimeout(() => setOpen(false), 300);
       } else if (selectedRange.from) {
-        // If they clicked before the start date, reset
         onDeliveryChange(selectedRange.from);
         onPickupChange(undefined);
         setStep("end");
@@ -91,20 +89,29 @@ export default function DateRangePicker({
         </span>
       );
     }
-    return <span className="text-muted-foreground text-sm">Selecione as datas</span>;
+    return <span className="text-muted-foreground text-sm">{compact ? "Quando?" : "Selecione as datas"}</span>;
   };
 
   return (
     <div className={className}>
-      <label className="text-sm font-medium text-foreground mb-2 block">
-        Período da reserva
-      </label>
+      {!compact && (
+        <label className="text-sm font-medium text-foreground mb-2 block">
+          Período da reserva
+        </label>
+      )}
+      {compact && (
+        <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+          <CalendarIcon size={12} className="text-primary" />
+          Quando?
+        </label>
+      )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              "w-full justify-start text-left font-normal h-11 md:h-10",
+              "w-full justify-start text-left font-normal",
+              compact ? "h-10 md:h-10" : "h-11 md:h-10",
               !deliveryDate && "text-muted-foreground"
             )}
           >
@@ -145,8 +152,8 @@ export default function DateRangePicker({
         </PopoverContent>
       </Popover>
 
-      {/* Day count pill shown below when dates are set */}
-      {days > 0 && (
+      {/* Day count pill below — only in non-compact mode */}
+      {!compact && days > 0 && (
         <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
           <CalendarIcon size={12} className="text-primary" />
           <span>
