@@ -1,26 +1,37 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   ArrowLeft, MapPin, Shield, Lock, CreditCard, QrCode,
-  CheckCircle2, Info, Copy, ChevronRight, Smartphone
+  CheckCircle2, Info, ChevronRight, Smartphone,
+  Camera, Upload, ImagePlus, X, AlertTriangle, FileText, Ban,
+  ShieldAlert, Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import CheckoutAuth from "@/components/guardaai/CheckoutAuth";
 import { calculatePrice, formatBRL, PRICING_HINT_SHORT, SERVICE_FEE } from "@/lib/pricing";
-import { format, addDays } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 type PaymentMethod = "credit" | "debit" | "pix";
 
 const STEPS = [
-  { key: "space", label: "Espaço" },
   { key: "account", label: "Conta" },
+  { key: "verification", label: "Verificação" },
   { key: "payment", label: "Pagamento" },
+];
+
+const PROHIBITED_SHORT = [
+  "Armas, munições e explosivos",
+  "Drogas e substâncias ilícitas",
+  "Inflamáveis, tóxicos e químicos",
+  "Perecíveis e animais",
+  "Itens roubados ou ilegais",
 ];
 
 const formatDateHuman = (dateStr?: string) => {
@@ -42,20 +53,33 @@ const Checkout = () => {
 
   const state = location.state as any;
   const space = state?.space;
-  const reservedArea = Math.max(state?.reservedArea || 1, 1);
+  const reservedArea = Math.max(state?.reservedVolume || state?.reservedArea || 1, 1);
   const days = Math.max(state?.days || 1, 1);
   const simulation = state?.simulation;
 
+  // Payment state
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("credit");
   const [confirmed, setConfirmed] = useState(false);
   const [processing, setProcessing] = useState(false);
-
-  // Card form
   const [cardNumber, setCardNumber] = useState("");
   const [cardName, setCardName] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
   const [installments, setInstallments] = useState("1");
+
+  // Photo upload state
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const [analysisStatus, setAnalysisStatus] = useState<"pending" | "analyzing" | "approved" | "blocked">("pending");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Terms state
+  const [renterTerms, setRenterTerms] = useState(false);
+  const [prohibitedTerms, setProhibitedTerms] = useState(false);
+
+  const allTermsAccepted = renterTerms && prohibitedTerms;
+  const photosApproved = photos.length > 0 && analysisStatus === "approved";
+  const verificationComplete = photosApproved && allTermsAccepted;
 
   if (!space) {
     return (
@@ -70,16 +94,49 @@ const Checkout = () => {
 
   const bp = calculatePrice(reservedArea, days);
   const reservationId = `GA-${Date.now().toString(36).toUpperCase().slice(-6)}`;
+  const currentStep = !user ? 0 : !verificationComplete ? 1 : 2;
 
-  const currentStep = !user ? 1 : 2;
+  // Photo handlers
+  const handlePhotoAdd = (files: FileList | null) => {
+    if (!files) return;
+    const newFiles = Array.from(files).slice(0, 10 - photos.length);
+    const newPreviews = newFiles.map((f) => URL.createObjectURL(f));
+    setPhotos((prev) => [...prev, ...newFiles]);
+    setPhotoPreviews((prev) => [...prev, ...newPreviews]);
+    if (analysisStatus !== "pending") setAnalysisStatus("pending");
+  };
+
+  const handlePhotoRemove = (index: number) => {
+    URL.revokeObjectURL(photoPreviews[index]);
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+    setPhotoPreviews((prev) => prev.filter((_, i) => i !== index));
+    if (analysisStatus !== "pending") setAnalysisStatus("pending");
+  };
+
+  const handleAnalyze = () => {
+    if (photos.length === 0) {
+      toast({ title: "Envie pelo menos uma foto", variant: "destructive" });
+      return;
+    }
+    setAnalysisStatus("analyzing");
+    // Simulated auto-approval (ready for future AI integration)
+    setTimeout(() => {
+      setAnalysisStatus("approved");
+      toast({ title: "Itens analisados ✓", description: "Nenhuma irregularidade detectada." });
+    }, 2500);
+  };
 
   const handlePay = () => {
     if (!user) {
-      toast({ title: "Faça login primeiro", description: "Acesse sua conta para continuar.", variant: "destructive" });
+      toast({ title: "Faça login primeiro", variant: "destructive" });
+      return;
+    }
+    if (!verificationComplete) {
+      toast({ title: "Complete a verificação", description: "Envie fotos dos itens e aceite os termos.", variant: "destructive" });
       return;
     }
     if (paymentMethod !== "pix" && (!cardNumber.trim() || !cardName.trim() || !cardExpiry.trim() || !cardCvv.trim())) {
-      toast({ title: "Preencha os dados do cartão", description: "Todos os campos do cartão são obrigatórios.", variant: "destructive" });
+      toast({ title: "Preencha os dados do cartão", variant: "destructive" });
       return;
     }
     setProcessing(true);
@@ -101,11 +158,7 @@ const Checkout = () => {
         >
           <Card className="border-primary/20 shadow-xl overflow-hidden">
             <div className="bg-primary/10 py-8 flex flex-col items-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
-              >
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring", stiffness: 300 }}>
                 <CheckCircle2 size={56} className="text-primary" />
               </motion.div>
               <h1 className="text-xl font-bold text-foreground mt-4">Reserva confirmada!</h1>
@@ -129,22 +182,22 @@ const Checkout = () => {
                   <span className="text-muted-foreground">Período</span>
                   <span className="font-medium text-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Fotos verificadas</span>
+                  <span className="font-medium text-primary">{photos.length} foto{photos.length !== 1 ? "s" : ""} ✓</span>
+                </div>
                 <div className="flex justify-between text-sm pt-2 border-t border-border/50">
                   <span className="font-bold text-foreground">Total pago</span>
                   <span className="font-extrabold text-primary text-lg">{formatBRL(bp.total)}</span>
                 </div>
               </div>
-
               <p className="text-xs text-muted-foreground text-center leading-relaxed">
                 Enviamos os detalhes para <strong>{user?.email}</strong>.<br />
                 Você também pode acompanhar na sua conta.
               </p>
-
-              <div className="flex flex-col gap-2 pt-2">
-                <Button className="w-full" onClick={() => navigate("/")}>
-                  Voltar ao início
-                </Button>
-              </div>
+              <Button className="w-full" onClick={() => navigate("/")}>
+                Voltar ao início
+              </Button>
             </CardContent>
           </Card>
         </motion.div>
@@ -162,14 +215,13 @@ const Checkout = () => {
             <ArrowLeft size={20} />
           </Button>
           <h1 className="text-base font-bold text-foreground">Finalizar reserva</h1>
-          {/* Step indicator */}
           <div className="hidden sm:flex items-center gap-1 ml-auto">
             {STEPS.map((s, i) => (
               <div key={s.key} className="flex items-center gap-1">
                 <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                  i + 1 === currentStep
+                  i === currentStep
                     ? "bg-primary text-primary-foreground"
-                    : i + 1 < currentStep
+                    : i < currentStep
                     ? "bg-primary/20 text-primary"
                     : "bg-secondary text-muted-foreground"
                 }`}>
@@ -191,9 +243,209 @@ const Checkout = () => {
               <CheckoutAuth />
             </motion.div>
 
-            {/* Step 2: Payment — only visible when authenticated */}
+            {/* Step 2: Verification — Photos + Terms */}
             <AnimatePresence>
               {user && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <Card className={verificationComplete ? "border-primary/30" : ""}>
+                    <CardContent className="p-5 sm:p-6">
+                      <h2 className="font-bold text-foreground mb-1 flex items-center gap-2 text-base">
+                        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
+                        Verificação dos itens
+                      </h2>
+                      <p className="text-xs text-muted-foreground mb-5">
+                        Envie fotos dos seus itens e aceite os termos para prosseguir.
+                      </p>
+
+                      {/* ── Photo Upload ── */}
+                      <div className="mb-6">
+                        <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1.5">
+                          <Camera size={14} className="text-primary" />
+                          Fotos dos itens
+                        </h3>
+                        <p className="text-xs text-muted-foreground mb-3">
+                          Fotografe os objetos que serão armazenados. As fotos são obrigatórias para análise de conformidade e segurança.
+                        </p>
+
+                        {/* Instructions */}
+                        <div className="p-3 rounded-lg bg-secondary/50 border border-border/40 mb-4">
+                          <ul className="space-y-1.5 text-xs text-muted-foreground">
+                            <li className="flex items-start gap-2"><CheckCircle2 size={12} className="text-primary shrink-0 mt-0.5" /> Fotografe cada item de forma clara e legível</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 size={12} className="text-primary shrink-0 mt-0.5" /> Inclua pelo menos 1 foto (máx. 10)</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 size={12} className="text-primary shrink-0 mt-0.5" /> As fotos podem ser usadas para análise automatizada</li>
+                          </ul>
+                        </div>
+
+                        {/* Upload area */}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={(e) => handlePhotoAdd(e.target.files)}
+                          className="hidden"
+                        />
+
+                        {photos.length < 10 && (
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full border-2 border-dashed border-border/60 rounded-xl p-6 flex flex-col items-center gap-2 hover:border-primary/40 hover:bg-primary/[0.02] transition-colors mb-4"
+                          >
+                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                              <ImagePlus size={22} className="text-primary" />
+                            </div>
+                            <p className="text-sm font-medium text-foreground">Clique para adicionar fotos</p>
+                            <p className="text-xs text-muted-foreground">JPG, PNG · Máximo 10 fotos</p>
+                          </button>
+                        )}
+
+                        {/* Preview grid */}
+                        {photoPreviews.length > 0 && (
+                          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-4">
+                            {photoPreviews.map((preview, i) => (
+                              <div key={i} className="relative group rounded-lg overflow-hidden border bg-muted aspect-square">
+                                <img src={preview} alt={`Item ${i + 1}`} className="w-full h-full object-cover" />
+                                <button
+                                  onClick={() => handlePhotoRemove(i)}
+                                  className="absolute top-1 right-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                                >
+                                  <X size={12} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Analyze button / status */}
+                        {photos.length > 0 && analysisStatus === "pending" && (
+                          <Button
+                            onClick={handleAnalyze}
+                            className="w-full bg-primary hover:bg-primary/90"
+                            size="sm"
+                          >
+                            <Upload size={14} className="mr-2" />
+                            Enviar {photos.length} foto{photos.length > 1 ? "s" : ""} para análise
+                          </Button>
+                        )}
+
+                        {analysisStatus === "analyzing" && (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/15">
+                            <Loader2 size={18} className="text-primary animate-spin" />
+                            <div>
+                              <p className="text-sm font-medium text-foreground">Analisando itens...</p>
+                              <p className="text-xs text-muted-foreground">Verificação automática em andamento</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {analysisStatus === "approved" && (
+                          <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/15">
+                            <CheckCircle2 size={18} className="text-primary" />
+                            <div>
+                              <p className="text-sm font-medium text-foreground">Itens aprovados</p>
+                              <p className="text-xs text-muted-foreground">{photos.length} foto{photos.length > 1 ? "s" : ""} verificada{photos.length > 1 ? "s" : ""}</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {analysisStatus === "blocked" && (
+                          <div className="p-4 rounded-lg bg-destructive/5 border border-destructive/15">
+                            <div className="flex items-center gap-2 mb-2">
+                              <AlertTriangle size={16} className="text-destructive" />
+                              <p className="text-sm font-semibold text-foreground">Reserva bloqueada para revisão</p>
+                            </div>
+                            <p className="text-xs text-muted-foreground mb-3">
+                              A análise identificou possível irregularidade nos itens enviados.
+                            </p>
+                            <Button variant="outline" size="sm" className="text-xs">
+                              Solicitar revisão manual
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* ── Prohibited items summary ── */}
+                      <div className="mb-6 p-3 rounded-lg bg-destructive/[0.03] border border-destructive/10">
+                        <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
+                          <Ban size={12} className="text-destructive" />
+                          Itens proibidos
+                        </h4>
+                        <ul className="space-y-1 mb-2">
+                          {PROHIBITED_SHORT.map((item, i) => (
+                            <li key={i} className="text-[11px] text-muted-foreground flex items-start gap-1.5">
+                              <span className="text-destructive/40 mt-0.5">•</span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                        <Link
+                          to="/itens-proibidos"
+                          target="_blank"
+                          className="text-[11px] text-primary font-medium hover:underline"
+                        >
+                          Ver lista completa →
+                        </Link>
+                      </div>
+
+                      {/* ── Terms acceptance ── */}
+                      <div className="space-y-3">
+                        <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                          <FileText size={12} className="text-primary" />
+                          Termos obrigatórios
+                        </h4>
+
+                        <label className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:border-primary/20 transition-colors cursor-pointer">
+                          <Checkbox
+                            checked={renterTerms}
+                            onCheckedChange={(v) => setRenterTerms(v === true)}
+                            className="mt-0.5"
+                          />
+                          <div className="text-xs text-muted-foreground leading-relaxed">
+                            Li e aceito o{" "}
+                            <Link to="/termos/locatario" target="_blank" className="text-primary font-medium hover:underline">
+                              Termo de Responsabilidade do Locatário
+                            </Link>
+                            , incluindo a declaração de que sou responsável pelos itens armazenados.
+                          </div>
+                        </label>
+
+                        <label className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:border-primary/20 transition-colors cursor-pointer">
+                          <Checkbox
+                            checked={prohibitedTerms}
+                            onCheckedChange={(v) => setProhibitedTerms(v === true)}
+                            className="mt-0.5"
+                          />
+                          <div className="text-xs text-muted-foreground leading-relaxed">
+                            Declaro que meus itens <strong>não incluem</strong> itens proibidos pela{" "}
+                            <Link to="/itens-proibidos" target="_blank" className="text-primary font-medium hover:underline">
+                              política da plataforma
+                            </Link>{" "}
+                            e autorizo a análise automatizada das fotos enviadas.
+                          </div>
+                        </label>
+                      </div>
+
+                      {/* Verification status */}
+                      {verificationComplete && (
+                        <div className="mt-4 flex items-center gap-2 p-2 rounded-lg bg-primary/5">
+                          <CheckCircle2 size={14} className="text-primary" />
+                          <span className="text-xs font-medium text-primary">Verificação completa</span>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Step 3: Payment — only visible when verification complete */}
+            <AnimatePresence>
+              {user && verificationComplete && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -203,17 +455,17 @@ const Checkout = () => {
                   <Card>
                     <CardContent className="p-5 sm:p-6">
                       <h2 className="font-bold text-foreground mb-4 flex items-center gap-2 text-base">
-                        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
+                        <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">3</span>
                         Forma de pagamento
                       </h2>
 
-                      {/* Tabs */}
+                      {/* Payment method tabs */}
                       <div className="grid grid-cols-3 gap-2 mb-5">
                         {([
                           { key: "credit" as const, label: "Crédito", icon: CreditCard },
                           { key: "debit" as const, label: "Débito", icon: CreditCard },
                           { key: "pix" as const, label: "Pix", icon: QrCode },
-                        ]).map(m => (
+                        ]).map((m) => (
                           <button
                             key={m.key}
                             onClick={() => setPaymentMethod(m.key)}
@@ -240,20 +492,20 @@ const Checkout = () => {
                           >
                             <div>
                               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Número do cartão</label>
-                              <Input value={cardNumber} onChange={e => setCardNumber(e.target.value)} placeholder="0000 0000 0000 0000" maxLength={19} />
+                              <Input value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} placeholder="0000 0000 0000 0000" maxLength={19} />
                             </div>
                             <div>
                               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Nome no cartão</label>
-                              <Input value={cardName} onChange={e => setCardName(e.target.value)} placeholder="Como está no cartão" />
+                              <Input value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder="Como está no cartão" />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Validade</label>
-                                <Input value={cardExpiry} onChange={e => setCardExpiry(e.target.value)} placeholder="MM/AA" maxLength={5} />
+                                <Input value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} placeholder="MM/AA" maxLength={5} />
                               </div>
                               <div>
                                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">CVV</label>
-                                <Input type="password" value={cardCvv} onChange={e => setCardCvv(e.target.value)} placeholder="•••" maxLength={4} />
+                                <Input type="password" value={cardCvv} onChange={(e) => setCardCvv(e.target.value)} placeholder="•••" maxLength={4} />
                               </div>
                             </div>
                             {paymentMethod === "credit" && (
@@ -261,7 +513,7 @@ const Checkout = () => {
                                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Parcelas</label>
                                 <select
                                   value={installments}
-                                  onChange={e => setInstallments(e.target.value)}
+                                  onChange={(e) => setInstallments(e.target.value)}
                                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                 >
                                   <option value="1">1× de {formatBRL(bp.total)} (à vista)</option>
@@ -308,8 +560,8 @@ const Checkout = () => {
                 {[
                   { icon: Lock, text: "Pagamento seguro" },
                   { icon: Shield, text: "Dados protegidos" },
-                  { icon: CheckCircle2, text: "Intermediação GuardaAí" },
-                  { icon: CreditCard, text: "Confirmação imediata" },
+                  { icon: Camera, text: "Itens verificados" },
+                  { icon: FileText, text: "Termos aceitos" },
                 ].map(({ icon: Icon, text }, i) => (
                   <div key={i} className="flex items-center gap-2 p-3 rounded-lg bg-card border border-border/60">
                     <Icon size={16} className="text-primary flex-shrink-0" />
@@ -320,7 +572,7 @@ const Checkout = () => {
             </motion.div>
 
             {/* Desktop CTA */}
-            {user && (
+            {user && verificationComplete && (
               <div className="hidden lg:block">
                 <Button
                   size="lg"
@@ -399,6 +651,27 @@ const Checkout = () => {
                       )}
                     </div>
 
+                    {/* Verification status */}
+                    <div className="space-y-1.5 mb-4 pb-4 border-b border-border/50">
+                      <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Verificação</h4>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Fotos dos itens</span>
+                        {photosApproved ? (
+                          <span className="text-primary font-medium text-xs flex items-center gap-1"><CheckCircle2 size={12} /> Aprovado</span>
+                        ) : (
+                          <span className="text-muted-foreground/50 text-xs">Pendente</span>
+                        )}
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Termos aceitos</span>
+                        {allTermsAccepted ? (
+                          <span className="text-primary font-medium text-xs flex items-center gap-1"><CheckCircle2 size={12} /> Aceito</span>
+                        ) : (
+                          <span className="text-muted-foreground/50 text-xs">Pendente</span>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Financial breakdown */}
                     <div className="space-y-2 mb-4 pb-4 border-b border-border/50">
                       <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Valores</h4>
@@ -435,7 +708,7 @@ const Checkout = () => {
       </div>
 
       {/* Mobile sticky CTA */}
-      {user && (
+      {user && verificationComplete && (
         <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-30 lg:hidden">
           <div className="container max-w-5xl">
             <Button

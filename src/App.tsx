@@ -10,6 +10,9 @@ import SearchResults from "./pages/SearchResults";
 import SpaceDetails from "./pages/SpaceDetails";
 import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
+import TermsRenter from "./pages/TermsRenter";
+import TermsHost from "./pages/TermsHost";
+import ProhibitedItems from "./pages/ProhibitedItems";
 import { AuthProvider } from "./hooks/useAuth";
 
 const queryClient = new QueryClient();
@@ -28,6 +31,9 @@ const App = () => (
           <Route path="/buscar" element={<SearchResults />} />
           <Route path="/espaco/:id" element={<SpaceDetails />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/termos/locatario" element={<TermsRenter />} />
+          <Route path="/termos/anfitriao" element={<TermsHost />} />
+          <Route path="/itens-proibidos" element={<ProhibitedItems />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
