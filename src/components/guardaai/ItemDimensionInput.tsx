@@ -235,7 +235,7 @@ const ItemDimensionInput = ({ items, onItemsChange }: ItemDimensionInputProps) =
           </div>
           <div className="flex justify-between text-xs font-semibold p-2 rounded-lg bg-primary/5 border border-primary/10">
             <span className="text-foreground">Total:</span>
-            <span className="text-primary">{Math.max(totalArea, 1).toFixed(1)} m² · {totalVolume.toFixed(1)} m³</span>
+            <span className="text-primary">{Math.max(totalVolume, 1).toFixed(1)} m³</span>
           </div>
         </div>
       )}
