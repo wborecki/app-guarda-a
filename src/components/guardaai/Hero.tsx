@@ -84,18 +84,18 @@ const Hero = () => {
             className="space-y-0"
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-5 border border-primary/20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 md:mb-7 border border-primary/20">
               <Package size={14} />
               Self storage descentralizado
             </div>
 
             {/* Headline */}
-            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-4 tracking-tight">
+            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-5 md:mb-6 tracking-tight">
               Guarde perto.<br />
               <span className="text-primary">Pague menos.</span>
             </h1>
 
-            <p className="text-[15px] md:text-[17px] text-muted-foreground mb-8 max-w-lg leading-relaxed">
+            <p className="text-[15px] md:text-[17px] text-muted-foreground mb-10 md:mb-12 max-w-lg leading-relaxed">
               Encontre espaços para armazenar seus objetos perto de você, por diárias ou mensalidades.
             </p>
 
@@ -104,14 +104,14 @@ const Hero = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.45 }}
-              className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-6"
+              className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-8 md:mb-10"
             >
               {/* ── Desktop layout ── */}
-              <div className="hidden md:block p-3.5">
+              <div className="hidden md:block p-4">
                 <div className="flex items-stretch gap-0">
                   {/* Location */}
-                  <div className="flex-[1.5] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                  <div className="flex-[1.5] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
+                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Localização
                     </label>
                     <LocationAutocomplete
@@ -124,10 +124,10 @@ const Hero = () => {
                   </div>
 
                   {/* Divider */}
-                  <div className="w-px self-stretch my-3 bg-border" />
+                  <div className="w-px self-stretch my-4 bg-border" />
 
                   {/* Dates */}
-                  <div className="flex-[1.2] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                  <div className="flex-[1.2] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
                     <DateRangePicker
                       deliveryDate={deliveryDate}
                       pickupDate={pickupDate}
@@ -138,11 +138,11 @@ const Hero = () => {
                   </div>
 
                   {/* Divider */}
-                  <div className="w-px self-stretch my-3 bg-border" />
+                  <div className="w-px self-stretch my-4 bg-border" />
 
                   {/* Volume */}
-                  <div className="flex-[0.8] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                  <div className="flex-[0.8] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
+                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Volume
                     </label>
                     <div className="relative">
@@ -162,7 +162,7 @@ const Hero = () => {
                   </div>
 
                   {/* CTA */}
-                  <div className="flex items-center pl-3 pr-1">
+                  <div className="flex items-center pl-4 pr-1.5">
                     <Button
                       onClick={handleSearch}
                       size="lg"
