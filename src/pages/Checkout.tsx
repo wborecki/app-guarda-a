@@ -18,7 +18,10 @@ import { calculatePrice, formatBRL, PRICING_HINT_SHORT, SERVICE_FEE } from "@/li
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+import { supabase } from "@/integrations/supabase/client";
+
 type PaymentMethod = "credit" | "debit" | "pix";
+type AnalysisStatus = "pending" | "analyzing" | "approved" | "review" | "blocked";
 
 const STEPS = [
   { key: "account", label: "Conta" },
