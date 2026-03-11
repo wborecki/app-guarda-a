@@ -17,7 +17,7 @@ interface LocationAutocompleteProps {
   hideGps?: boolean;
 }
 
-const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta, 1200, São Paulo", className }: LocationAutocompleteProps) => {
+const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta, 1200, São Paulo", className, hideGps = false }: LocationAutocompleteProps) => {
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
