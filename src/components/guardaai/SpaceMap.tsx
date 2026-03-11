@@ -104,8 +104,8 @@ const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyrigh
 export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick, className }: SpaceMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<Map<number, L.Marker>>(new Map());
-  const spacePricesRef = useRef<Map<number, string>>(new Map());
+  const markersRef = useRef<Map<number | string, L.Marker>>(new Map());
+  const spacePricesRef = useRef<Map<number | string, string>>(new Map());
 
   // Initialize map
   useEffect(() => {
