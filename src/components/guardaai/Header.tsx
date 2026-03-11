@@ -174,12 +174,22 @@ const Header = () => {
               </Button>
 
               {user ? (
-                <Button variant="ghost" className="text-foreground hover:bg-secondary gap-2 h-12 text-base" asChild>
-                  <Link to="/minha-conta" onClick={() => setMobileOpen(false)}>
-                    <LayoutDashboard size={18} />
-                    Minha conta
-                  </Link>
-                </Button>
+                <>
+                  <Button variant="ghost" className="text-foreground hover:bg-secondary gap-2 h-12 text-base" asChild>
+                    <Link to="/minha-conta" onClick={() => setMobileOpen(false)}>
+                      <LayoutDashboard size={18} />
+                      Minha conta
+                    </Link>
+                  </Button>
+                  {isAdmin && (
+                    <Button variant="ghost" className="text-muted-foreground hover:text-foreground gap-2 h-12 text-base" asChild>
+                      <Link to="/admin" onClick={() => setMobileOpen(false)}>
+                        <ShieldCheck size={18} />
+                        Painel admin
+                      </Link>
+                    </Button>
+                  )}
+                </>
               ) : (
                 <Button variant="ghost" className="text-muted-foreground hover:text-foreground gap-2 h-12 text-base" asChild>
                   <Link to="/entrar" onClick={() => setMobileOpen(false)}>
