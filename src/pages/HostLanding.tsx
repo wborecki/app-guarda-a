@@ -64,10 +64,10 @@ const earningsExamples = [
 
 const HostLanding = () => {
   const { user, displayName, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
   const [form, setForm] = useState({
-    name: "", whatsapp: "", email: "",
     location: "", neighborhood: "",
     spaceType: "", spaceCategory: "",
     height: "", width: "", length: "",
@@ -77,17 +77,6 @@ const HostLanding = () => {
     accessType: "",
     notes: "",
   });
-
-  useEffect(() => {
-    if (user) {
-      setForm(prev => ({
-        ...prev,
-        name: prev.name || displayName || "",
-        email: prev.email || user.email || "",
-        whatsapp: prev.whatsapp || user.user_metadata?.phone || "",
-      }));
-    }
-  }, [user, displayName]);
 
   const isLoggedIn = !!user;
 
@@ -101,14 +90,13 @@ const HostLanding = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalName = isLoggedIn ? (displayName || form.name) : form.name;
-    const finalEmail = isLoggedIn ? (user.email || form.email) : form.email;
+    if (!isLoggedIn) return;
     const availabilityText = form.availability === "continuous" ? "Contínua / Indeterminada"
       : form.availability === "weekdays" ? "Dias úteis"
       : form.availability === "weekends" ? "Finais de semana"
       : "Personalizada";
     const message = encodeURIComponent(
-      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${finalName}\nE-mail: ${finalEmail}\nWhatsApp: ${form.whatsapp}\nLocalização: ${form.location}\nBairro: ${form.neighborhood}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
+      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nBairro: ${form.neighborhood}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
     );
     window.open(`https://wa.me/5511994541862?text=${message}`, "_blank");
   };
