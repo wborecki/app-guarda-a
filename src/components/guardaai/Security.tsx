@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Camera, FileText, ShieldAlert, Ban, Clock, UserX, Shield, Handshake } from "lucide-react";
+import { Camera, FileText, ShieldAlert, Ban, Clock, UserX, Shield, Handshake, Lock, Home } from "lucide-react";
 
 const userFeatures = [
   { icon: Camera, title: "Cadastro com foto", desc: "Objetos fotografados e registrados na plataforma." },
@@ -36,7 +36,7 @@ const SecurityCard = ({ f, i, variant }: { f: typeof userFeatures[0]; i: number;
 
 const Security = () => {
   return (
-    <section id="seguranca" className="py-16 md:py-32 bg-secondary/50">
+    <section id="seguranca" className="py-14 md:py-20 bg-secondary/50">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -60,7 +60,8 @@ const Security = () => {
               viewport={{ once: true }}
               className="text-base md:text-xl font-bold text-foreground mb-4 md:mb-6 text-center"
             >
-              🔒 Para quem guarda objetos
+              <Lock size={18} className="inline mr-2 text-primary" />
+              Para quem guarda objetos
             </motion.h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
               {userFeatures.map((f, i) => (
@@ -76,7 +77,8 @@ const Security = () => {
               viewport={{ once: true }}
               className="text-base md:text-xl font-bold text-foreground mb-4 md:mb-6 text-center"
             >
-              🏠 Para quem oferece espaço
+              <Home size={18} className="inline mr-2 text-accent" />
+              Para quem oferece espaço
             </motion.h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
               {hostFeatures.map((f, i) => (

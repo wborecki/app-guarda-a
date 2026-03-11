@@ -34,19 +34,18 @@ const Footer = () => {
             <ul className="space-y-2 md:space-y-2.5 text-xs md:text-sm text-background/60">
               <li><button onClick={() => handleAnchor("#como-funciona")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">Como funciona</button></li>
               <li><button onClick={() => handleAnchor("#precos")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">Preços</button></li>
-              <li><Link to="/quero-guardar" className="hover:text-background transition-colors">Quero guardar</Link></li>
               <li><button onClick={() => handleAnchor("#seguranca")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">Segurança</button></li>
-              <li><Link to="/anunciar" className="hover:text-background transition-colors">Anunciar espaço</Link></li>
+              <li><button onClick={() => handleAnchor("#faq")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">FAQ</button></li>
+              <li><button onClick={() => handleAnchor("#fale-conosco")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">Fale conosco</button></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-3 md:mb-4 text-xs md:text-sm">Sua conta</h4>
+            <h4 className="font-semibold mb-3 md:mb-4 text-xs md:text-sm">Ações</h4>
             <ul className="space-y-2 md:space-y-2.5 text-xs md:text-sm text-background/60">
-              <li><Link to="/entrar" className="hover:text-background transition-colors">Entrar</Link></li>
-              <li><Link to="/quero-guardar" className="hover:text-background transition-colors">Guardar itens</Link></li>
+              <li><Link to="/quero-guardar" className="hover:text-background transition-colors">Quero guardar</Link></li>
               <li><Link to="/anunciar" className="hover:text-background transition-colors">Anunciar espaço</Link></li>
-              <li><button onClick={() => handleAnchor("#faq")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">FAQ</button></li>
+              <li><Link to="/entrar" className="hover:text-background transition-colors">Entrar</Link></li>
             </ul>
           </div>
 

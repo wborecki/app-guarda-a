@@ -64,7 +64,7 @@ const Simulator = () => {
   };
 
   return (
-    <section id="simulador" className="py-16 md:py-32">
+    <section id="simulador" className="py-14 md:py-20">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

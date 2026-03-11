@@ -14,7 +14,7 @@ const cases = [
 
 const UseCases = () => {
   return (
-    <section className="py-16 md:py-28">
+    <section className="py-14 md:py-20">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
