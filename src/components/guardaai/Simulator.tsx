@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { encodeSearchParams } from "@/lib/searchParams";
 import { motion } from "framer-motion";
 import { differenceInDays } from "date-fns";
 import { Button } from "@/components/ui/button";
