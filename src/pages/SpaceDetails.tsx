@@ -374,7 +374,7 @@ const SpaceDetails = () => {
                         <div className="space-y-4">
                           {/* Area editor */}
                           <div>
-                            <label className="text-xs text-muted-foreground mb-1.5 block">Área reservada (m²)</label>
+                            <label className="text-xs text-muted-foreground mb-1.5 block">Volume reservado (m³)</label>
                             <div className="flex items-center gap-3 bg-secondary/50 rounded-lg p-3">
                               <button
                                 onClick={() => adjustArea(-1)}
