@@ -309,7 +309,7 @@ const SearchResults = () => {
   } | null;
 
   const days = state?.days || 1;
-  const totalArea = state?.totalArea || 0;
+  const totalVol = state?.totalVol || 0;
   const userLocation = state?.location || "Não informado";
   const shortLocation = useMemo(() => shortenLocation(userLocation), [userLocation]);
   const allSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
