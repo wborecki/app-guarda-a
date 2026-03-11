@@ -431,8 +431,8 @@ const SpaceDetails = () => {
                       ) : (
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Área reservada</span>
-                            <span className="text-foreground font-medium">{effectiveReservedArea} m²</span>
+                            <span className="text-muted-foreground">Volume reservado</span>
+                            <span className="text-foreground font-medium">{effectiveReservedArea} m³</span>
                           </div>
                           <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Período</span>
