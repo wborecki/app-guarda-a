@@ -502,7 +502,7 @@ const SpaceDetails = () => {
                       setEditingReservation(true);
                       toast({
                         title: "Área aumentada",
-                        description: `Área reservada ajustada para ${Math.min(effectiveReservedArea + 1, availableArea)} m². Edite conforme sua necessidade.`,
+                        description: `Volume reservado ajustado para ${Math.min(effectiveReservedArea + 1, availableArea)} m³. Edite conforme sua necessidade.`,
                       });
                     }}
                     className="w-full flex items-center gap-3 text-left group"
