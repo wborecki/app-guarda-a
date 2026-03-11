@@ -106,7 +106,7 @@ const Header = () => {
                   </Button>
                 )}
                 {isAdmin && (
-                  <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
+                  <Button size="sm" variant="ghost" className="bg-secondary/80 hover:bg-secondary text-foreground gap-1.5" asChild>
                     <Link to="/admin">
                       <ShieldCheck size={16} />
                       Admin
