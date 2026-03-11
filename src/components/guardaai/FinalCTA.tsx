@@ -4,6 +4,9 @@ import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, Home, Sparkles } from "lucide-react";
 
 const FinalCTA = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+  const simulatorHref = isHomePage ? "#simulador" : "/#simulador";
   return (
     <section className="py-20 md:py-36">
       <div className="container max-w-7xl">
