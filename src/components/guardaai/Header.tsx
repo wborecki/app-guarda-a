@@ -21,6 +21,7 @@ const Header = () => {
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
   const { user, displayName, loading } = useAuth();
+  const { isAdmin } = useAdminCheck();
 
   const initials = displayName
     ? displayName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
