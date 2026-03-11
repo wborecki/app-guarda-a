@@ -357,9 +357,14 @@ const Checkout = () => {
                 Enviamos os detalhes para <strong>{user?.email}</strong>.<br />
                 Você também pode acompanhar na sua conta.
               </p>
-              <Button className="w-full" onClick={() => navigate("/")}>
-                Voltar ao início
-              </Button>
+              <div className="flex gap-3">
+                <Button className="flex-1" onClick={() => navigate("/minha-conta/reservas")}>
+                  Minhas reservas
+                </Button>
+                <Button variant="outline" className="flex-1" onClick={() => navigate("/")}>
+                  Voltar ao início
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
