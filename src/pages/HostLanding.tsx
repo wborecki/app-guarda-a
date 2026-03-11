@@ -21,9 +21,9 @@ import {
 } from "lucide-react";
 
 const earnings = [
-  { area: "3 m²", value: "R$ 135", desc: "Garagem pequena" },
-  { area: "5 m²", value: "R$ 225", desc: "Quarto vazio" },
-  { area: "10 m²", value: "R$ 450", desc: "Depósito médio" },
+  { area: "3 m³", value: "R$ 135", desc: "Garagem pequena" },
+  { area: "5 m³", value: "R$ 225", desc: "Quarto vazio" },
+  { area: "10 m³", value: "R$ 450", desc: "Depósito médio" },
 ];
 
 const spaceTypes = [
