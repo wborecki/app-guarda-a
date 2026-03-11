@@ -1,3 +1,4 @@
+import CheckoutSkeleton from "@/components/guardaai/skeletons/CheckoutSkeleton";
 import SEO from "@/components/SEO";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
