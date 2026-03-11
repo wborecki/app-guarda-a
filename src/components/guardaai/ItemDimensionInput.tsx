@@ -222,7 +222,7 @@ const ItemDimensionInput = ({ items, onItemsChange }: ItemDimensionInputProps) =
                     <div className="min-w-0">
                       <p className="font-medium truncate">{item.quantidade > 1 ? `${item.quantidade}x ` : ""}{item.nome}</p>
                       <p className="text-[10px] text-muted-foreground">
-                        {item.altura}×{item.largura}×{item.comprimento}cm · {areaItem.toFixed(2)}m² · {volItem.toFixed(2)}m³
+                        {item.altura}×{item.largura}×{item.comprimento}cm · {volItem.toFixed(2)}m³
                       </p>
                     </div>
                   </div>
