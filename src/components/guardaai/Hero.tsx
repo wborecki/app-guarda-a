@@ -95,7 +95,7 @@ const Hero = () => {
               <span className="text-primary">Pague menos.</span>
             </h1>
 
-            <p className="text-[15px] md:text-[17px] text-muted-foreground mb-8 max-w-lg leading-relaxed">
+            <p className="text-[15px] md:text-[17px] text-muted-foreground mb-10 md:mb-12 max-w-lg leading-relaxed">
               Encontre espaços para armazenar seus objetos perto de você, por diárias ou mensalidades.
             </p>
 
