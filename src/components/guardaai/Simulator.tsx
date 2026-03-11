@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { encodeSearchParams } from "@/lib/searchParams";
 import { motion } from "framer-motion";
 import { differenceInDays } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -50,21 +51,16 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
   };
 
   const handleFindSpace = () => {
-    navigate("/buscar", {
-      state: {
-        items,
-        location,
-        days,
-        spaceType,
-        usage,
-        totalVol,
-        estimatedPrice: price.subtotal,
-        deliveryDate: deliveryDate?.toISOString(),
-        deliveryTime,
-        pickupDate: pickupDate?.toISOString(),
-        pickupTime,
-      },
+    const qs = encodeSearchParams({
+      location,
+      days,
+      totalVol,
+      deliveryDate: deliveryDate?.toISOString(),
+      deliveryTime,
+      pickupDate: pickupDate?.toISOString(),
+      pickupTime,
     });
+    navigate(`/buscar?${qs}`);
   };
 
   const simulatorContent = (

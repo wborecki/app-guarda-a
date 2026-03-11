@@ -2,8 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { Package, Search, MapPin, CalendarIcon, Box, ArrowRight, TrendingDown, Briefcase, Home } from "lucide-react";
+import { Package, Search, ArrowRight } from "lucide-react";
 import { differenceInDays } from "date-fns";
+import { encodeSearchParams } from "@/lib/searchParams";
 import heroBg from "@/assets/hero-bg-new.jpg";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import DateRangePicker from "@/components/guardaai/DateRangePicker";
@@ -19,15 +20,14 @@ const Hero = () => {
 
   const handleSearch = () => {
     const totalVol = parseFloat(volume) || 0;
-    navigate("/buscar", {
-      state: {
-        location: location || "São Paulo",
-        deliveryDate: deliveryDate?.toISOString(),
-        pickupDate: pickupDate?.toISOString(),
-        totalVol,
-        days: days || 1,
-      },
+    const qs = encodeSearchParams({
+      location: location || "São Paulo",
+      days: days || 1,
+      totalVol,
+      deliveryDate: deliveryDate?.toISOString(),
+      pickupDate: pickupDate?.toISOString(),
     });
+    navigate(`/buscar?${qs}`);
   };
 
   return (
