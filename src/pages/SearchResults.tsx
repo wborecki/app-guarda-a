@@ -137,6 +137,39 @@ const reviewsPool = [
   { name: "Diego C.", rating: 4, date: "2023-11-20", text: "Muito prático e bem localizado. Voltarei a usar." },
 ];
 
+// ─── Smart badges logic ────────────────────────────────────────────
+type SmartBadge = { label: string; color: string };
+
+function computeSmartBadges(space: any, allSpaces: any[], index: number): SmartBadge[] {
+  const badges: SmartBadge[] = [];
+  // Closest
+  const sorted = [...allSpaces].sort((a, b) => a.distanceNum - b.distanceNum);
+  if (sorted[0]?.id === space.id) badges.push({ label: "Mais próximo", color: "bg-primary/10 text-primary" });
+  // Best rated
+  const byRating = [...allSpaces].sort((a, b) => b.rating - a.rating);
+  if (byRating[0]?.id === space.id) badges.push({ label: "Melhor avaliação", color: "bg-accent/10 text-accent" });
+  // Best value (lowest price per m³)
+  const byArea = [...allSpaces].sort((a, b) => a.pricePerDay - b.pricePerDay);
+  if (byArea[0]?.id === space.id) badges.push({ label: "Melhor custo-benefício", color: "bg-emerald-50 text-emerald-700" });
+  // Large capacity
+  if (space.area >= 20) badges.push({ label: "Espaço amplo", color: "bg-blue-50 text-blue-700" });
+  // 24h access
+  if (space.features.includes("Acesso 24h")) badges.push({ label: "Acesso 24h", color: "bg-violet-50 text-violet-700" });
+  return badges.slice(0, 2);
+}
+
+// Space use-case hints based on type
+function getUseCaseHint(type: string): string {
+  switch (type) {
+    case "Garagem": return "Ideal para mudanças e itens volumosos";
+    case "Quarto": return "Perfeito para caixas e itens pessoais";
+    case "Depósito": return "Ótimo para estoque e equipamentos";
+    case "Área coberta": return "Bom para itens que precisam de ventilação";
+    case "Galpão": return "Para móveis grandes e volumes pesados";
+    default: return "Espaço versátil para diversas necessidades";
+  }
+}
+
 // ─── Helpers ───────────────────────────────────────────────────────
 function detectCity(locationStr: string): CityData {
   const lower = locationStr.toLowerCase();
