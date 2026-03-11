@@ -303,7 +303,7 @@ const SearchResults = () => {
   const navigate = useNavigate();
 
   const state = location.state as {
-    items?: any[]; location?: string; days?: number; totalArea?: number;
+    items?: any[]; location?: string; days?: number;
     totalVol?: number; estimatedPrice?: number; deliveryDate?: string;
     deliveryTime?: string; pickupDate?: string; pickupTime?: string;
   } | null;
