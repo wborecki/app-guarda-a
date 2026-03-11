@@ -8,11 +8,11 @@ const faqs = [
   },
   {
     q: "Como o preço é calculado?",
-    a: "O preço é baseado na área que seus objetos vão ocupar (mínimo de 1 m²). Usamos uma tabela progressiva: quanto mais tempo você guardar, menor o valor proporcional por dia. Uma taxa de serviço fixa de R$ 28,00 é adicionada no checkout.",
+    a: "O preço é baseado no volume que seus objetos vão ocupar (mínimo de 1 m³). Usamos uma tabela progressiva: quanto mais tempo você guardar, menor o valor proporcional por dia. Uma taxa de serviço fixa de R$ 28,00 é adicionada no checkout.",
   },
   {
     q: "Quanto custa guardar no GuardaAí?",
-    a: "Diárias a partir de R$ 5,00/m². Para 30 dias, o valor é R$ 45,00/m². Em planos anuais, a partir de R$ 40,00/m². Quanto maior o período, menor o custo por dia.",
+    a: "Diárias a partir de R$ 5,00/m³. Para 30 dias, o valor é R$ 45,00/m³. Em planos anuais, a partir de R$ 40,00/m³. Quanto maior o período, menor o custo por dia.",
   },
   {
     q: "Posso guardar por poucos dias?",
@@ -24,15 +24,15 @@ const faqs = [
   },
   {
     q: "Existe cobrança mínima?",
-    a: "Sim. A cobrança mínima equivale a 1 m². Objetos que ocupem menos de 1 m² são cobrados como 1 m².",
+    a: "Sim. A cobrança mínima equivale a 1 m³. Objetos que ocupem menos de 1 m³ são cobrados como 1 m³.",
   },
   {
     q: "O que é a taxa de serviço?",
     a: "É uma taxa fixa de R$ 28,00 por reserva, cobrada no checkout. Ela cobre os custos operacionais da plataforma.",
   },
   {
-    q: "Eu pago pela área total do espaço?",
-    a: "Não. Você paga apenas pela área que seus objetos vão ocupar, e não pela metragem total do local anunciado.",
+    q: "Eu pago pelo volume total do espaço?",
+    a: "Não. Você paga apenas pelo volume que seus objetos vão ocupar, e não pela capacidade total do local anunciado. Objetos podem ser empilhados para otimizar o uso do espaço.",
   },
   {
     q: "Quais objetos posso armazenar?",

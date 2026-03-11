@@ -28,15 +28,14 @@ const Simulator = () => {
   const [pickupDate, setPickupDate] = useState<Date>();
   const [pickupTime, setPickupTime] = useState("09:00");
 
-  const totalArea = Math.max(
-    items.reduce((sum, i) => sum + ((i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0),
+  const totalVol = Math.max(
+    items.reduce((sum, i) => sum + ((i.altura / 100) * (i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0),
     items.length > 0 ? 1 : 0
   );
-  const totalVol = items.reduce((sum, i) => sum + ((i.altura / 100) * (i.largura / 100) * (i.comprimento / 100)) * i.quantidade, 0);
 
   const days = (deliveryDate && pickupDate) ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
 
-  const price = calculatePrice(totalArea, days);
+  const price = calculatePrice(totalVol, days);
 
   const handleSimulate = () => {
     if (items.length > 0 && deliveryDate && pickupDate) {
@@ -57,7 +56,6 @@ const Simulator = () => {
         days,
         spaceType,
         usage,
-        totalArea,
         totalVol,
         estimatedPrice: price.subtotal,
         deliveryDate: deliveryDate?.toISOString(),
@@ -232,19 +230,12 @@ const Simulator = () => {
                   className="mt-6 p-5 md:p-6 rounded-xl bg-primary-light border border-primary/20"
                 >
                   <h3 className="font-semibold text-foreground mb-4 text-sm md:text-base">Resultado da simulação</h3>
-                  <div className="grid grid-cols-3 gap-3 md:gap-4">
-                    <div className="text-center">
-                      <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-1.5 md:mb-2">
-                        <Ruler size={18} className="text-primary" />
-                      </div>
-                      <p className="text-[10px] md:text-xs text-muted-foreground">Área estimada</p>
-                      <p className="text-base md:text-lg font-bold text-foreground">{totalArea.toFixed(1)} m²</p>
-                    </div>
+                  <div className="grid grid-cols-2 gap-3 md:gap-4">
                     <div className="text-center">
                       <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-1.5 md:mb-2">
                         <Package size={18} className="text-primary" />
                       </div>
-                      <p className="text-[10px] md:text-xs text-muted-foreground">Volume</p>
+                      <p className="text-[10px] md:text-xs text-muted-foreground">Volume estimado</p>
                       <p className="text-base md:text-lg font-bold text-foreground">{totalVol.toFixed(1)} m³</p>
                     </div>
                     <div className="text-center">
@@ -259,12 +250,12 @@ const Simulator = () => {
                   {/* Rate tier info */}
                   <div className="mt-4 p-3 rounded-lg bg-background/60 border border-border/40">
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Valor por m² ({days} {days === 1 ? "dia" : "dias"})</span>
-                      <span className="font-semibold text-foreground">R$ {price.pricePerM2.toFixed(2).replace(".", ",")}</span>
+                      <span className="text-muted-foreground">Valor por m³ ({days} {days === 1 ? "dia" : "dias"})</span>
+                      <span className="font-semibold text-foreground">R$ {price.pricePerM3.toFixed(2).replace(".", ",")}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs mb-1">
                       <span className="text-muted-foreground">Valor efetivo por dia</span>
-                      <span className="font-semibold text-foreground">R$ {price.dailyRate.toFixed(2).replace(".", ",")}/m²</span>
+                      <span className="font-semibold text-foreground">R$ {price.dailyRate.toFixed(2).replace(".", ",")}/m³</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground">+ Taxa de serviço fixa</span>
@@ -290,7 +281,7 @@ const Simulator = () => {
               )}
 
               <p className="text-[10px] md:text-xs text-muted-foreground mt-3 md:mt-4 text-center">
-                O sistema calcula automaticamente a metragem e encontra o melhor espaço.
+                O sistema calcula automaticamente o volume e encontra o melhor espaço.
               </p>
             </div>
           </div>

@@ -222,7 +222,7 @@ const ItemDimensionInput = ({ items, onItemsChange }: ItemDimensionInputProps) =
                     <div className="min-w-0">
                       <p className="font-medium truncate">{item.quantidade > 1 ? `${item.quantidade}x ` : ""}{item.nome}</p>
                       <p className="text-[10px] text-muted-foreground">
-                        {item.altura}×{item.largura}×{item.comprimento}cm · {areaItem.toFixed(2)}m² · {volItem.toFixed(2)}m³
+                        {item.altura}×{item.largura}×{item.comprimento}cm · {volItem.toFixed(2)}m³
                       </p>
                     </div>
                   </div>
@@ -235,7 +235,7 @@ const ItemDimensionInput = ({ items, onItemsChange }: ItemDimensionInputProps) =
           </div>
           <div className="flex justify-between text-xs font-semibold p-2 rounded-lg bg-primary/5 border border-primary/10">
             <span className="text-foreground">Total:</span>
-            <span className="text-primary">{Math.max(totalArea, 1).toFixed(1)} m² · {totalVolume.toFixed(1)} m³</span>
+            <span className="text-primary">{Math.max(totalVolume, 1).toFixed(1)} m³</span>
           </div>
         </div>
       )}

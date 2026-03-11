@@ -22,7 +22,7 @@ const SpaceDetails = () => {
   const space = (location.state as any)?.space;
   const simulation = (location.state as any)?.simulation;
   const initialDays = simulation?.days || 1;
-  const initialReservedArea = Math.max(simulation?.totalArea || 1, 1);
+  const initialReservedArea = Math.max(simulation?.totalVol || 1, 1);
 
   const [days, setDays] = useState(initialDays);
   const [reservedArea, setReservedArea] = useState(initialReservedArea);
@@ -74,7 +74,7 @@ const SpaceDetails = () => {
     navigate("/checkout", {
       state: {
         space,
-        reservedArea: effectiveReservedArea,
+        reservedVolume: effectiveReservedArea,
         days,
         simulation,
       },
@@ -205,13 +205,13 @@ const SpaceDetails = () => {
                   <Ruler size={14} className="text-primary" />
                   <div>
                     <p className="text-xs text-muted-foreground">Capacidade total</p>
-                    <p className="text-sm font-bold text-foreground">{space.area} m²</p>
+                    <p className="text-sm font-bold text-foreground">{space.area} m³</p>
                   </div>
                 </div>
                 <div className="w-px h-8 bg-border/60" />
                 <div>
                   <p className="text-xs text-muted-foreground">Disponível agora</p>
-                  <p className="text-sm font-bold text-primary">{availableArea} m²</p>
+                  <p className="text-sm font-bold text-primary">{availableArea} m³</p>
                 </div>
               </div>
 
@@ -374,7 +374,7 @@ const SpaceDetails = () => {
                         <div className="space-y-4">
                           {/* Area editor */}
                           <div>
-                            <label className="text-xs text-muted-foreground mb-1.5 block">Área reservada (m²)</label>
+                            <label className="text-xs text-muted-foreground mb-1.5 block">Volume reservado (m³)</label>
                             <div className="flex items-center gap-3 bg-secondary/50 rounded-lg p-3">
                               <button
                                 onClick={() => adjustArea(-1)}
@@ -385,7 +385,7 @@ const SpaceDetails = () => {
                               </button>
                               <div className="flex-1 text-center">
                                 <span className="text-2xl font-bold text-foreground">{effectiveReservedArea}</span>
-                                <span className="text-sm text-muted-foreground ml-1">m²</span>
+                                <span className="text-sm text-muted-foreground ml-1">m³</span>
                               </div>
                               <button
                                 onClick={() => adjustArea(1)}
@@ -395,7 +395,7 @@ const SpaceDetails = () => {
                                 <Plus size={14} className="text-foreground" />
                               </button>
                             </div>
-                            <p className="text-[10px] text-muted-foreground mt-1">Máximo disponível: {availableArea} m²</p>
+                            <p className="text-[10px] text-muted-foreground mt-1">Máximo disponível: {availableArea} m³</p>
                           </div>
 
                           {/* Days editor */}
@@ -431,8 +431,8 @@ const SpaceDetails = () => {
                       ) : (
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Área reservada</span>
-                            <span className="text-foreground font-medium">{effectiveReservedArea} m²</span>
+                            <span className="text-muted-foreground">Volume reservado</span>
+                            <span className="text-foreground font-medium">{effectiveReservedArea} m³</span>
                           </div>
                           <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">Período</span>
@@ -450,8 +450,8 @@ const SpaceDetails = () => {
                         <span className="text-foreground font-medium">R$ {subtotal.toFixed(2).replace(".", ",")}</span>
                       </div>
                       <div className="text-[11px] text-muted-foreground/70 pl-0.5">
-                        {effectiveReservedArea} m² × {days} {days === 1 ? "dia" : "dias"} → R$ {bp.pricePerM2.toFixed(2).replace(".", ",")}/m²
-                        {days > 1 && <> (≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m²/dia)</>}
+                        {effectiveReservedArea} m³ × {days} {days === 1 ? "dia" : "dias"} → R$ {bp.pricePerM3.toFixed(2).replace(".", ",")}/m³
+                        {days > 1 && <> (≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m³/dia)</>}
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Taxa de serviço (fixa)</span>
@@ -502,7 +502,7 @@ const SpaceDetails = () => {
                       setEditingReservation(true);
                       toast({
                         title: "Área aumentada",
-                        description: `Área reservada ajustada para ${Math.min(effectiveReservedArea + 1, availableArea)} m². Edite conforme sua necessidade.`,
+                        description: `Volume reservado ajustado para ${Math.min(effectiveReservedArea + 1, availableArea)} m³. Edite conforme sua necessidade.`,
                       });
                     }}
                     className="w-full flex items-center gap-3 text-left group"
@@ -527,7 +527,7 @@ const SpaceDetails = () => {
         <div className="container max-w-6xl flex items-center justify-between gap-4">
           <div>
             <p className="text-xl font-extrabold text-foreground">R$ {totalPrice.toFixed(2).replace(".", ",")}</p>
-            <p className="text-[11px] text-muted-foreground">{effectiveReservedArea} m² · {days} {days === 1 ? "dia" : "dias"}</p>
+            <p className="text-[11px] text-muted-foreground">{effectiveReservedArea} m³ · {days} {days === 1 ? "dia" : "dias"}</p>
           </div>
           <Button
             size="lg"

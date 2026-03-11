@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Info, DollarSign } from "lucide-react";
-import { PRICING_EXPLANATION, MIN_AREA, SERVICE_FEE, PRICE_HIGHLIGHTS } from "@/lib/pricing";
+import { PRICING_EXPLANATION, MIN_VOLUME, SERVICE_FEE, PRICE_HIGHLIGHTS } from "@/lib/pricing";
 
 const Pricing = () => {
   return (
@@ -20,7 +20,7 @@ const Pricing = () => {
             Pague muito menos que o mercado
           </h2>
           <p className="text-muted-foreground text-sm md:text-base max-w-lg mx-auto">
-            Preço por espaço. Sem surpresas. Sem contratos longos.
+            Preço por volume. Sem surpresas. Sem contratos longos.
           </p>
         </motion.div>
 
@@ -37,7 +37,7 @@ const Pricing = () => {
               <p className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold mb-3">Self storage tradicional</p>
               <div className="flex items-baseline gap-1.5 mb-4">
                 <span className="text-3xl md:text-5xl font-black text-muted-foreground/35 line-through decoration-destructive/40 decoration-2">R$80–150</span>
-                <span className="text-sm text-muted-foreground">/m² mês</span>
+                <span className="text-sm text-muted-foreground">/m³ mês</span>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-muted-foreground/60 text-xs md:text-sm">
@@ -60,10 +60,10 @@ const Pricing = () => {
               <p className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-primary-foreground/60 font-semibold mb-3">GuardaAí</p>
               <div className="flex items-baseline gap-1.5 mb-1">
                 <span className="text-3xl md:text-5xl font-black">R$45</span>
-                <span className="text-sm text-primary-foreground/50">/m² mês</span>
+                <span className="text-sm text-primary-foreground/50">/m³ mês</span>
               </div>
-              <p className="text-xs text-primary-foreground/40 mb-1">ou a partir de R$ 40,00/m² em planos anuais</p>
-              <p className="text-xs text-primary-foreground/40 mb-4">Diária a partir de R$ 5,00 / m²</p>
+              <p className="text-xs text-primary-foreground/40 mb-1">ou a partir de R$ 40,00/m³ em planos anuais</p>
+              <p className="text-xs text-primary-foreground/40 mb-4">Diária a partir de R$ 5,00 / m³</p>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-xs md:text-sm">
                   <Check size={14} className="text-accent shrink-0" /> Tabela progressiva — mais dias, menor valor
@@ -86,7 +86,7 @@ const Pricing = () => {
           viewport={{ once: true }}
           className="mb-6 md:mb-8"
         >
-          <h3 className="text-sm font-semibold text-foreground mb-3 text-center">Tabela progressiva (por 1 m²)</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-3 text-center">Tabela progressiva (por 1 m³)</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {PRICE_HIGHLIGHTS.map((h, i) => {
               const isPopular = h.days === 30;
@@ -114,7 +114,7 @@ const Pricing = () => {
                   )}
                   <p className={`text-lg md:text-xl font-extrabold ${isPopular ? "" : "text-foreground"}`}>
                     R${h.price.toFixed(2).replace(".", ",")}
-                    <span className={`text-xs font-normal ${isPopular ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/m²</span>
+                    <span className={`text-xs font-normal ${isPopular ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/m³</span>
                   </p>
                   <p className={`text-[10px] ${isPopular ? "text-primary-foreground/40" : "text-muted-foreground/60"}`}>
                     ≈ R${(h.price / h.days).toFixed(2).replace(".", ",")}/dia
@@ -134,7 +134,7 @@ const Pricing = () => {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-6 md:gap-8 py-3 md:py-4 px-4 md:px-0">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <CheckCircle size={14} className="text-primary shrink-0" />
-              <span>Cobrança mínima: {MIN_AREA} m²</span>
+              <span>Cobrança mínima: {MIN_VOLUME} m³</span>
             </div>
             <div className="hidden sm:block w-px h-4 bg-border" />
             <div className="flex items-center gap-2 text-xs text-muted-foreground">

@@ -21,9 +21,9 @@ import {
 } from "lucide-react";
 
 const earnings = [
-  { area: "3 m²", value: "R$ 135", desc: "Garagem pequena" },
-  { area: "5 m²", value: "R$ 225", desc: "Quarto vazio" },
-  { area: "10 m²", value: "R$ 450", desc: "Depósito médio" },
+  { area: "3 m³", value: "R$ 135", desc: "Garagem pequena" },
+  { area: "5 m³", value: "R$ 225", desc: "Quarto vazio" },
+  { area: "10 m³", value: "R$ 450", desc: "Depósito médio" },
 ];
 
 const spaceTypes = [
@@ -54,7 +54,7 @@ const securityItems = [
 
 const faqItems = [
   { q: "Que tipo de espaço posso anunciar?", a: "Garagens, quartos vazios, depósitos, áreas cobertas, galpões pequenos e espaços comerciais ociosos. O espaço precisa ser seguro e acessível." },
-  { q: "Como o valor é calculado?", a: "O valor base é de R$45/m² por mês. O sistema calcula automaticamente com base nas dimensões do espaço cadastrado." },
+  { q: "Como o valor é calculado?", a: "O valor base é de R$45/m³ por mês. O sistema calcula automaticamente com base no volume do espaço cadastrado." },
   { q: "Preciso receber pessoas dentro da minha casa?", a: "Não necessariamente. O espaço pode ser independente, como uma garagem com acesso externo. Você define as regras de acesso." },
   { q: "Posso recusar objetos?", a: "Sim. O anfitrião tem total direito de recusar objetos que considere inadequados ou que não se enquadrem nas regras da plataforma." },
   { q: "O que acontece se o cliente não retirar os itens?", a: "Após o prazo contratual, os objetos poderão ser considerados abandonados conforme os termos aceitos por ambas as partes." },
@@ -128,7 +128,7 @@ const HostLanding = () => {
                 </motion.div>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground text-center mt-6">* Valores ilustrativos com base em R$45/m² por mês.</p>
+            <p className="text-xs text-muted-foreground text-center mt-6">* Valores ilustrativos com base em R$45/m³ por mês.</p>
           </div>
         </section>
 

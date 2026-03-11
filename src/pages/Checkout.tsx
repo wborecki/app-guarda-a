@@ -273,8 +273,8 @@ const Checkout = () => {
                   <span className="font-medium text-foreground truncate max-w-[180px]">{space.name}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Área reservada</span>
-                  <span className="font-medium text-foreground">{reservedArea} m²</span>
+                  <span className="text-muted-foreground">Volume reservado</span>
+                  <span className="font-medium text-foreground">{reservedArea} m³</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Período</span>
@@ -769,8 +769,8 @@ const Checkout = () => {
                     {/* Reservation details */}
                     <div className="space-y-2 mb-4 pb-4 border-b border-border/50">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Área reservada</span>
-                        <span className="text-foreground font-medium">{reservedArea} m²</span>
+                        <span className="text-muted-foreground">Volume reservado</span>
+                        <span className="text-foreground font-medium">{reservedArea} m³</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Período</span>
@@ -825,7 +825,7 @@ const Checkout = () => {
                         <span className="text-foreground font-medium">{formatBRL(bp.subtotal)}</span>
                       </div>
                       <div className="text-[11px] text-muted-foreground/70 pl-0.5">
-                        {reservedArea} m² × {days} {days === 1 ? "dia" : "dias"} → {formatBRL(bp.pricePerM2)}/m²
+                        {reservedArea} m³ × {days} {days === 1 ? "dia" : "dias"} → {formatBRL(bp.pricePerM3)}/m³
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Taxa de serviço (fixa)</span>

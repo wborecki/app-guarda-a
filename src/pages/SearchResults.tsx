@@ -303,13 +303,13 @@ const SearchResults = () => {
   const navigate = useNavigate();
 
   const state = location.state as {
-    items?: any[]; location?: string; days?: number; totalArea?: number;
+    items?: any[]; location?: string; days?: number;
     totalVol?: number; estimatedPrice?: number; deliveryDate?: string;
     deliveryTime?: string; pickupDate?: string; pickupTime?: string;
   } | null;
 
   const days = state?.days || 1;
-  const totalArea = state?.totalArea || 0;
+  const totalVol = state?.totalVol || 0;
   const userLocation = state?.location || "Não informado";
   const shortLocation = useMemo(() => shortenLocation(userLocation), [userLocation]);
   const allSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
@@ -325,7 +325,7 @@ const SearchResults = () => {
 
     // Filters
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
-    if (filters.maxPrice !== null) result = result.filter(s => calculatePrice(Math.max(totalArea, 1), days).subtotal <= filters.maxPrice!);
+    if (filters.maxPrice !== null) result = result.filter(s => calculatePrice(Math.max(totalVol, 1), days).subtotal <= filters.maxPrice!);
     if (filters.maxDistance !== null) result = result.filter(s => s.distanceNum <= filters.maxDistance!);
     if (filters.minRating !== null) result = result.filter(s => s.rating >= filters.minRating!);
     if (filters.features.length > 0) result = result.filter(s => filters.features.every(f => s.features.includes(f)));
@@ -436,7 +436,7 @@ const SearchResults = () => {
           <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}><ArrowLeft size={20} /></Button>
           <div className="flex-1 min-w-0">
             <h1 className="text-lg font-bold text-foreground">Espaços disponíveis</h1>
-            <p className="text-sm text-muted-foreground truncate">{shortLocation} · {totalArea.toFixed(1)} m² · {days} {days === 1 ? "dia" : "dias"}</p>
+            <p className="text-sm text-muted-foreground truncate">{shortLocation} · {totalVol.toFixed(1)} m³ · {days} {days === 1 ? "dia" : "dias"}</p>
           </div>
           <span className="text-xs font-medium text-muted-foreground bg-secondary rounded-full px-2.5 py-1 hidden sm:block">
             {filteredSortedSpaces.length} resultado{filteredSortedSpaces.length !== 1 ? "s" : ""}
@@ -449,7 +449,7 @@ const SearchResults = () => {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-5 p-3 md:p-4 rounded-xl bg-primary/[0.04] border border-primary/15">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
             <div className="flex items-center gap-1.5"><MapPin size={14} className="text-primary flex-shrink-0" /><span className="text-foreground font-semibold">{shortLocation}</span></div>
-            <div className="flex items-center gap-1.5"><Ruler size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{totalArea.toFixed(1)} m²</span></div>
+            <div className="flex items-center gap-1.5"><Ruler size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{totalVol.toFixed(1)} m³</span></div>
             <div className="flex items-center gap-1.5"><Calendar size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span></div>
             {state?.deliveryDate && (
               <div className="flex items-center gap-1.5"><Clock size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{format(new Date(state.deliveryDate), "dd/MM", { locale: pt })} {state.deliveryTime}</span></div>
@@ -579,8 +579,8 @@ const SearchResults = () => {
             </motion.div>
           ) : (
             filteredSortedSpaces.map((space, index) => {
-              const reservedArea = Math.max(totalArea, 1);
-              const bp = calculatePrice(reservedArea, days);
+              const reservedVol = Math.max(totalVol, 1);
+              const bp = calculatePrice(reservedVol, days);
               return (
                 <motion.div key={space.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
                   <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer border-border/60" onClick={() => handleCardClick(space)}>
@@ -605,8 +605,8 @@ const SearchResults = () => {
                             </div>
                             <p className="text-xs text-muted-foreground mb-2">{space.type} · {space.neighborhood}, {space.city}</p>
                             <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                              <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m²</span>
-                              <span className="text-primary font-semibold">Disponível: {space.area} m²</span>
+                              <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m³</span>
+                              <span className="text-primary font-semibold">Disponível: {space.area} m³</span>
                             </div>
                             <div className="flex flex-wrap gap-1.5 mb-3">
                               {space.features.map((f) => (
@@ -622,7 +622,7 @@ const SearchResults = () => {
                               </div>
                               <p className="text-xl font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
                               <p className="text-[11px] text-muted-foreground mt-0.5">
-                                {reservedArea} m² reservado{reservedArea > 1 ? "s" : ""} × {days} {days === 1 ? "dia" : "dias"}
+                                {reservedVol} m³ × {days} {days === 1 ? "dia" : "dias"}
                               </p>
                               <p className="text-[10px] text-muted-foreground/60">+ taxa fixa R$ 28,00 no checkout</p>
                             </div>
