@@ -13,6 +13,8 @@ interface LocationAutocompleteProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  /** Hide the GPS locate button for compact layouts */
+  hideGps?: boolean;
 }
 
 const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta, 1200, São Paulo", className }: LocationAutocompleteProps) => {
