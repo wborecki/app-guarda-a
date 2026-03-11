@@ -1,11 +1,20 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/guardaai-logo-negative.png";
+import { useCallback } from "react";
 
 const Footer = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
 
-  const anchor = (hash: string) => (isHomePage ? hash : `/${hash}`);
+  const handleAnchor = useCallback((hash: string) => {
+    if (isHomePage) {
+      const id = hash.replace("#", "");
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/" + hash);
+    }
+  }, [isHomePage, navigate]);
 
   return (
     <footer className="bg-foreground text-background py-12 md:py-20">
@@ -23,10 +32,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-3 md:mb-4 text-xs md:text-sm">Para você</h4>
             <ul className="space-y-2 md:space-y-2.5 text-xs md:text-sm text-background/60">
-              <li><a href={anchor("#como-funciona")} className="hover:text-background transition-colors">Como funciona</a></li>
-              <li><a href={anchor("#precos")} className="hover:text-background transition-colors">Preços</a></li>
-              <li><a href={anchor("#simulador")} className="hover:text-background transition-colors">Simulador</a></li>
-              <li><a href={anchor("#seguranca")} className="hover:text-background transition-colors">Segurança</a></li>
+              <li><button onClick={() => handleAnchor("#como-funciona")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">Como funciona</button></li>
+              <li><button onClick={() => handleAnchor("#precos")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">Preços</button></li>
+              <li><Link to="/quero-guardar" className="hover:text-background transition-colors">Quero guardar</Link></li>
+              <li><button onClick={() => handleAnchor("#seguranca")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">Segurança</button></li>
               <li><Link to="/anunciar" className="hover:text-background transition-colors">Anunciar espaço</Link></li>
             </ul>
           </div>
@@ -35,9 +44,9 @@ const Footer = () => {
             <h4 className="font-semibold mb-3 md:mb-4 text-xs md:text-sm">Sua conta</h4>
             <ul className="space-y-2 md:space-y-2.5 text-xs md:text-sm text-background/60">
               <li><Link to="/entrar" className="hover:text-background transition-colors">Entrar</Link></li>
-              <li><a href={anchor("#simulador")} className="hover:text-background transition-colors">Guardar itens</a></li>
+              <li><Link to="/quero-guardar" className="hover:text-background transition-colors">Guardar itens</Link></li>
               <li><Link to="/anunciar" className="hover:text-background transition-colors">Anunciar espaço</Link></li>
-              <li><a href={anchor("#faq")} className="hover:text-background transition-colors">FAQ</a></li>
+              <li><button onClick={() => handleAnchor("#faq")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">FAQ</button></li>
             </ul>
           </div>
 
@@ -47,7 +56,7 @@ const Footer = () => {
               <li><Link to="/termos/locatario" className="hover:text-background transition-colors">Termos do locatário</Link></li>
               <li><Link to="/termos/anfitriao" className="hover:text-background transition-colors">Termos do anfitrião</Link></li>
               <li><Link to="/itens-proibidos" className="hover:text-background transition-colors">Itens proibidos</Link></li>
-              <li><Link to="/fale-conosco" className="hover:text-background transition-colors">Fale conosco</Link></li>
+              <li><button onClick={() => handleAnchor("#fale-conosco")} className="hover:text-background transition-colors bg-transparent border-none cursor-pointer text-inherit">Fale conosco</button></li>
             </ul>
           </div>
         </div>

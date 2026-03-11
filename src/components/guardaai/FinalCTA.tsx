@@ -1,12 +1,9 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ArrowRight, Home, Sparkles } from "lucide-react";
 
 const FinalCTA = () => {
-  const location = useLocation();
-  const isHomePage = location.pathname === "/";
-  const simulatorHref = isHomePage ? "#simulador" : "/#simulador";
   return (
     <section className="py-20 md:py-36">
       <div className="container max-w-7xl">
@@ -45,10 +42,10 @@ const FinalCTA = () => {
                 className="bg-accent hover:bg-accent/90 text-accent-foreground text-base md:text-lg px-8 md:px-10 h-13 md:h-14 group shadow-xl shadow-accent/30 font-semibold rounded-xl md:rounded-2xl w-full sm:w-auto"
                 asChild
               >
-                <a href={simulatorHref}>
+                <Link to="/quero-guardar">
                   Encontrar um espaço
                   <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </a>
+                </Link>
               </Button>
               <Button
                 size="lg"

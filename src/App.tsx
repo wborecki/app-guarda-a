@@ -15,6 +15,7 @@ import TermsRenter from "./pages/TermsRenter";
 import TermsHost from "./pages/TermsHost";
 import ProhibitedItems from "./pages/ProhibitedItems";
 import Contact from "./pages/Contact";
+import QueroGuardar from "./pages/QueroGuardar";
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import DashboardOverview from "./pages/dashboard/DashboardOverview";
 import DashboardReservas from "./pages/dashboard/DashboardReservas";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/termos/anfitriao" element={<TermsHost />} />
           <Route path="/itens-proibidos" element={<ProhibitedItems />} />
           <Route path="/contato" element={<Contact />} />
+          <Route path="/quero-guardar" element={<QueroGuardar />} />
           <Route path="/fale-conosco" element={<Contact />} />
           
           {/* Dashboard - Área do cliente */}
