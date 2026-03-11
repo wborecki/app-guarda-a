@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Camera, FileText, ShieldAlert, Ban, Clock, UserX, Shield, Handshake } from "lucide-react";
+import { Camera, FileText, ShieldAlert, Ban, Clock, UserX, Shield, Handshake, Lock, Home } from "lucide-react";
 
 const userFeatures = [
   { icon: Camera, title: "Cadastro com foto", desc: "Objetos fotografados e registrados na plataforma." },

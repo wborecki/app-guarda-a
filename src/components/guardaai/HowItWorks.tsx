@@ -48,7 +48,7 @@ const StepCard = ({ step, index, variant }: { step: typeof stepsGuardar[0]; inde
 
 const HowItWorks = () => {
   return (
-    <section id="como-funciona" className="py-16 md:py-28 bg-secondary/50">
+    <section id="como-funciona" className="py-14 md:py-20 bg-secondary/50">
       <div className="container">
         <motion.div {...fadeIn} transition={{ duration: 0.5 }} className="text-center mb-8 md:mb-12">
           <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4">

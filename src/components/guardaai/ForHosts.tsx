@@ -11,7 +11,7 @@ const examples = [
 
 const ForHosts = () => {
   return (
-    <section id="anfitriao" className="py-16 md:py-32 bg-secondary/50">
+    <section id="anfitriao" className="py-14 md:py-20 bg-secondary/50">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
           <motion.div

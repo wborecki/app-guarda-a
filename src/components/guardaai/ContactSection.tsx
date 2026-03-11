@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const ContactSection = () => {
   return (
-    <section id="fale-conosco" className="py-16 md:py-24">
+    <section id="fale-conosco" className="py-14 md:py-20">
       <div className="container max-w-3xl text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

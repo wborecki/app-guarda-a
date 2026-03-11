@@ -272,12 +272,12 @@ const Hero = () => {
             >
               Anunciar espaço →
             </Link>
-            <a
-              href="#simulador"
+            <Link
+              to="/quero-guardar"
               className="text-[12px] text-muted-foreground/60 hover:text-primary transition-colors"
             >
-              Simulador detalhado ↓
-            </a>
+              Simulador detalhado →
+            </Link>
           </motion.div>
         </motion.div>
       </div>

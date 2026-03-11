@@ -5,7 +5,7 @@ import { ArrowRight, Home, Sparkles } from "lucide-react";
 
 const FinalCTA = () => {
   return (
-    <section className="py-20 md:py-36">
+    <section className="py-16 md:py-24">
       <div className="container max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
