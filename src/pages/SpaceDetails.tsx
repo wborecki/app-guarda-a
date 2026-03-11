@@ -50,14 +50,7 @@ const SpaceDetails = () => {
   }, [emblaApi]);
 
   if (!space) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground mb-4">Espaço não encontrado</p>
-          <Button onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")}>Voltar</Button>
-        </div>
-      </div>
-    );
+    return <SpaceDetailsSkeleton />;
   }
 
   // Available capacity = total - already occupied (simulated)
