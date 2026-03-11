@@ -581,19 +581,19 @@ const SpaceDetails = () => {
         </div>
       </div>
 
-      {/* ═══ Mobile sticky CTA ═══ */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-30 lg:hidden">
-        <div className="container max-w-6xl flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xl font-extrabold text-foreground">R$ {totalPrice.toFixed(2).replace(".", ",")}</p>
-            <p className="text-[11px] text-muted-foreground">{effectiveReservedArea} m³ · {days} {days === 1 ? "dia" : "dias"}</p>
+      {/* ═══ Mobile sticky CTA — always visible ═══ */}
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden safe-area-bottom">
+        <div className="container max-w-6xl flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-lg sm:text-xl font-extrabold text-foreground leading-none">R$ {totalPrice.toFixed(0)}</p>
+            <p className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5">{effectiveReservedArea} m³ · {days} {days === 1 ? "dia" : "dias"} · total</p>
           </div>
           <Button
-            size="lg"
-            className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold shadow-md"
+            size="default"
+            className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold shadow-md px-5 sm:px-6"
             onClick={handleContinue}
           >
-            Reservar online
+            Reservar
           </Button>
         </div>
       </div>
