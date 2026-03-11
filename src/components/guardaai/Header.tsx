@@ -101,32 +101,32 @@ const Header = () => {
         </div>
 
         {/* Mobile: login icon + hamburger */}
-        <div className="flex lg:hidden items-center gap-1">
+        <div className="flex lg:hidden items-center gap-0">
           {!loading && (
             user ? (
-              <Button size="icon" variant="ghost" className="h-10 w-10" asChild>
+              <Button size="icon" variant="ghost" className="h-9 w-9" asChild>
                 <Link to="/minha-conta">
-                  <Avatar className="h-7 w-7">
-                    <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
+                  <Avatar className="h-6 w-6">
+                    <AvatarFallback className="bg-primary/10 text-primary text-[9px] font-medium">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
                 </Link>
               </Button>
             ) : (
-              <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground" asChild>
+              <Button size="icon" variant="ghost" className="h-9 w-9 text-muted-foreground" asChild>
                 <Link to="/entrar">
-                  <LogIn size={20} />
+                  <LogIn size={18} />
                 </Link>
               </Button>
             )
           )}
           <button
-            className="p-2 text-foreground"
+            className="p-1.5 text-foreground"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Menu"
           >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
