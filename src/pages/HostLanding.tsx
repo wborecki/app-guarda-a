@@ -399,6 +399,8 @@ const HostLanding = () => {
                         </div>
                       </>
                     )}
+                    </>
+                    )}
                   </div>
                 </form>
               </motion.div>
