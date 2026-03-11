@@ -68,6 +68,9 @@ const HostLanding = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
+  const [photos, setPhotos] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [form, setForm] = useState({
     location: "",
     spaceType: "", spaceCategory: "",
@@ -78,6 +81,23 @@ const HostLanding = () => {
     accessType: "",
     notes: "",
   });
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const total = photos.length + files.length;
+    if (total > 5) {
+      toast({ title: "Limite de fotos", description: "Você pode enviar no máximo 5 fotos.", variant: "destructive" });
+      const allowed = files.slice(0, 5 - photos.length);
+      setPhotos(prev => [...prev, ...allowed]);
+    } else {
+      setPhotos(prev => [...prev, ...files]);
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
+  };
 
   const isLoggedIn = !!user;
 
