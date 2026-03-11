@@ -85,25 +85,35 @@ const Header = () => {
             </Button>
 
             {!loading && (
-              user ? (
-                <Button size="sm" variant="ghost" className="text-foreground hover:bg-secondary gap-2" asChild>
-                  <Link to="/minha-conta">
-                    <Avatar className="h-6 w-6">
-                      <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="max-w-[100px] truncate text-sm">{displayName || "Minha conta"}</span>
-                  </Link>
-                </Button>
-              ) : (
-                <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
-                  <Link to="/entrar">
-                    <User size={16} />
-                    Entrar
-                  </Link>
-                </Button>
-              )
+              <>
+                {user ? (
+                  <Button size="sm" variant="ghost" className="text-foreground hover:bg-secondary gap-2" asChild>
+                    <Link to="/minha-conta">
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="max-w-[100px] truncate text-sm">{displayName || "Minha conta"}</span>
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
+                    <Link to="/entrar">
+                      <User size={16} />
+                      Entrar
+                    </Link>
+                  </Button>
+                )}
+                {isAdmin && (
+                  <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
+                    <Link to="/admin">
+                      <ShieldCheck size={16} />
+                      Admin
+                    </Link>
+                  </Button>
+                )}
+              </>
             )}
           </div>
 
