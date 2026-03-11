@@ -129,7 +129,7 @@ export type Database = {
           id: string
           notes: string | null
           renter_id: string
-          space_id: string
+          space_id: string | null
           start_date: string
           status: string
           total_price: number
@@ -143,7 +143,7 @@ export type Database = {
           id?: string
           notes?: string | null
           renter_id: string
-          space_id: string
+          space_id?: string | null
           start_date: string
           status?: string
           total_price?: number
@@ -157,7 +157,7 @@ export type Database = {
           id?: string
           notes?: string | null
           renter_id?: string
-          space_id?: string
+          space_id?: string | null
           start_date?: string
           status?: string
           total_price?: number
