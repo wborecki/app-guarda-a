@@ -26,6 +26,7 @@ import DashboardMensagens from "./pages/dashboard/DashboardMensagens";
 import DashboardFinanceiro from "./pages/dashboard/DashboardFinanceiro";
 import DashboardPerfil from "./pages/dashboard/DashboardPerfil";
 import { AuthProvider } from "./hooks/useAuth";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/anunciar" element={<HostLanding />} />
