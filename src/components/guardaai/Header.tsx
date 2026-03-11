@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { Menu, X, User, LogIn } from "lucide-react";
+import { Menu, X, User, LogIn, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import logo from "@/assets/guardaai-logo-transparent.png";
 
 const navLinks = [
@@ -17,8 +19,12 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const isHostPage = location.pathname === "/anunciar";
+  const { user, displayName, loading } = useAuth();
 
-  // Prevent body scroll when mobile menu is open
+  const initials = displayName
+    ? displayName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+    : "U";
+
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
@@ -68,21 +74,52 @@ const Header = () => {
           <Button size="sm" variant="outline" className="border-primary text-primary hover:bg-primary/5" asChild>
             <Link to="/anunciar">Anunciar espaço</Link>
           </Button>
-          <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
-            <Link to="/entrar">
-              <User size={16} />
-              Entrar
-            </Link>
-          </Button>
+
+          {/* Auth state */}
+          {!loading && (
+            user ? (
+              <Button size="sm" variant="ghost" className="text-foreground hover:bg-secondary gap-2" asChild>
+                <Link to="/minha-conta">
+                  <Avatar className="h-6 w-6">
+                    <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="max-w-[100px] truncate text-sm">{displayName || "Minha conta"}</span>
+                </Link>
+              </Button>
+            ) : (
+              <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
+                <Link to="/entrar">
+                  <User size={16} />
+                  Entrar
+                </Link>
+              </Button>
+            )
+          )}
         </div>
 
         {/* Mobile: login icon + hamburger */}
         <div className="flex lg:hidden items-center gap-1">
-          <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground" asChild>
-            <Link to="/entrar">
-              <LogIn size={20} />
-            </Link>
-          </Button>
+          {!loading && (
+            user ? (
+              <Button size="icon" variant="ghost" className="h-10 w-10" asChild>
+                <Link to="/minha-conta">
+                  <Avatar className="h-7 w-7">
+                    <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+              </Button>
+            ) : (
+              <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground" asChild>
+                <Link to="/entrar">
+                  <LogIn size={20} />
+                </Link>
+              </Button>
+            )
+          )}
           <button
             className="p-2 text-foreground"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -93,7 +130,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile menu - full screen overlay */}
+      {/* Mobile menu */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 top-14 z-40 bg-background/98 backdrop-blur-lg overflow-y-auto">
           <nav className="container flex flex-col gap-1 pt-6 pb-8">
@@ -132,12 +169,22 @@ const Header = () => {
               <Button variant="outline" className="border-primary text-primary hover:bg-primary/5 h-12 text-base" asChild>
                 <Link to="/anunciar" onClick={() => setMobileOpen(false)}>Anunciar espaço</Link>
               </Button>
-              <Button variant="ghost" className="text-muted-foreground hover:text-foreground gap-2 h-12 text-base" asChild>
-                <Link to="/entrar" onClick={() => setMobileOpen(false)}>
-                  <User size={18} />
-                  Entrar na minha conta
-                </Link>
-              </Button>
+
+              {user ? (
+                <Button variant="ghost" className="text-foreground hover:bg-secondary gap-2 h-12 text-base" asChild>
+                  <Link to="/minha-conta" onClick={() => setMobileOpen(false)}>
+                    <LayoutDashboard size={18} />
+                    Minha conta
+                  </Link>
+                </Button>
+              ) : (
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground gap-2 h-12 text-base" asChild>
+                  <Link to="/entrar" onClick={() => setMobileOpen(false)}>
+                    <User size={18} />
+                    Entrar na minha conta
+                  </Link>
+                </Button>
+              )}
             </div>
           </nav>
         </div>
