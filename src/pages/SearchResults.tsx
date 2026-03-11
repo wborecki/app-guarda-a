@@ -44,9 +44,20 @@ const SearchResults = () => {
   const shortLocation = useMemo(() => shortenLocation(userLocation), [userLocation]);
   const templateSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
 
+  // Resolve photo URL — handles storage paths and full URLs
+  const resolvePhotoUrl = (path: string) => {
+    if (!path || path === "/placeholder.svg") return "/placeholder.svg";
+    if (path.startsWith("http")) return path;
+    // Storage path — build public URL
+    const { data } = supabase.storage.from("space-photos").getPublicUrl(path);
+    return data?.publicUrl || "/placeholder.svg";
+  };
+
   // Fetch real published spaces from database
   const [dbSpaces, setDbSpaces] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasRealSpaces, setHasRealSpaces] = useState(false);
+
   useEffect(() => {
     const fetchPublished = async () => {
       setIsLoading(true);
@@ -54,7 +65,13 @@ const SearchResults = () => {
         .from("spaces")
         .select("*")
         .eq("status", "published");
-      if (!data || data.length === 0) { setDbSpaces([]); setIsLoading(false); return; }
+
+      if (!data || data.length === 0) {
+        setDbSpaces([]);
+        setHasRealSpaces(false);
+        setIsLoading(false);
+        return;
+      }
 
       const typeMap: Record<string, string> = {
         garagem: "Garagem", quarto: "Quarto", deposito: "Depósito",
@@ -65,43 +82,58 @@ const SearchResults = () => {
         const locParts = (s.location || "").split(",").map((p: string) => p.trim());
         const neighborhood = locParts[0] || "Centro";
         const city = locParts.length >= 4 ? locParts[3] : locParts[1] || "";
-        const vol = s.volume || (s.width * s.length * s.height) || 0;
+        const vol = s.volume || ((s.width || 0) * (s.length || 0) * (s.height || 0)) || 0;
         const dailyRate = getDailyRate(Math.max(vol, 1));
+
+        const photos = (s.photos && s.photos.length > 0)
+          ? s.photos.map((p: string) => resolvePhotoUrl(p))
+          : ["/placeholder.svg"];
 
         return {
           id: `db-${s.id}`,
           dbId: s.id,
-          name: `${typeMap[s.space_type] || s.space_type} disponível`,
+          hostId: s.user_id,
+          name: s.description?.split(".")[0]?.slice(0, 40) || `${typeMap[s.space_type] || s.space_type} disponível`,
           type: typeMap[s.space_type] || s.space_type || "Espaço",
           area: Number(vol) || 8,
           pricePerDay: dailyRate,
           description: s.description || "Espaço disponível para guardar seus itens com segurança.",
-          photos: s.photos && s.photos.length > 0 ? s.photos : ["/placeholder.svg"],
+          photos,
           features: [
             s.covered ? "Coberto" : null,
             s.closed ? "Fechado" : null,
             s.easy_access ? "Fácil acesso" : null,
             s.security_features ? s.security_features.split(",")[0]?.trim() : null,
           ].filter(Boolean) as string[],
-          owner: "Anfitrião", ownerPhoto: `https://i.pravatar.cc/100?img=${30 + i}`,
+          owner: "Anfitrião",
+          ownerPhoto: `https://i.pravatar.cc/100?img=${30 + i}`,
           ownerSince: new Date(s.created_at).getFullYear().toString(),
           ownerDescription: "Anfitrião verificado na plataforma.",
-          rating: 0, reviews: 0,
-          address: `${neighborhood}`,
-          neighborhood, city,
-          distance: "—", distanceNum: 999,
+          rating: 0,
+          reviews: 0,
+          address: neighborhood,
+          neighborhood,
+          city,
+          distance: "—",
+          distanceNum: 999,
           reviewsList: [],
-          lat: 0, lng: 0,
+          lat: 0,
+          lng: 0,
           isReal: true,
         };
       });
       setDbSpaces(mapped);
+      setHasRealSpaces(true);
       setIsLoading(false);
     };
     fetchPublished();
   }, []);
 
-  const allSpaces = useMemo(() => [...dbSpaces, ...templateSpaces], [dbSpaces, templateSpaces]);
+  // Show real spaces when available, fall back to mock with a notice
+  const allSpaces = useMemo(
+    () => (hasRealSpaces ? dbSpaces : templateSpaces),
+    [dbSpaces, templateSpaces, hasRealSpaces]
+  );
 
   // ── State ──
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
