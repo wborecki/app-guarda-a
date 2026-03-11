@@ -202,20 +202,4 @@ const QueroGuardar = () => {
   );
 };
 
-/** Simulator wrapped in a compact card to match HostLanding form style */
-const SimulatorCard = () => {
-  return (
-    <div className="rounded-2xl bg-card border shadow-lg overflow-hidden">
-      <div className="text-center pt-5 pb-2 px-5">
-        <h2 className="text-lg font-bold text-foreground">Simule seu armazenamento</h2>
-        <p className="text-xs text-muted-foreground">Descubra o preço em segundos.</p>
-      </div>
-      {/* Embed the Simulator component but override its outer wrapper styles */}
-      <div className="simulator-card-wrapper">
-        <Simulator />
-      </div>
-    </div>
-  );
-};
-
 export default QueroGuardar;
