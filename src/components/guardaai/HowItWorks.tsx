@@ -27,21 +27,21 @@ const fadeIn = {
 const StepCard = ({ step, index, variant }: { step: typeof stepsGuardar[0]; index: number; variant: "primary" | "accent" }) => (
   <motion.div
     key={index}
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 16 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ delay: index * 0.1 }}
-    className="flex items-start gap-4 md:flex-col md:items-center md:text-center p-4"
+    transition={{ delay: index * 0.08 }}
+    className="flex items-start gap-3.5 md:flex-col md:items-center md:text-center py-3 px-1 md:p-4"
   >
-    <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl ${variant === "primary" ? "bg-primary/10" : "bg-accent/10"} flex items-center justify-center shrink-0 relative`}>
-      <step.icon size={22} className={variant === "primary" ? "text-primary" : "text-accent"} />
-      <span className={`absolute -top-1.5 -right-1.5 w-5 h-5 md:w-6 md:h-6 rounded-full ${variant === "primary" ? "bg-primary" : "bg-accent"} text-${variant === "primary" ? "primary" : "accent"}-foreground text-[10px] md:text-xs font-bold flex items-center justify-center`}>
+    <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl ${variant === "primary" ? "bg-primary/8" : "bg-accent/8"} flex items-center justify-center shrink-0 relative`}>
+      <step.icon size={18} className={`md:w-[22px] md:h-[22px] ${variant === "primary" ? "text-primary" : "text-accent"}`} />
+      <span className={`absolute -top-1 -right-1 w-[18px] h-[18px] md:w-6 md:h-6 rounded-full ${variant === "primary" ? "bg-primary" : "bg-accent"} text-${variant === "primary" ? "primary" : "accent"}-foreground text-[9px] md:text-xs font-bold flex items-center justify-center`}>
         {index + 1}
       </span>
     </div>
-    <div>
-      <h3 className="font-semibold text-foreground text-sm mb-0.5">{step.title}</h3>
-      <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+    <div className="min-w-0">
+      <h3 className="font-semibold text-foreground text-[13px] md:text-sm mb-0.5 leading-tight">{step.title}</h3>
+      <p className="text-[11.5px] md:text-xs text-muted-foreground/75 leading-relaxed">{step.desc}</p>
     </div>
   </motion.div>
 );
