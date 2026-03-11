@@ -579,8 +579,8 @@ const SearchResults = () => {
             </motion.div>
           ) : (
             filteredSortedSpaces.map((space, index) => {
-              const reservedArea = Math.max(totalArea, 1);
-              const bp = calculatePrice(reservedArea, days);
+              const reservedVol = Math.max(totalVol, 1);
+              const bp = calculatePrice(reservedVol, days);
               return (
                 <motion.div key={space.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
                   <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer border-border/60" onClick={() => handleCardClick(space)}>
