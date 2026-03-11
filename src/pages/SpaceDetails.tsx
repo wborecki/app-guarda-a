@@ -127,6 +127,33 @@ const SpaceDetails = () => {
               </div>
             </div>
           </div>
+          {/* Quick price on header */}
+          <div className="hidden sm:flex flex-col items-end">
+            <p className="text-base font-extrabold text-foreground">R$ {totalPrice.toFixed(0)}</p>
+            <p className="text-[10px] text-muted-foreground">{effectiveReservedArea} m³ · {days}d · total</p>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Steps bar: Compare → Escolha → Reserve ── */}
+      <div className="bg-primary/[0.03] border-b">
+        <div className="container max-w-6xl py-2.5">
+          <div className="flex items-center justify-center gap-6 text-xs">
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold">1</span>
+              Compare
+            </span>
+            <ChevronRight size={12} className="text-border" />
+            <span className="flex items-center gap-1.5 text-primary font-semibold">
+              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">2</span>
+              Escolha
+            </span>
+            <ChevronRight size={12} className="text-border" />
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold">3</span>
+              Reserve online
+            </span>
+          </div>
         </div>
       </div>
 
