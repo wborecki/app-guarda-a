@@ -54,7 +54,7 @@ const SearchResults = () => {
         .from("spaces")
         .select("*")
         .eq("status", "published");
-      if (!data || data.length === 0) { setDbSpaces([]); return; }
+      if (!data || data.length === 0) { setDbSpaces([]); setIsLoading(false); return; }
 
       const typeMap: Record<string, string> = {
         garagem: "Garagem", quarto: "Quarto", deposito: "Depósito",
