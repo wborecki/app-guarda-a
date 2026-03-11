@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import Header from "@/components/guardaai/Header";
 import Hero from "@/components/guardaai/Hero";
 import HowItWorks from "@/components/guardaai/HowItWorks";
