@@ -26,6 +26,7 @@ const TermsHost = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Termos do Anfitrião" description="Termos e condições para anfitriões na plataforma GuardaAí. Leia antes de anunciar seu espaço." canonical="/termos/anfitriao" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container max-w-3xl px-4 md:px-8">

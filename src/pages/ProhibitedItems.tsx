@@ -23,6 +23,7 @@ const ProhibitedItems = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Itens proibidos" description="Confira a lista de itens proibidos para armazenamento na GuardaAí. Armas, explosivos, inflamáveis e outros materiais não permitidos." canonical="/itens-proibidos" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container max-w-4xl px-4 md:px-8">

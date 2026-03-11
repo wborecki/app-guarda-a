@@ -270,6 +270,7 @@ const SpaceOnboarding = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Cadastrar espaço" description="Complete o cadastro do seu espaço na GuardaAí e comece a receber reservas." noIndex />
       <Header />
       <main className="pt-20 pb-16">
         <div className="container max-w-4xl mx-auto px-4">

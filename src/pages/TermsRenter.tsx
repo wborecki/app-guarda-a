@@ -26,6 +26,7 @@ const TermsRenter = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Termos do Locatário" description="Termos e condições para locatários na plataforma GuardaAí. Leia antes de reservar um espaço." canonical="/termos/locatario" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container max-w-3xl px-4 md:px-8">
