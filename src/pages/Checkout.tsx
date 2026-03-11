@@ -73,7 +73,13 @@ const Checkout = () => {
   // Photo upload state
   const [photos, setPhotos] = useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
-  const [analysisStatus, setAnalysisStatus] = useState<"pending" | "analyzing" | "approved" | "blocked">("pending");
+  const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus>("pending");
+  const [analysisResult, setAnalysisResult] = useState<{
+    reason?: string;
+    detected_items?: string[];
+    flagged_items?: string[];
+    confidence?: number;
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Terms state
