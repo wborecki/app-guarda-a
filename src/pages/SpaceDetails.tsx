@@ -576,8 +576,8 @@ const SpaceDetails = () => {
                 </CardContent>
               </Card>
             </div>
-          </div>
         </div>
+      </div>
       </div>
 
       {/* ═══ Mobile sticky CTA ═══ */}
