@@ -519,8 +519,10 @@ const SpaceDetails = () => {
                     <p className="text-center text-[10px] text-muted-foreground mt-2">
                       Reserva rápida, segura e sem compromisso até a confirmação.
                     </p>
+
+                    <button
                       onClick={() => setEditingReservation(!editingReservation)}
-                      className="w-full text-center text-sm text-primary font-semibold mt-3 hover:underline flex items-center justify-center gap-1.5"
+                      className="w-full text-center text-sm text-primary font-semibold mt-2 hover:underline flex items-center justify-center gap-1.5"
                     >
                       <Package size={14} />
                       {editingReservation ? "Fechar edição" : "Editar reserva"}
