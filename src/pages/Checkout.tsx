@@ -359,7 +359,6 @@ const Checkout = () => {
                        <p className="text-xs text-muted-foreground mb-5">
                          Envie fotos dos seus itens para análise automática de conformidade. A aprovação depende da verificação dos itens conforme a política da plataforma.
                        </p>
-                      </p>
 
                       {/* ── Photo Upload ── */}
                       <div className="mb-6">
