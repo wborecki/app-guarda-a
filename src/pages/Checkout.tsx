@@ -340,10 +340,10 @@ const Checkout = () => {
         </div>
       </div>
 
-      <div className="container max-w-5xl py-6">
+      <div className="container max-w-5xl py-4 sm:py-6">
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8">
           {/* ═══ LEFT — Forms ═══ */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Step 1: Auth */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <CheckoutAuth />
