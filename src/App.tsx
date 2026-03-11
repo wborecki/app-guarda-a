@@ -29,6 +29,11 @@ import DashboardPerfil from "./pages/dashboard/DashboardPerfil";
 import { AuthProvider } from "./hooks/useAuth";
 import ScrollToTop from "./components/ScrollToTop";
 import FloatingChat from "./components/guardaai/FloatingChat";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminEspacos from "./pages/admin/AdminEspacos";
+import AdminAnalises from "./pages/admin/AdminAnalises";
+import AdminUsuarios from "./pages/admin/AdminUsuarios";
 
 const queryClient = new QueryClient();
 
