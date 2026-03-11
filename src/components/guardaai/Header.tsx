@@ -36,10 +36,10 @@ const Header = () => {
   }, [mobileOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b">
-      <div className="container flex items-center justify-between h-14 md:h-[72px]">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="GuardaAí" className="h-8 md:h-9" />
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/92 backdrop-blur-md border-b border-border/60">
+      <div className="container flex items-center justify-between h-[52px] md:h-[72px]">
+        <Link to="/" className="flex items-center">
+          <img src={logo} alt="GuardaAí" className="h-[26px] md:h-9" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-7">
