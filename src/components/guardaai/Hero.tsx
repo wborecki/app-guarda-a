@@ -90,7 +90,7 @@ const Hero = () => {
             </div>
 
             {/* Headline */}
-            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-4 tracking-tight">
+            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-5 tracking-tight">
               Guarde perto.<br />
               <span className="text-primary">Pague menos.</span>
             </h1>
