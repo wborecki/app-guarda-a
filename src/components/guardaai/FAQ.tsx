@@ -66,29 +66,29 @@ const faqs = [
 
 const FAQ = () => {
   return (
-    <section id="faq" className="py-14 md:py-20 bg-secondary/50">
-      <div className="container max-w-3xl px-4 md:px-8">
+    <section id="faq" className="py-10 md:py-20 bg-secondary/40">
+      <div className="container max-w-3xl px-5 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-8 md:mb-12"
+          className="text-center mb-6 md:mb-12"
         >
-          <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4">
+          <h2 className="text-[1.3rem] md:text-4xl font-bold text-foreground mb-1.5 md:mb-4 leading-tight">
             Perguntas frequentes
           </h2>
-          <p className="text-muted-foreground text-sm md:text-lg">
+          <p className="text-muted-foreground text-[13px] md:text-lg">
             Tire suas dúvidas sobre o GuardaAí.
           </p>
         </motion.div>
 
-        <Accordion type="single" collapsible className="space-y-2">
+        <Accordion type="single" collapsible className="space-y-1.5 md:space-y-2">
           {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="bg-card border rounded-xl px-4 md:px-6">
-              <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline text-sm md:text-base py-3.5 md:py-4">
+            <AccordionItem key={i} value={`faq-${i}`} className="bg-card border border-border/60 rounded-xl px-3.5 md:px-6">
+              <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline text-[13px] md:text-base py-3 md:py-4">
                 {faq.q}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground text-xs md:text-sm leading-relaxed pb-3.5 md:pb-4">
+              <AccordionContent className="text-muted-foreground/80 text-[11.5px] md:text-sm leading-relaxed pb-3 md:pb-4">
                 {faq.a}
               </AccordionContent>
             </AccordionItem>
