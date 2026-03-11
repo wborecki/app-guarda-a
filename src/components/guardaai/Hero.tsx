@@ -162,7 +162,7 @@ const Hero = () => {
                   </div>
 
                   {/* CTA */}
-                  <div className="flex items-center pl-3 pr-1">
+                  <div className="flex items-center pl-4 pr-1.5">
                     <Button
                       onClick={handleSearch}
                       size="lg"
