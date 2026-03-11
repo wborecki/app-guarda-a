@@ -94,14 +94,7 @@ const Checkout = () => {
   const verificationComplete = photosApproved && allTermsAccepted;
 
   if (!space) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground mb-4">Reserva não encontrada</p>
-          <Button onClick={() => navigate("/")}>Voltar ao início</Button>
-        </div>
-      </div>
-    );
+    return <CheckoutSkeleton />;
   }
 
   const bp = calculatePrice(reservedArea, days);
