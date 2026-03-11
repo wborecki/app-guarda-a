@@ -656,8 +656,8 @@ const SpaceOnboarding = () => {
                     <div>
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Chave Pix</label>
                       <Input
-                        value={space.pix_key}
-                        onChange={e => updateSpace({ pix_key: e.target.value })}
+                        value={pixKeyLocal}
+                        onChange={e => setPixKeyLocal(e.target.value)}
                         placeholder="Informe sua chave Pix"
                         className="h-10 text-sm"
                       />
@@ -666,8 +666,8 @@ const SpaceOnboarding = () => {
                     <div>
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Nome do favorecido</label>
                       <Input
-                        value={space.beneficiary_name}
-                        onChange={e => updateSpace({ beneficiary_name: e.target.value })}
+                        value={beneficiaryLocal}
+                        onChange={e => setBeneficiaryLocal(e.target.value)}
                         placeholder="Nome completo do titular"
                         className="h-10 text-sm"
                       />
@@ -676,8 +676,8 @@ const SpaceOnboarding = () => {
                     <div>
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">CPF ou CNPJ</label>
                       <Input
-                        value={space.document_number}
-                        onChange={e => updateSpace({ document_number: e.target.value })}
+                        value={documentLocal}
+                        onChange={e => setDocumentLocal(e.target.value)}
                         placeholder="000.000.000-00"
                         className="h-10 text-sm"
                       />
