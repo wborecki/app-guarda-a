@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { Menu, X, User, LogIn, LayoutDashboard } from "lucide-react";
+import { Menu, X, User, LogIn, LayoutDashboard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import logo from "@/assets/guardaai-logo-transparent.png";
 
