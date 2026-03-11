@@ -441,24 +441,26 @@ const SearchResults = () => {
 
   // ── Map spaces ──
   const mapSpaces: MapSpace[] = useMemo(() => {
-    return filteredSortedSpaces.map((s) => {
-      const reservedVol = Math.max(totalVol, 1);
-      const bp = calculatePrice(reservedVol, days);
-      return {
-        id: s.id,
-        name: s.name,
-        type: s.type,
-        neighborhood: s.neighborhood,
-        city: s.city,
-        distance: s.distance,
-        rating: s.rating,
-        reviews: s.reviews,
-        price: `R$ ${bp.subtotal.toFixed(0)}`,
-        photo: s.photos[0],
-        lat: s.lat,
-        lng: s.lng,
-      };
-    });
+    return filteredSortedSpaces
+      .filter((s) => s.lat !== 0 && s.lng !== 0)
+      .map((s) => {
+        const reservedVol = Math.max(totalVol, 1);
+        const bp = calculatePrice(reservedVol, days);
+        return {
+          id: s.id,
+          name: s.name,
+          type: s.type,
+          neighborhood: s.neighborhood,
+          city: s.city,
+          distance: s.distance,
+          rating: s.rating,
+          reviews: s.reviews,
+          price: `R$ ${bp.subtotal.toFixed(0)}`,
+          photo: s.photos[0],
+          lat: s.lat,
+          lng: s.lng,
+        };
+      });
   }, [filteredSortedSpaces, totalVol, days]);
 
   // ── Active filter chips ──
