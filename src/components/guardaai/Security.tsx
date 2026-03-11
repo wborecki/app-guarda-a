@@ -77,7 +77,8 @@ const Security = () => {
               viewport={{ once: true }}
               className="text-base md:text-xl font-bold text-foreground mb-4 md:mb-6 text-center"
             >
-              🏠 Para quem oferece espaço
+              <Home size={18} className="inline mr-2 text-accent" />
+              Para quem oferece espaço
             </motion.h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
               {hostFeatures.map((f, i) => (
