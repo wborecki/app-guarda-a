@@ -168,8 +168,14 @@ const DashboardOverview = () => {
         <StatCard
           icon={Package}
           label="Reservas ativas"
-          value="0"
-          subtitle="Em breve"
+          value={activeReservations !== null ? String(activeReservations) : "—"}
+          subtitle={
+            activeReservations === null
+              ? "Carregando..."
+              : activeReservations === 0
+              ? "Nenhuma reserva no momento"
+              : `${activeReservations} em andamento`
+          }
           color="bg-primary/10 text-primary"
         />
         <StatCard
@@ -188,15 +194,21 @@ const DashboardOverview = () => {
         <StatCard
           icon={CalendarDays}
           label="Próximos eventos"
-          value="0"
-          subtitle="Em breve"
+          value={upcomingReservations !== null ? String(upcomingReservations) : "—"}
+          subtitle={
+            upcomingReservations === null
+              ? "Carregando..."
+              : upcomingReservations === 0
+              ? "Sem eventos agendados"
+              : `${upcomingReservations} reserva${upcomingReservations !== 1 ? "s" : ""} futura${upcomingReservations !== 1 ? "s" : ""}`
+          }
           color="bg-blue-100/80 text-blue-600"
         />
         <StatCard
           icon={Wallet}
           label="Saldo disponível"
-          value="R$ 0"
-          subtitle="Em breve"
+          value={balance !== null ? `R$ ${balance.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}` : "—"}
+          subtitle={balance === null ? "Carregando..." : "Balanço atualizado"}
           color="bg-emerald-100/80 text-emerald-600"
         />
       </div>
