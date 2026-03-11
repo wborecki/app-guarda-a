@@ -92,30 +92,30 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
           onPickupChange={setPickupDate}
         />
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-2 block">Hora entrada</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Hora entrada</label>
           <Input
             type="time"
             value={deliveryTime}
             onChange={(e) => setDeliveryTime(e.target.value)}
-            className="w-24 h-11 md:h-10"
+            className="w-24 h-10"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-2 block">Hora retirada</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Hora retirada</label>
           <Input
             type="time"
             value={pickupTime}
             onChange={(e) => setPickupTime(e.target.value)}
-            className="w-24 h-11 md:h-10"
+            className="w-24 h-10"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">Tipo de espaço</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Tipo de espaço</label>
           <Select value={spaceType} onValueChange={setSpaceType}>
-            <SelectTrigger className="h-11 md:h-10">
+            <SelectTrigger className="h-10">
               <SelectValue placeholder="Qualquer tipo" />
             </SelectTrigger>
             <SelectContent>
@@ -129,9 +129,9 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
           </Select>
         </div>
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">Uso</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Uso</label>
           <Select value={usage} onValueChange={setUsage}>
-            <SelectTrigger className="h-11 md:h-10">
+            <SelectTrigger className="h-10">
               <SelectValue placeholder="Selecione" />
             </SelectTrigger>
             <SelectContent>
