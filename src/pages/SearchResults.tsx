@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock,
   ChevronLeft, ChevronRight, Navigation, SlidersHorizontal,
-  X, ChevronDown, Check, Info, Map as MapIcon, List
+  X, ChevronDown, Check, Info, Map as MapIcon, List, CheckCircle2
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
