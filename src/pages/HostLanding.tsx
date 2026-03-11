@@ -110,18 +110,58 @@ const HostLanding = () => {
     return null;
   })();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLoggedIn) return;
-    const availabilityText = form.availability === "continuous" ? "Contínua / Indeterminada"
-      : form.availability === "weekdays" ? "Dias úteis"
-      : form.availability === "weekends" ? "Finais de semana"
-      : "Personalizada";
-    const photosNote = photos.length > 0 ? `\nFotos: ${photos.length} foto(s) selecionada(s) — enviarei na conversa` : "";
-    const message = encodeURIComponent(
-      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}${photosNote}`
-    );
-    window.open(`https://wa.me/5511994541862?text=${message}`, "_blank");
+    if (!isLoggedIn || !user) return;
+    setSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.from("spaces").insert({
+        user_id: user.id,
+        location: form.location,
+        space_type: form.spaceType,
+        space_category: form.spaceCategory,
+        height: parseFloat(form.height) || 0,
+        width: parseFloat(form.width) || 0,
+        length: parseFloat(form.length) || 0,
+        covered: form.covered,
+        closed: form.closed,
+        easy_access: form.easyAccess,
+        availability: form.availability,
+        access_hours: form.accessHours,
+        access_type: form.accessType,
+        notes: form.notes,
+        status: "draft",
+        onboarding_step: 1,
+      }).select("id").single();
+
+      if (error) throw error;
+
+      // Upload photos if any
+      if (photos.length > 0 && data) {
+        const uploaded: string[] = [];
+        for (const file of photos) {
+          const ext = file.name.split(".").pop();
+          const path = `${user.id}/${data.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+          const { error: upErr } = await supabase.storage.from("space-photos").upload(path, file);
+          if (!upErr) {
+            const { data: urlData } = supabase.storage.from("space-photos").getPublicUrl(path);
+            uploaded.push(urlData.publicUrl);
+          }
+        }
+        if (uploaded.length > 0) {
+          await supabase.from("spaces").update({ photos: uploaded }).eq("id", data.id);
+        }
+      }
+
+      navigate(`/anunciar/finalizar?id=${data.id}`);
+    } catch (err: any) {
+      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
