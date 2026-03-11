@@ -50,7 +50,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground mb-0.5">Telefone / WhatsApp</p>
-                  <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">(11) 9 9454-18626</p>
+                  <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">(11) 9 94541-8626</p>
                 </div>
               </a>
             </div>
