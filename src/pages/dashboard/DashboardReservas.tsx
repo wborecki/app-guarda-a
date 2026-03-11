@@ -23,7 +23,7 @@ const DashboardReservas = () => (
             title="Nenhuma reserva ativa"
             description="Você ainda não tem reservas em andamento. Encontre um espaço perto de você para guardar seus itens."
             actionLabel="Buscar espaço"
-            actionHref="/"
+            actionHref="/buscar"
           />
         </div>
       </TabsContent>
