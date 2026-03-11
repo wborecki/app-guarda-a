@@ -54,7 +54,7 @@ const securityItems = [
 
 const faqItems = [
   { q: "Que tipo de espaço posso anunciar?", a: "Garagens, quartos vazios, depósitos, áreas cobertas, galpões pequenos e espaços comerciais ociosos. O espaço precisa ser seguro e acessível." },
-  { q: "Como o valor é calculado?", a: "O valor base é de R$45/m² por mês. O sistema calcula automaticamente com base nas dimensões do espaço cadastrado." },
+  { q: "Como o valor é calculado?", a: "O valor base é de R$45/m³ por mês. O sistema calcula automaticamente com base no volume do espaço cadastrado." },
   { q: "Preciso receber pessoas dentro da minha casa?", a: "Não necessariamente. O espaço pode ser independente, como uma garagem com acesso externo. Você define as regras de acesso." },
   { q: "Posso recusar objetos?", a: "Sim. O anfitrião tem total direito de recusar objetos que considere inadequados ou que não se enquadrem nas regras da plataforma." },
   { q: "O que acontece se o cliente não retirar os itens?", a: "Após o prazo contratual, os objetos poderão ser considerados abandonados conforme os termos aceitos por ambas as partes." },
