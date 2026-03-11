@@ -107,22 +107,22 @@ const SpaceDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-28 lg:pb-8">
+    <div className="min-h-screen bg-background pb-24 sm:pb-28 lg:pb-8">
       <SEO title={`${space.name} — ${space.neighborhood}`} description={space.description?.slice(0, 155) || `Espaço disponível para guardar seus itens em ${space.neighborhood}.`} />
       {/* Sticky Header */}
       <div className="bg-card border-b sticky top-0 z-30">
-        <div className="container py-3 flex items-center gap-3 max-w-6xl">
-          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0">
-            <ArrowLeft size={20} />
+        <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 max-w-6xl">
+          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0 h-8 w-8 sm:h-9 sm:w-9">
+            <ArrowLeft size={18} />
           </Button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-foreground truncate">{space.name}</h1>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>{space.neighborhood}, {space.city}</span>
+            <h1 className="text-sm sm:text-base font-bold text-foreground truncate">{space.name}</h1>
+            <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-muted-foreground">
+              <span className="truncate">{space.neighborhood}, {space.city}</span>
               <span>•</span>
               <span className="text-primary font-semibold">{space.distance}</span>
-              <span>•</span>
-              <div className="flex items-center gap-0.5">
+              <span className="hidden sm:inline">•</span>
+              <div className="hidden sm:flex items-center gap-0.5">
                 <Star size={10} className="text-accent fill-accent" />
                 <span className="font-semibold text-foreground">{avgRating}</span>
                 <span>({totalReviews})</span>
@@ -139,74 +139,92 @@ const SpaceDetails = () => {
 
       {/* ── Steps bar: Compare → Escolha → Reserve ── */}
       <div className="bg-primary/[0.03] border-b">
-        <div className="container max-w-6xl py-2.5">
-          <div className="flex items-center justify-center gap-6 text-xs">
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold">1</span>
+        <div className="container max-w-6xl py-2 sm:py-2.5">
+          <div className="flex items-center justify-center gap-4 sm:gap-6 text-[11px] sm:text-xs">
+            <span className="flex items-center gap-1 sm:gap-1.5 text-muted-foreground">
+              <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[9px] sm:text-[10px] font-bold">1</span>
               Compare
             </span>
-            <ChevronRight size={12} className="text-border" />
-            <span className="flex items-center gap-1.5 text-primary font-semibold">
-              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[10px] font-bold">2</span>
+            <ChevronRight size={10} className="text-border" />
+            <span className="flex items-center gap-1 sm:gap-1.5 text-primary font-semibold">
+              <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[9px] sm:text-[10px] font-bold">2</span>
               Escolha
             </span>
-            <ChevronRight size={12} className="text-border" />
-            <span className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="w-5 h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[10px] font-bold">3</span>
-              Reserve online
+            <ChevronRight size={10} className="text-border" />
+            <span className="flex items-center gap-1 sm:gap-1.5 text-muted-foreground">
+              <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-primary/15 text-primary flex items-center justify-center text-[9px] sm:text-[10px] font-bold">3</span>
+              Reserve
             </span>
           </div>
         </div>
       </div>
 
-      <div className="container max-w-6xl py-6">
-        <div className="lg:grid lg:grid-cols-[1fr_380px] lg:gap-8">
-          {/* ═══ LEFT COLUMN ═══ */}
-          <div className="space-y-6">
-            {/* ── Photo Gallery ── */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <div className="relative rounded-xl overflow-hidden">
-                <div ref={emblaRef} className="overflow-hidden">
-                  <div className="flex">
-                    {space.photos.map((photo: string, i: number) => (
-                      <div key={i} className="flex-[0_0_100%] min-w-0">
-                        <img
-                          src={photo}
-                          alt={`${space.name} – ângulo ${i + 1}`}
-                          className="w-full h-64 sm:h-80 md:h-[420px] object-cover"
-                        />
-                      </div>
-                    ))}
+      <div className="max-w-6xl mx-auto">
+        <div className="lg:container lg:py-6">
+          <div className="lg:grid lg:grid-cols-[1fr_380px] lg:gap-8">
+            {/* ═══ LEFT COLUMN ═══ */}
+            <div className="space-y-5 sm:space-y-6">
+              {/* ── Photo Gallery — edge-to-edge on mobile ── */}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <div className="relative overflow-hidden lg:rounded-xl">
+                  <div ref={emblaRef} className="overflow-hidden">
+                    <div className="flex">
+                      {space.photos.map((photo: string, i: number) => (
+                        <div key={i} className="flex-[0_0_100%] min-w-0">
+                          <img
+                            src={photo}
+                            alt={`${space.name} – ângulo ${i + 1}`}
+                            className="w-full h-56 sm:h-72 md:h-80 lg:h-[420px] object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <button onClick={scrollPrev} className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-1.5 sm:p-2 shadow-md transition-opacity">
+                    <ChevronLeft size={18} className="text-foreground" />
+                  </button>
+                  <button onClick={scrollNext} className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-1.5 sm:p-2 shadow-md transition-opacity">
+                    <ChevronRight size={18} className="text-foreground" />
+                  </button>
+                  {/* Mobile: rating badge on photo */}
+                  <div className="absolute top-3 right-3 sm:hidden bg-background/90 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1">
+                    <Star size={11} className="text-accent fill-accent" />
+                    <span className="text-xs font-bold text-foreground">{avgRating}</span>
+                    <span className="text-[10px] text-muted-foreground">({totalReviews})</span>
+                  </div>
+                  <div className="absolute bottom-3 right-3 bg-background/85 backdrop-blur-sm rounded-full px-2.5 py-1 text-[11px] sm:text-xs font-medium text-foreground flex items-center gap-1.5">
+                    <Camera size={11} />
+                    {selectedIndex + 1}/{space.photos.length}
                   </div>
                 </div>
-                <button onClick={scrollPrev} className="absolute left-3 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-2 shadow-md transition-opacity">
-                  <ChevronLeft size={20} className="text-foreground" />
-                </button>
-                <button onClick={scrollNext} className="absolute right-3 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-2 shadow-md transition-opacity">
-                  <ChevronRight size={20} className="text-foreground" />
-                </button>
-                <div className="absolute bottom-3 right-3 bg-background/85 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-foreground flex items-center gap-1.5">
-                  <Camera size={12} />
-                  {selectedIndex + 1}/{space.photos.length}
-                </div>
-              </div>
-              {/* Thumbnails */}
-              <div ref={thumbRef} className="overflow-hidden mt-3">
-                <div className="flex gap-2">
-                  {space.photos.map((photo: string, i: number) => (
+                {/* Thumbnails — hidden on mobile for cleaner UX, dots instead */}
+                <div className="flex justify-center gap-1.5 py-3 lg:hidden">
+                  {space.photos.map((_: string, i: number) => (
                     <button
                       key={i}
                       onClick={() => scrollToIndex(i)}
-                      className={`flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
-                        i === selectedIndex ? "border-primary ring-1 ring-primary/30" : "border-transparent opacity-60 hover:opacity-100"
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        i === selectedIndex ? "bg-primary w-5" : "bg-border"
                       }`}
-                    >
-                      <img src={photo} alt={`Miniatura ${i + 1}`} className="w-20 h-14 object-cover" />
-                    </button>
+                    />
                   ))}
                 </div>
-              </div>
-            </motion.div>
+                <div ref={thumbRef} className="overflow-hidden mt-3 hidden lg:block px-4 lg:px-0">
+                  <div className="flex gap-2">
+                    {space.photos.map((photo: string, i: number) => (
+                      <button
+                        key={i}
+                        onClick={() => scrollToIndex(i)}
+                        className={`flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${
+                          i === selectedIndex ? "border-primary ring-1 ring-primary/30" : "border-transparent opacity-60 hover:opacity-100"
+                        }`}
+                      >
+                        <img src={photo} alt={`Miniatura ${i + 1}`} className="w-20 h-14 object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
 
             {/* ── Space Details ── */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
