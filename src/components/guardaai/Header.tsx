@@ -58,7 +58,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/92 backdrop-blur-md border-b border-border/60">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/97 backdrop-blur-md border-b border-border/60">
         <div className="container flex items-center justify-between h-[52px] md:h-[72px]">
           <Link to="/" className="flex items-center">
             <img src={logo} alt="GuardaAí" className="h-[26px] md:h-9" />
