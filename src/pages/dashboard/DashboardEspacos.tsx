@@ -43,7 +43,7 @@ const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete
 
   return (
     <>
-      <div className="flex gap-4 p-4 rounded-xl border border-border bg-card hover:shadow-sm transition-shadow">
+      <div className="flex gap-4 p-4 rounded-xl border border-border/60 bg-card hover:shadow-sm transition-shadow">
         <div className="w-20 h-20 rounded-lg bg-secondary shrink-0 overflow-hidden">
           {thumb ? (
             <img src={thumb} alt="Espaço" className="w-full h-full object-cover" />
@@ -191,10 +191,10 @@ const DashboardEspacos = () => {
   const inactive = spaces.filter(s => s.status === "inactive");
 
   return (
-    <div className="max-w-5xl">
+    <div className="w-full max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground mb-1">Meus espaços</h1>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">Meus espaços</h1>
           <p className="text-muted-foreground text-sm">Gerencie seus espaços anunciados e rascunhos.</p>
         </div>
         <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-1.5" asChild>
@@ -222,7 +222,7 @@ const DashboardEspacos = () => {
 
           <TabsContent value="publicados">
             {published.length === 0 ? (
-              <div className="rounded-2xl border bg-card">
+              <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
                 <EmptyState icon={Eye} title="Nenhum espaço publicado" description="Seus espaços publicados aparecerão aqui." actionLabel="Anunciar espaço" actionHref="/anunciar" />
               </div>
             ) : (
@@ -232,7 +232,7 @@ const DashboardEspacos = () => {
 
           <TabsContent value="rascunhos">
             {drafts.length === 0 ? (
-              <div className="rounded-2xl border bg-card">
+              <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
                 <EmptyState icon={FileEdit} title="Nenhum rascunho" description="Rascunhos de espaços não finalizados aparecerão aqui." />
               </div>
             ) : (
@@ -242,7 +242,7 @@ const DashboardEspacos = () => {
 
           <TabsContent value="inativos">
             {inactive.length === 0 ? (
-              <div className="rounded-2xl border bg-card">
+              <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
                 <EmptyState icon={EyeOff} title="Nenhum espaço inativo" description="Espaços desativados aparecerão aqui. Você pode reativá-los a qualquer momento." />
               </div>
             ) : (
