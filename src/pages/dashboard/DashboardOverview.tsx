@@ -76,8 +76,31 @@ const QuickAction = ({
 
 /* ── Main Overview ─────────────────────────────────────── */
 const DashboardOverview = () => {
-  const { displayName } = useAuth();
+  const { user, displayName } = useAuth();
   const firstName = displayName?.split(" ")[0] || "Olá";
+
+  const [spacesCount, setSpacesCount] = useState<number | null>(null);
+  const [publishedCount, setPublishedCount] = useState<number>(0);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchStats = async () => {
+      const [allSpaces, published] = await Promise.all([
+        supabase
+          .from("spaces")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id),
+        supabase
+          .from("spaces")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .eq("status", "published"),
+      ]);
+      setSpacesCount(allSpaces.count ?? 0);
+      setPublishedCount(published.count ?? 0);
+    };
+    fetchStats();
+  }, [user]);
 
   const hour = new Date().getHours();
   const greeting =
