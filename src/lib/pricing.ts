@@ -2,13 +2,14 @@
  * GuardaAí – Centralized pricing logic (official table)
  *
  * Rules:
- *  • Price follows a fixed progressive table per 1 m².
- *  • Minimum billable area: 1 m².
+ *  • Price follows a fixed progressive table per 1 m³.
+ *  • Minimum billable volume: 1 m³.
  *  • Service fee: fixed R$ 28,00 per reservation.
  *  • Longer reservations = lower proportional daily cost.
+ *  • Volume (m³) allows stacking — more efficient than area.
  */
 
-// ─── Official progressive table (value for 1 m²) ──────────────────
+// ─── Official progressive table (value for 1 m³) ──────────────────
 const PRICE_TABLE: Record<number, number> = {
   1: 5.0,
   2: 8.5,
@@ -43,43 +44,43 @@ const PRICE_TABLE: Record<number, number> = {
 };
 
 export const SERVICE_FEE = 28.0; // R$ fixed per reservation
-export const MIN_AREA = 1; // m²
-export const MONTHLY_PRICE = 45.0; // R$/m² for 30 days
-export const ANNUAL_PRICE = 40.0; // R$/m² "a partir de" for long-term
+export const MIN_VOLUME = 1; // m³
+export const MONTHLY_PRICE = 45.0; // R$/m³ for 30 days
+export const ANNUAL_PRICE = 40.0; // R$/m³ "a partir de" for long-term
 
 // ─── Helpers ───────────────────────────────────────────────────────
 
-/** Price per 1 m² for a given number of days (capped at 30) */
+/** Price per 1 m³ for a given number of days (capped at 30) */
 export function getTablePrice(days: number): number {
   const clamped = Math.min(Math.max(days, 1), 30);
   return PRICE_TABLE[clamped] ?? PRICE_TABLE[30];
 }
 
-/** Effective daily rate per m² for a given number of days */
+/** Effective daily rate per m³ for a given number of days */
 export function getDailyRate(days: number): number {
   return getTablePrice(days) / Math.min(Math.max(days, 1), 30);
 }
 
 /** Full price breakdown for a reservation */
 export interface PriceBreakdown {
-  area: number;          // m²
+  volume: number;        // m³
   days: number;
-  pricePerM2: number;    // table value for 1 m² at this # of days
-  dailyRate: number;     // pricePerM2 / days (effective per-day rate)
-  subtotal: number;      // pricePerM2 × area
+  pricePerM3: number;    // table value for 1 m³ at this # of days
+  dailyRate: number;     // pricePerM3 / days (effective per-day rate)
+  subtotal: number;      // pricePerM3 × volume
   serviceFee: number;    // R$ 28,00 fixed
   total: number;         // subtotal + serviceFee
 }
 
-export function calculatePrice(area: number, days: number): PriceBreakdown {
-  const effectiveArea = Math.max(area, MIN_AREA);
+export function calculatePrice(volume: number, days: number): PriceBreakdown {
+  const effectiveVolume = Math.max(volume, MIN_VOLUME);
   const effectiveDays = Math.max(days, 1);
-  const pricePerM2 = getTablePrice(effectiveDays);
-  const dailyRate = Math.round((pricePerM2 / Math.min(effectiveDays, 30)) * 100) / 100;
-  const subtotal = Math.round(pricePerM2 * effectiveArea * 100) / 100;
+  const pricePerM3 = getTablePrice(effectiveDays);
+  const dailyRate = Math.round((pricePerM3 / Math.min(effectiveDays, 30)) * 100) / 100;
+  const subtotal = Math.round(pricePerM3 * effectiveVolume * 100) / 100;
   const total = Math.round((subtotal + SERVICE_FEE) * 100) / 100;
 
-  return { area: effectiveArea, days: effectiveDays, pricePerM2, dailyRate, subtotal, serviceFee: SERVICE_FEE, total };
+  return { volume: effectiveVolume, days: effectiveDays, pricePerM3, dailyRate, subtotal, serviceFee: SERVICE_FEE, total };
 }
 
 /** Format currency BRL */
@@ -89,7 +90,7 @@ export function formatBRL(value: number): string {
 
 /** Short pricing explanation used across the site */
 export const PRICING_EXPLANATION =
-  "O valor é calculado com base no espaço reservado (mínimo de 1 m²) e no tempo da reserva. Quanto maior o período, menor o valor proporcional por dia. A taxa de serviço fixa de R$ 28,00 é adicionada no checkout.";
+  "O valor é calculado com base no volume reservado (mínimo de 1 m³) e no tempo da reserva. Objetos podem ser empilhados, otimizando o espaço. Quanto maior o período, menor o valor proporcional por dia. A taxa de serviço fixa de R$ 28,00 é adicionada no checkout.";
 
 export const PRICING_HINT_SHORT = "Reservas mais longas têm valor proporcional menor por dia.";
 
