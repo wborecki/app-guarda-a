@@ -13,11 +13,13 @@ interface LocationAutocompleteProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
-  /** Hide the GPS locate button for compact layouts */
+  /** Hide the GPS locate button */
   hideGps?: boolean;
+  /** Show only the icon (no text label) for compact layouts */
+  compactGps?: boolean;
 }
 
-const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta, 1200, São Paulo", className, hideGps = false }: LocationAutocompleteProps) => {
+const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta, 1200, São Paulo", className, hideGps = false, compactGps = false }: LocationAutocompleteProps) => {
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -127,7 +129,7 @@ const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta,
             type="button"
             onClick={handleGeolocate}
             disabled={isGeolocating}
-            className="flex items-center gap-1.5 px-3 py-2 h-10 rounded-md border border-input bg-background text-sm text-muted-foreground hover:text-foreground hover:bg-accent/10 transition-colors disabled:opacity-50 shrink-0"
+            className={`flex items-center gap-1.5 ${compactGps ? 'px-2' : 'px-3'} py-2 h-10 rounded-md border border-input bg-background text-sm text-muted-foreground hover:text-foreground hover:bg-accent/10 transition-colors disabled:opacity-50 shrink-0`}
             title="Usar minha localização"
           >
             {isGeolocating ? (
@@ -135,7 +137,7 @@ const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta,
             ) : (
               <LocateFixed size={16} />
             )}
-            <span className="hidden sm:inline">Localização</span>
+            {!compactGps && <span className="hidden sm:inline">Localização</span>}
           </button>
         )}
       </div>
