@@ -395,7 +395,7 @@ const SpaceDetails = () => {
                                 <Plus size={14} className="text-foreground" />
                               </button>
                             </div>
-                            <p className="text-[10px] text-muted-foreground mt-1">Máximo disponível: {availableArea} m²</p>
+                            <p className="text-[10px] text-muted-foreground mt-1">Máximo disponível: {availableArea} m³</p>
                           </div>
 
                           {/* Days editor */}
