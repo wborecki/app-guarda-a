@@ -45,8 +45,10 @@ const SearchResults = () => {
 
   // Fetch real published spaces from database
   const [dbSpaces, setDbSpaces] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchPublished = async () => {
+      setIsLoading(true);
       const { data } = await supabase
         .from("spaces")
         .select("*")
