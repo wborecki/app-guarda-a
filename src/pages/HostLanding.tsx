@@ -392,9 +392,31 @@ const HostLanding = () => {
                           />
                           <label className="flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-border hover:border-accent/40 transition-colors cursor-pointer bg-secondary/20">
                             <Upload size={16} className="text-muted-foreground" />
-                            <span className="text-xs text-muted-foreground">Enviar fotos do espaço (máx. 5)</span>
-                            <input type="file" accept="image/*" multiple className="hidden" />
+                            <span className="text-xs text-muted-foreground">
+                              {photos.length === 0 ? "Enviar fotos do espaço (máx. 5)" : `${photos.length}/5 foto(s) selecionada(s)`}
+                            </span>
+                            <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoChange} />
                           </label>
+                          {photos.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {photos.map((photo, i) => (
+                                <div key={i} className="relative group">
+                                  <img
+                                    src={URL.createObjectURL(photo)}
+                                    alt={`Foto ${i + 1}`}
+                                    className="w-16 h-16 rounded-lg object-cover border border-border"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => removePhoto(i)}
+                                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                    <X size={12} />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
 
                         {/* Navigation */}
