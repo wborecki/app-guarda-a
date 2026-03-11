@@ -95,6 +95,7 @@ const SearchResults = () => {
         };
       });
       setDbSpaces(mapped);
+      setIsLoading(false);
     };
     fetchPublished();
   }, []);
