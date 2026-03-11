@@ -22,6 +22,7 @@ import {
 import SpaceCard from "@/components/guardaai/search/SpaceCard";
 import FilterBar from "@/components/guardaai/search/FilterBar";
 import MobileFilterDrawer from "@/components/guardaai/search/MobileFilterDrawer";
+import { SearchCardSkeletonList } from "@/components/guardaai/skeletons/SearchCardSkeleton";
 
 // Lazy-load map for performance
 const SpaceMap = lazy(() => import("@/components/guardaai/SpaceMap"));
