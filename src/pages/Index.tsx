@@ -10,6 +10,7 @@ import SmallBusiness from "@/components/guardaai/SmallBusiness";
 import ForHosts from "@/components/guardaai/ForHosts";
 import Testimonials from "@/components/guardaai/Testimonials";
 import FAQ from "@/components/guardaai/FAQ";
+import ContactSection from "@/components/guardaai/ContactSection";
 import FinalCTA from "@/components/guardaai/FinalCTA";
 import Footer from "@/components/guardaai/Footer";
 
