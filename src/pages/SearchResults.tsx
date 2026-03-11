@@ -12,6 +12,7 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
 import { calculatePrice, getDailyRate, PRICING_HINT_SHORT } from "@/lib/pricing";
+import { supabase } from "@/integrations/supabase/client";
 
 // Lazy-load map for performance
 const SpaceMap = lazy(() => import("@/components/guardaai/SpaceMap"));
