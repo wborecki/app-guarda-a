@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
@@ -184,6 +185,7 @@ const SearchResults = () => {
   // ─── RENDER ────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SEO title={`Espaços em ${shortLocation}`} description={`Encontre espaços para guardar ${totalVol.toFixed(1)} m³ em ${shortLocation}. Compare preços e reserve online.`} canonical="/buscar" />
       {/* ═══ STICKY HEADER ═══ */}
       <div className="bg-card border-b sticky top-0 z-20">
         <div className="container py-3 flex items-center gap-3">

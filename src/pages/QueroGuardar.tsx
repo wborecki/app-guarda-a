@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
 import Simulator from "@/components/guardaai/Simulator";
@@ -40,6 +41,7 @@ const pricingTiers = [
 const QueroGuardar = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Quero guardar" description="Simule o custo de armazenamento, encontre espaços disponíveis e reserve online. Mais barato que self storage tradicional." canonical="/quero-guardar" />
       <Header />
       <main>
         {/* ========== HERO + SIMULATOR ========== */}

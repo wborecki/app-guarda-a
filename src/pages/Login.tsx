@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Package, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff } from "lucide-react";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import SEO from "@/components/SEO";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -132,6 +133,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO title="Entrar" description="Acesse sua conta GuardaAí para gerenciar reservas, espaços e mensagens." canonical="/entrar" noIndex />
       <Header />
       <main className="flex-1 pt-24 pb-16">
         <div className="container max-w-lg mx-auto">

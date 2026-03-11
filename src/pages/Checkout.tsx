@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef } from "react";
@@ -311,6 +312,7 @@ const Checkout = () => {
   // ─── CHECKOUT PAGE ────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background pb-28 lg:pb-8">
+      <SEO title="Checkout" description="Finalize sua reserva de espaço na GuardaAí. Pagamento seguro via Pix." noIndex />
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-30">
         <div className="container py-3 flex items-center gap-3 max-w-5xl">

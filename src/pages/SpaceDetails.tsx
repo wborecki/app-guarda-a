@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -107,6 +108,7 @@ const SpaceDetails = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28 lg:pb-8">
+      <SEO title={`${space.name} — ${space.neighborhood}`} description={space.description?.slice(0, 155) || `Espaço disponível para guardar seus itens em ${space.neighborhood}.`} />
       {/* Sticky Header */}
       <div className="bg-card border-b sticky top-0 z-30">
         <div className="container py-3 flex items-center gap-3 max-w-6xl">
