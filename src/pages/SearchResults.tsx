@@ -7,11 +7,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock,
   ChevronLeft, ChevronRight, Navigation, SlidersHorizontal,
-  X, ChevronDown, Check, Info
+  X, ChevronDown, Check, Info, Map as MapIcon, List
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useState, useMemo, useRef } from "react";
+import { useCallback, useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
 import { calculatePrice, getDailyRate, PRICING_HINT_SHORT } from "@/lib/pricing";
+
+// Lazy-load map for performance
+const SpaceMap = lazy(() => import("@/components/guardaai/SpaceMap"));
+import type { MapSpace } from "@/components/guardaai/SpaceMap";
 
 // Coherent photo sets
 import garageA1 from "@/assets/spaces/garage-a1.jpg";
@@ -30,79 +34,81 @@ import shedA1 from "@/assets/spaces/shed-a1.jpg";
 import shedA2 from "@/assets/spaces/shed-a2.jpg";
 import shedA3 from "@/assets/spaces/shed-a3.jpg";
 
-// ─── City database ─────────────────────────────────────────────────
+// ─── City database with coordinates ───────────────────────────────
 type CityData = {
   city: string;
   state: string;
-  neighborhoods: { name: string; street: string; number: string }[];
+  lat: number;
+  lng: number;
+  neighborhoods: { name: string; street: string; number: string; lat: number; lng: number }[];
 };
 
 const cityDatabase: Record<string, CityData> = {
   curitiba: {
-    city: "Curitiba", state: "PR",
+    city: "Curitiba", state: "PR", lat: -25.4284, lng: -49.2733,
     neighborhoods: [
-      { name: "Centro", street: "Rua Emiliano Perneta", number: "340" },
-      { name: "Batel", street: "Rua Coronel Dulcídio", number: "185" },
-      { name: "Água Verde", street: "Rua Brasílio Itiberê", number: "455" },
-      { name: "Rebouças", street: "Rua Rockefeller", number: "72" },
-      { name: "Alto da XV", street: "Rua Fernando Amaro", number: "290" },
-      { name: "Juvevê", street: "Rua Augusto Stresser", number: "112" },
-      { name: "Mercês", street: "Rua Jaime Reis", number: "540" },
-      { name: "São Francisco", street: "Rua São Francisco", number: "88" },
+      { name: "Centro", street: "Rua Emiliano Perneta", number: "340", lat: -25.4290, lng: -49.2710 },
+      { name: "Batel", street: "Rua Coronel Dulcídio", number: "185", lat: -25.4410, lng: -49.2890 },
+      { name: "Água Verde", street: "Rua Brasílio Itiberê", number: "455", lat: -25.4500, lng: -49.2810 },
+      { name: "Rebouças", street: "Rua Rockefeller", number: "72", lat: -25.4430, lng: -49.2660 },
+      { name: "Alto da XV", street: "Rua Fernando Amaro", number: "290", lat: -25.4320, lng: -49.2550 },
+      { name: "Juvevê", street: "Rua Augusto Stresser", number: "112", lat: -25.4170, lng: -49.2640 },
+      { name: "Mercês", street: "Rua Jaime Reis", number: "540", lat: -25.4230, lng: -49.2830 },
+      { name: "São Francisco", street: "Rua São Francisco", number: "88", lat: -25.4260, lng: -49.2750 },
     ],
   },
   "são paulo": {
-    city: "São Paulo", state: "SP",
+    city: "São Paulo", state: "SP", lat: -23.5505, lng: -46.6333,
     neighborhoods: [
-      { name: "Consolação", street: "Rua Augusta", number: "1200" },
-      { name: "Bela Vista", street: "Rua Treze de Maio", number: "900" },
-      { name: "Vila Mariana", street: "Rua Vergueiro", number: "3100" },
-      { name: "Vila Madalena", street: "Rua Harmonia", number: "450" },
-      { name: "Pinheiros", street: "Rua Cardeal Arcoverde", number: "800" },
-      { name: "Perdizes", street: "Rua Monte Alegre", number: "220" },
-      { name: "Lapa", street: "Rua Clélia", number: "315" },
-      { name: "Mooca", street: "Rua da Mooca", number: "1500" },
+      { name: "Consolação", street: "Rua Augusta", number: "1200", lat: -23.5530, lng: -46.6560 },
+      { name: "Bela Vista", street: "Rua Treze de Maio", number: "900", lat: -23.5600, lng: -46.6480 },
+      { name: "Vila Mariana", street: "Rua Vergueiro", number: "3100", lat: -23.5850, lng: -46.6380 },
+      { name: "Vila Madalena", street: "Rua Harmonia", number: "450", lat: -23.5500, lng: -46.6900 },
+      { name: "Pinheiros", street: "Rua dos Pinheiros", number: "800", lat: -23.5660, lng: -46.6930 },
+      { name: "Moema", street: "Av. Ibirapuera", number: "2120", lat: -23.6010, lng: -46.6600 },
+      { name: "Itaim Bibi", street: "Rua João Cachoeira", number: "350", lat: -23.5820, lng: -46.6780 },
+      { name: "Lapa", street: "Rua Guaicurus", number: "200", lat: -23.5260, lng: -46.7020 },
     ],
   },
   "rio de janeiro": {
-    city: "Rio de Janeiro", state: "RJ",
+    city: "Rio de Janeiro", state: "RJ", lat: -22.9068, lng: -43.1729,
     neighborhoods: [
-      { name: "Botafogo", street: "Rua Voluntários da Pátria", number: "340" },
-      { name: "Tijuca", street: "Rua Conde de Bonfim", number: "700" },
-      { name: "Copacabana", street: "Rua Barata Ribeiro", number: "500" },
-      { name: "Méier", street: "Rua Dias da Cruz", number: "220" },
-      { name: "Vila Isabel", street: "Boulevard Vinte e Oito de Setembro", number: "100" },
-      { name: "Laranjeiras", street: "Rua das Laranjeiras", number: "410" },
-      { name: "Flamengo", street: "Rua Marquês de Abrantes", number: "180" },
-      { name: "Maracanã", street: "Rua São Francisco Xavier", number: "95" },
+      { name: "Copacabana", street: "Rua Barata Ribeiro", number: "300", lat: -22.9700, lng: -43.1860 },
+      { name: "Botafogo", street: "Rua Voluntários da Pátria", number: "120", lat: -22.9510, lng: -43.1870 },
+      { name: "Tijuca", street: "Rua Conde de Bonfim", number: "800", lat: -22.9280, lng: -43.2350 },
+      { name: "Leblon", street: "Rua Dias Ferreira", number: "250", lat: -22.9830, lng: -43.2230 },
+      { name: "Flamengo", street: "Rua Marquês de Abrantes", number: "150", lat: -22.9320, lng: -43.1760 },
+      { name: "Ipanema", street: "Rua Visconde de Pirajá", number: "500", lat: -22.9840, lng: -43.2030 },
+      { name: "Centro", street: "Av. Rio Branco", number: "100", lat: -22.9030, lng: -43.1770 },
+      { name: "Lapa", street: "Rua do Lavradio", number: "80", lat: -22.9120, lng: -43.1830 },
     ],
   },
   "belo horizonte": {
-    city: "Belo Horizonte", state: "MG",
+    city: "Belo Horizonte", state: "MG", lat: -19.9167, lng: -43.9345,
     neighborhoods: [
-      { name: "Savassi", street: "Rua Pernambuco", number: "1000" },
-      { name: "Funcionários", street: "Rua Gonçalves Dias", number: "300" },
-      { name: "Serra", street: "Rua do Ouro", number: "150" },
-      { name: "Santo Antônio", street: "Rua Aimorés", number: "420" },
-      { name: "Lourdes", street: "Rua Curitiba", number: "700" },
-      { name: "Centro", street: "Avenida Afonso Pena", number: "1500" },
-      { name: "Floresta", street: "Rua Pouso Alegre", number: "230" },
-      { name: "Santa Tereza", street: "Rua Mármore", number: "80" },
+      { name: "Savassi", street: "Rua Pernambuco", number: "1000", lat: -19.9360, lng: -43.9370 },
+      { name: "Funcionários", street: "Rua Fernandes Tourinho", number: "350", lat: -19.9300, lng: -43.9310 },
+      { name: "Lourdes", street: "Rua São Paulo", number: "1500", lat: -19.9270, lng: -43.9420 },
+      { name: "Centro", street: "Av. Afonso Pena", number: "800", lat: -19.9190, lng: -43.9380 },
+      { name: "Prado", street: "Rua Platina", number: "200", lat: -19.9380, lng: -43.9560 },
+      { name: "Gutierrez", street: "Rua Araguari", number: "100", lat: -19.9430, lng: -43.9610 },
+      { name: "Santa Efigênia", street: "Rua Pouso Alegre", number: "500", lat: -19.9230, lng: -43.9240 },
+      { name: "Floresta", street: "Rua Salinas", number: "300", lat: -19.9150, lng: -43.9280 },
     ],
   },
 };
 
 const defaultCity: CityData = {
-  city: "Sua região", state: "",
+  city: "Sua região", state: "", lat: -25.4284, lng: -49.2733,
   neighborhoods: [
-    { name: "Centro", street: "Rua Principal", number: "100" },
-    { name: "Jardim América", street: "Rua das Flores", number: "250" },
-    { name: "Vila Nova", street: "Av. Brasil", number: "500" },
-    { name: "Bairro Alto", street: "Rua São José", number: "80" },
-    { name: "Boa Vista", street: "Rua XV de Novembro", number: "300" },
-    { name: "Industrial", street: "Rua dos Operários", number: "150" },
-    { name: "Jardim Europa", street: "Rua Portugal", number: "420" },
-    { name: "Santa Cruz", street: "Rua Santa Cruz", number: "60" },
+    { name: "Centro", street: "Rua Principal", number: "100", lat: -25.4290, lng: -49.2710 },
+    { name: "Bairro Norte", street: "Av. Norte", number: "200", lat: -25.4200, lng: -49.2680 },
+    { name: "Bairro Sul", street: "Rua Sul", number: "300", lat: -25.4380, lng: -49.2750 },
+    { name: "Zona Leste", street: "Rua Leste", number: "400", lat: -25.4300, lng: -49.2600 },
+    { name: "Vila Nova", street: "Av. Brasil", number: "500", lat: -25.4350, lng: -49.2800 },
+    { name: "Bairro Alto", street: "Rua São José", number: "80", lat: -25.4150, lng: -49.2720 },
+    { name: "Boa Vista", street: "Rua XV de Novembro", number: "300", lat: -25.4250, lng: -49.2650 },
+    { name: "Industrial", street: "Rua dos Operários", number: "150", lat: -25.4450, lng: -49.2900 },
   ],
 };
 
@@ -181,6 +187,8 @@ function generateSpacesForCity(locationStr: string) {
       neighborhood: neighborhood.name, city: cityData.city,
       distance: `${distances[i]} km`, distanceNum: distances[i],
       reviewsList: reviewsPool.slice(0, 2 + (i % 2)),
+      lat: neighborhood.lat,
+      lng: neighborhood.lng,
     };
   });
 }
@@ -277,7 +285,7 @@ const CardCarousel = ({ photos, name }: { photos: string[]; name: string }) => {
 
   return (
     <div className="relative group h-full">
-      <div ref={emblaRef} className="overflow-hidden h-full rounded-l-lg sm:rounded-l-lg rounded-r-none">
+      <div ref={emblaRef} className="overflow-hidden h-full">
         <div className="flex h-full">
           {photos.map((photo, i) => (
             <div key={i} className="flex-[0_0_100%] min-w-0 h-full">
@@ -318,19 +326,19 @@ const SearchResults = () => {
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
   const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | null>(null);
+  const [mobileView, setMobileView] = useState<"list" | "map">("list");
+  const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
   // ── Filter + Sort logic ──
   const filteredSortedSpaces = useMemo(() => {
     let result = [...allSpaces];
-
-    // Filters
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
     if (filters.maxPrice !== null) result = result.filter(s => calculatePrice(Math.max(totalVol, 1), days).subtotal <= filters.maxPrice!);
     if (filters.maxDistance !== null) result = result.filter(s => s.distanceNum <= filters.maxDistance!);
     if (filters.minRating !== null) result = result.filter(s => s.rating >= filters.minRating!);
     if (filters.features.length > 0) result = result.filter(s => filters.features.every(f => s.features.includes(f)));
 
-    // Sort
     switch (sortBy) {
       case "proximity": result.sort((a, b) => a.distanceNum - b.distanceNum); break;
       case "price_asc": result.sort((a, b) => a.area - b.area); break;
@@ -339,7 +347,29 @@ const SearchResults = () => {
       case "relevance": result.sort((a, b) => (b.rating * b.reviews) - (a.rating * a.reviews)); break;
     }
     return result;
-  }, [allSpaces, sortBy, filters, days]);
+  }, [allSpaces, sortBy, filters, days, totalVol]);
+
+  // ── Map spaces ──
+  const mapSpaces: MapSpace[] = useMemo(() => {
+    return filteredSortedSpaces.map((s) => {
+      const reservedVol = Math.max(totalVol, 1);
+      const bp = calculatePrice(reservedVol, days);
+      return {
+        id: s.id,
+        name: s.name,
+        type: s.type,
+        neighborhood: s.neighborhood,
+        city: s.city,
+        distance: s.distance,
+        rating: s.rating,
+        reviews: s.reviews,
+        price: `R$ ${bp.subtotal.toFixed(0)}`,
+        photo: s.photos[0],
+        lat: s.lat,
+        lng: s.lng,
+      };
+    });
+  }, [filteredSortedSpaces, totalVol, days]);
 
   // ── Active filter chips ──
   const activeFilterChips = useMemo(() => {
@@ -367,10 +397,26 @@ const SearchResults = () => {
     navigate(`/espaco/${space.id}`, { state: { space, simulation: state } });
   };
 
+  const handlePinClick = (id: number) => {
+    const space = filteredSortedSpaces.find((s) => s.id === id);
+    if (space) {
+      // On mobile map view, switch to list and scroll
+      if (mobileView === "map") {
+        setMobileView("list");
+        setTimeout(() => {
+          cardRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "center" });
+          setHighlightedSpaceId(id);
+        }, 300);
+      } else {
+        cardRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "center" });
+        setHighlightedSpaceId(id);
+      }
+    }
+  };
+
   // ── Filter panel content (shared desktop/mobile) ──
   const FilterContent = () => (
     <div className="space-y-5">
-      {/* Type */}
       <div>
         <h4 className="text-xs font-semibold text-foreground mb-2">Tipo de espaço</h4>
         <div className="flex flex-wrap gap-1.5">
@@ -381,7 +427,6 @@ const SearchResults = () => {
           ))}
         </div>
       </div>
-      {/* Distance */}
       <div>
         <h4 className="text-xs font-semibold text-foreground mb-2">Distância máxima</h4>
         <div className="flex flex-wrap gap-1.5">
@@ -392,7 +437,6 @@ const SearchResults = () => {
           ))}
         </div>
       </div>
-      {/* Rating */}
       <div>
         <h4 className="text-xs font-semibold text-foreground mb-2">Avaliação mínima</h4>
         <div className="flex flex-wrap gap-1.5">
@@ -403,7 +447,6 @@ const SearchResults = () => {
           ))}
         </div>
       </div>
-      {/* Price */}
       <div>
         <h4 className="text-xs font-semibold text-foreground mb-2">Preço máximo (total)</h4>
         <div className="flex flex-wrap gap-1.5">
@@ -414,29 +457,28 @@ const SearchResults = () => {
           ))}
         </div>
       </div>
-      {/* Features */}
       <div>
         <h4 className="text-xs font-semibold text-foreground mb-2">Comodidades</h4>
         <div className="flex flex-wrap gap-1.5">
           {allFeatures.map(feat => (
             <button key={feat} onClick={() => toggleFeature(feat)}
-              className={`text-xs px-3 py-1.5 rounded-full border transition-colors flex items-center gap-1 ${filters.features.includes(feat) ? "bg-primary/10 border-primary/30 text-primary font-semibold" : "border-border/60 text-muted-foreground hover:border-primary/20"}`}
-            >{filters.features.includes(feat) && <Check size={10} />}{feat}</button>
+              className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${filters.features.includes(feat) ? "bg-primary/10 border-primary/30 text-primary font-semibold" : "border-border/60 text-muted-foreground hover:border-primary/20"}`}
+            >{feat}</button>
           ))}
         </div>
       </div>
     </div>
   );
 
+  // ─── RENDER ────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* ═══ STICKY HEADER ═══ */}
       <div className="bg-card border-b sticky top-0 z-20">
-        <div className="container py-4 flex items-center gap-4">
+        <div className="container py-3 flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}><ArrowLeft size={20} /></Button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-bold text-foreground">Espaços disponíveis</h1>
-            <p className="text-sm text-muted-foreground truncate">{shortLocation} · {totalVol.toFixed(1)} m³ · {days} {days === 1 ? "dia" : "dias"}</p>
+            <h1 className="text-base font-bold text-foreground">Espaços disponíveis</h1>
           </div>
           <span className="text-xs font-medium text-muted-foreground bg-secondary rounded-full px-2.5 py-1 hidden sm:block">
             {filteredSortedSpaces.length} resultado{filteredSortedSpaces.length !== 1 ? "s" : ""}
@@ -444,28 +486,57 @@ const SearchResults = () => {
         </div>
       </div>
 
-      <div className="container py-6 md:py-8 max-w-3xl">
-        {/* Summary bar */}
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-5 p-3 md:p-4 rounded-xl bg-primary/[0.04] border border-primary/15">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-            <div className="flex items-center gap-1.5"><MapPin size={14} className="text-primary flex-shrink-0" /><span className="text-foreground font-semibold">{shortLocation}</span></div>
-            <div className="flex items-center gap-1.5"><Ruler size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{totalVol.toFixed(1)} m³</span></div>
-            <div className="flex items-center gap-1.5"><Calendar size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span></div>
+      {/* ═══ SEARCH SUMMARY BAR ═══ */}
+      <div className="bg-card/80 backdrop-blur-sm border-b">
+        <div className="container py-2.5">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
+            <div className="flex items-center gap-1.5">
+              <MapPin size={13} className="text-primary flex-shrink-0" />
+              <span className="font-semibold text-foreground">{shortLocation}</span>
+            </div>
+            <div className="hidden sm:block w-px h-4 bg-border/60" />
+            <div className="flex items-center gap-1.5">
+              <Ruler size={13} className="text-primary flex-shrink-0" />
+              <span className="text-muted-foreground">{totalVol.toFixed(1)} m³</span>
+            </div>
+            <div className="hidden sm:block w-px h-4 bg-border/60" />
+            <div className="flex items-center gap-1.5">
+              <Calendar size={13} className="text-primary flex-shrink-0" />
+              <span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
+            </div>
             {state?.deliveryDate && (
-              <div className="flex items-center gap-1.5"><Clock size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{format(new Date(state.deliveryDate), "dd/MM", { locale: pt })} {state.deliveryTime}</span></div>
+              <>
+                <div className="hidden sm:block w-px h-4 bg-border/60" />
+                <div className="flex items-center gap-1.5">
+                  <Clock size={13} className="text-primary flex-shrink-0" />
+                  <span className="text-muted-foreground text-xs">
+                    {format(new Date(state.deliveryDate), "dd/MM", { locale: pt })}
+                    {state.deliveryTime ? ` ${state.deliveryTime}` : ""}
+                    {state.pickupDate ? ` → ${format(new Date(state.pickupDate), "dd/MM", { locale: pt })}` : ""}
+                    {state.pickupTime ? ` ${state.pickupTime}` : ""}
+                  </span>
+                </div>
+              </>
             )}
+            <button
+              onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}
+              className="ml-auto text-xs text-primary font-medium hover:underline hidden sm:block"
+            >
+              Editar busca
+            </button>
           </div>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* ═══ Sort + Filter bar ═══ */}
-        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-4 space-y-3">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-            {/* Sort pills */}
+      {/* ═══ SORT + FILTER BAR ═══ */}
+      <div className="bg-background border-b">
+        <div className="container py-2.5 space-y-2">
+          <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-hide">
             {(Object.keys(sortLabels) as SortOption[]).map(key => (
               <button
                 key={key}
                 onClick={() => setSortBy(key)}
-                className={`text-xs font-medium px-3 py-2 rounded-full border whitespace-nowrap transition-colors ${
+                className={`text-xs font-medium px-3 py-1.5 rounded-full border whitespace-nowrap transition-colors ${
                   sortBy === key
                     ? "bg-foreground text-background border-foreground"
                     : "bg-card border-border/60 text-muted-foreground hover:border-primary/30 hover:text-foreground"
@@ -476,7 +547,7 @@ const SearchResults = () => {
               </button>
             ))}
 
-            <div className="w-px h-6 bg-border/60 flex-shrink-0 mx-1 hidden sm:block" />
+            <div className="w-px h-5 bg-border/60 flex-shrink-0 mx-1 hidden sm:block" />
 
             {/* Desktop filter dropdowns */}
             <div className="hidden sm:flex items-center gap-2">
@@ -535,7 +606,7 @@ const SearchResults = () => {
             {/* Mobile filter button */}
             <button
               onClick={() => setMobileFiltersOpen(true)}
-              className={`sm:hidden flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-full border whitespace-nowrap transition-colors ${
+              className={`sm:hidden flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border whitespace-nowrap transition-colors ${
                 hasActiveFilters ? "bg-primary/10 border-primary/30 text-primary" : "bg-card border-border/60 text-foreground"
               }`}
             >
@@ -558,97 +629,154 @@ const SearchResults = () => {
               </motion.div>
             )}
           </AnimatePresence>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* Result count + sort label */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5">
+      {/* ═══ MAIN CONTENT: LIST + MAP ═══ */}
+      <div className="flex-1 flex flex-col lg:flex-row">
+        {/* ── Results count bar ── */}
+        <div className="lg:hidden container py-2 flex items-center justify-between border-b bg-background">
+          <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
             <Navigation size={12} className="text-primary" />
-            <span className="text-xs font-medium text-muted-foreground">
-              {filteredSortedSpaces.length} espaço{filteredSortedSpaces.length !== 1 ? "s" : ""} · {sortLabels[sortBy].toLowerCase()}
-            </span>
-          </div>
+            {filteredSortedSpaces.length} espaço{filteredSortedSpaces.length !== 1 ? "s" : ""}
+          </span>
         </div>
 
-        {/* Results */}
-        <div className="space-y-4">
-          {filteredSortedSpaces.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-              <p className="text-muted-foreground text-sm mb-2">Nenhum espaço encontrado com esses filtros.</p>
-              <Button variant="outline" size="sm" onClick={clearAll}>Limpar filtros</Button>
-            </motion.div>
-          ) : (
-            filteredSortedSpaces.map((space, index) => {
-              const reservedVol = Math.max(totalVol, 1);
-              const bp = calculatePrice(reservedVol, days);
-              return (
-                <motion.div key={space.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
-                  <Card className="overflow-hidden hover:shadow-md transition-all cursor-pointer border-border/60" onClick={() => handleCardClick(space)}>
-                    <CardContent className="p-0">
-                      <div className="flex flex-col sm:flex-row">
-                        <div className="sm:w-56 h-48 sm:h-auto bg-muted flex-shrink-0 relative">
-                          <CardCarousel photos={space.photos} name={space.name} />
-                          <div className="absolute top-2.5 left-2.5 bg-background/95 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm">
-                            <MapPin size={11} className="text-primary" />
-                            <span className="text-xs font-bold text-foreground">{space.distance}</span>
+        {/* ── LEFT: Card List ── */}
+        <div className={`flex-1 lg:max-w-[55%] xl:max-w-[50%] overflow-y-auto ${mobileView === "map" ? "hidden lg:block" : ""}`}>
+          <div className="container lg:pr-0 py-4 space-y-3">
+            {/* Desktop result count */}
+            <div className="hidden lg:flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                <Navigation size={12} className="text-primary" />
+                {filteredSortedSpaces.length} espaço{filteredSortedSpaces.length !== 1 ? "s" : ""} · {sortLabels[sortBy].toLowerCase()}
+              </span>
+            </div>
+
+            {filteredSortedSpaces.length === 0 ? (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
+                <p className="text-muted-foreground text-sm mb-2">Nenhum espaço encontrado com esses filtros.</p>
+                <Button variant="outline" size="sm" onClick={clearAll}>Limpar filtros</Button>
+              </motion.div>
+            ) : (
+              filteredSortedSpaces.map((space, index) => {
+                const reservedVol = Math.max(totalVol, 1);
+                const bp = calculatePrice(reservedVol, days);
+                const isHighlighted = highlightedSpaceId === space.id;
+
+                return (
+                  <motion.div
+                    key={space.id}
+                    ref={(el) => { cardRefs.current[space.id] = el; }}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.04 }}
+                    onMouseEnter={() => setHighlightedSpaceId(space.id)}
+                    onMouseLeave={() => setHighlightedSpaceId(null)}
+                  >
+                    <Card
+                      className={`overflow-hidden transition-all cursor-pointer ${
+                        isHighlighted
+                          ? "shadow-lg ring-2 ring-primary/30 border-primary/40"
+                          : "hover:shadow-md border-border/60"
+                      }`}
+                      onClick={() => handleCardClick(space)}
+                    >
+                      <CardContent className="p-0">
+                        <div className="flex flex-col sm:flex-row">
+                          <div className="sm:w-52 lg:w-48 xl:w-52 h-48 sm:h-auto bg-muted flex-shrink-0 relative">
+                            <CardCarousel photos={space.photos} name={space.name} />
+                            <div className="absolute top-2.5 left-2.5 bg-background/95 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm">
+                              <MapPin size={11} className="text-primary" />
+                              <span className="text-xs font-bold text-foreground">{space.distance}</span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between min-h-[180px]">
-                          <div>
-                            <div className="flex items-start justify-between gap-2 mb-1.5">
-                              <h3 className="font-bold text-foreground text-[15px] leading-snug">{space.name}</h3>
-                              <div className="flex items-center gap-0.5 flex-shrink-0 bg-accent/10 rounded-md px-1.5 py-0.5">
-                                <Star size={12} className="text-accent fill-accent" />
-                                <span className="text-sm font-bold text-foreground">{space.rating}</span>
-                                <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
-                              </div>
-                            </div>
-                            <p className="text-xs text-muted-foreground mb-2">{space.type} · {space.neighborhood}, {space.city}</p>
-                            <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                              <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m³</span>
-                              <span className="text-primary font-semibold">Disponível: {space.area} m³</span>
-                            </div>
-                            <div className="flex flex-wrap gap-1.5 mb-3">
-                              {space.features.map((f) => (
-                                <span key={f} className="text-[11px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{f}</span>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="flex items-end justify-between gap-3 pt-2 border-t border-border/40">
+                          <div className="flex-1 p-4 flex flex-col justify-between min-h-[160px]">
                             <div>
-                              <div className="flex items-center gap-1.5 mb-1.5">
-                                <Shield size={12} className="text-primary" />
-                                <span className="text-xs text-muted-foreground font-medium">{space.owner}</span>
+                              <div className="flex items-start justify-between gap-2 mb-1">
+                                <h3 className="font-bold text-foreground text-sm leading-snug">{space.name}</h3>
+                                <div className="flex items-center gap-0.5 flex-shrink-0 bg-accent/10 rounded-md px-1.5 py-0.5">
+                                  <Star size={11} className="text-accent fill-accent" />
+                                  <span className="text-xs font-bold text-foreground">{space.rating}</span>
+                                  <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
+                                </div>
                               </div>
-                              <p className="text-xl font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
-                              <p className="text-[11px] text-muted-foreground mt-0.5">
-                                {reservedVol} m³ × {days} {days === 1 ? "dia" : "dias"}
-                              </p>
-                              <p className="text-[10px] text-muted-foreground/60">+ taxa fixa R$ 28,00 no checkout</p>
+                              <p className="text-xs text-muted-foreground mb-1.5">{space.type} · {space.neighborhood}, {space.city}</p>
+                              <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
+                                <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m³</span>
+                              </div>
+                              <div className="flex flex-wrap gap-1 mb-2">
+                                {space.features.slice(0, 3).map((f) => (
+                                  <span key={f} className="text-[10px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{f}</span>
+                                ))}
+                              </div>
                             </div>
-                            <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm" onClick={(e) => handleSelect(e, space)}>
-                              Selecionar
-                            </Button>
+                            <div className="flex items-end justify-between gap-3 pt-2 border-t border-border/40">
+                              <div>
+                                <div className="flex items-center gap-1.5 mb-1">
+                                  <Shield size={11} className="text-primary" />
+                                  <span className="text-[11px] text-muted-foreground font-medium">{space.owner}</span>
+                                </div>
+                                <p className="text-lg font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">
+                                  {reservedVol} m³ × {days} {days === 1 ? "dia" : "dias"}
+                                </p>
+                              </div>
+                              <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-4 shadow-sm text-xs" onClick={(e) => handleSelect(e, space)}>
+                                Selecionar
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              );
-            })
-          )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })
+            )}
+
+            {/* Pricing hint */}
+            {filteredSortedSpaces.length > 0 && (
+              <div className="flex items-start gap-1.5 pt-2 justify-center">
+                <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
+                <p className="text-[10px] text-muted-foreground/60 text-center max-w-md">
+                  {PRICING_HINT_SHORT} + taxa fixa de R$ 28,00 no checkout.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Pricing hint */}
-        {filteredSortedSpaces.length > 0 && (
-          <div className="flex items-start gap-1.5 mt-5 justify-center">
-            <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
-            <p className="text-[10px] text-muted-foreground/60 text-center max-w-md">
-              {PRICING_HINT_SHORT} Valores estimados antes da taxa de serviço (12%), adicionada no checkout.
-            </p>
-          </div>
-        )}
+        {/* ── RIGHT: Map (desktop always visible, mobile toggled) ── */}
+        <div className={`lg:flex-1 lg:sticky lg:top-[105px] lg:h-[calc(100vh-105px)] ${mobileView === "list" ? "hidden lg:block" : "flex-1"}`}>
+          <Suspense fallback={
+            <div className="w-full h-full min-h-[400px] bg-muted flex items-center justify-center rounded-xl">
+              <p className="text-sm text-muted-foreground">Carregando mapa...</p>
+            </div>
+          }>
+            <SpaceMap
+              spaces={mapSpaces}
+              highlightedId={highlightedSpaceId}
+              onPinHover={setHighlightedSpaceId}
+              onPinClick={handlePinClick}
+              className="h-full w-full lg:rounded-none"
+            />
+          </Suspense>
+        </div>
+      </div>
+
+      {/* ═══ MOBILE: View toggle FAB ═══ */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 lg:hidden">
+        <button
+          onClick={() => setMobileView(mobileView === "list" ? "map" : "list")}
+          className="flex items-center gap-2 bg-foreground text-background px-5 py-3 rounded-full shadow-xl font-semibold text-sm hover:opacity-90 transition-opacity"
+        >
+          {mobileView === "list" ? (
+            <><MapIcon size={16} /> Ver mapa</>
+          ) : (
+            <><List size={16} /> Ver lista</>
+          )}
+        </button>
       </div>
 
       {/* ═══ Mobile Filter Drawer ═══ */}
