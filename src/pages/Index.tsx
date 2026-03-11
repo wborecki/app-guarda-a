@@ -16,6 +16,18 @@ import Footer from "@/components/guardaai/Footer";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        canonical="/"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          name: "GuardaAí",
+          description: "Marketplace de self storage descentralizado. Encontre espaços para guardar seus objetos perto de você. Guarde móveis, estoque e mudanças por menos.",
+          url: "https://guardaai.com.br",
+          applicationCategory: "BusinessApplication",
+          offers: { "@type": "Offer", price: "1.50", priceCurrency: "BRL", description: "Diárias a partir de R$1,50 por m²" },
+        }}
+      />
       <Header />
       <main>
         <Hero />
