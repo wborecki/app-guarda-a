@@ -471,10 +471,10 @@ const HostLanding = () => {
                           >
                             Voltar
                           </Button>
-                          <Button type="submit" size="lg" className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-11 group">
-                            Cadastrar meu espaço
-                            <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
-                          </Button>
+                           <Button type="submit" size="lg" disabled={submitting} className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-11 group">
+                             {submitting ? "Salvando..." : "Cadastrar meu espaço"}
+                             {!submitting && <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />}
+                           </Button>
                         </div>
                       </>
                     )}

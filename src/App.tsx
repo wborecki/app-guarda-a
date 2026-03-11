@@ -39,6 +39,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/anunciar" element={<HostLanding />} />
+          <Route path="/anunciar/finalizar" element={<SpaceOnboarding />} />
           <Route path="/entrar" element={<Login />} />
           <Route path="/redefinir-senha" element={<ResetPassword />} />
           <Route path="/buscar" element={<SearchResults />} />
