@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   MapPin, Star, Ruler, Calendar, ArrowLeft, Shield, Clock,
   ChevronLeft, ChevronRight, Navigation, SlidersHorizontal,
-  X, ChevronDown, Check, Info, Map as MapIcon, List
+  X, ChevronDown, Check, Info, Map as MapIcon, List, CheckCircle2
 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
@@ -136,6 +136,39 @@ const reviewsPool = [
   { name: "Sandra L.", rating: 5, date: "2024-02-05", text: "Ótimo local, exatamente como descrito no anúncio." },
   { name: "Diego C.", rating: 4, date: "2023-11-20", text: "Muito prático e bem localizado. Voltarei a usar." },
 ];
+
+// ─── Smart badges logic ────────────────────────────────────────────
+type SmartBadge = { label: string; color: string };
+
+function computeSmartBadges(space: any, allSpaces: any[], index: number): SmartBadge[] {
+  const badges: SmartBadge[] = [];
+  // Closest
+  const sorted = [...allSpaces].sort((a, b) => a.distanceNum - b.distanceNum);
+  if (sorted[0]?.id === space.id) badges.push({ label: "Mais próximo", color: "bg-primary/10 text-primary" });
+  // Best rated
+  const byRating = [...allSpaces].sort((a, b) => b.rating - a.rating);
+  if (byRating[0]?.id === space.id) badges.push({ label: "Melhor avaliação", color: "bg-accent/10 text-accent" });
+  // Best value (lowest price per m³)
+  const byArea = [...allSpaces].sort((a, b) => a.pricePerDay - b.pricePerDay);
+  if (byArea[0]?.id === space.id) badges.push({ label: "Melhor custo-benefício", color: "bg-emerald-50 text-emerald-700" });
+  // Large capacity
+  if (space.area >= 20) badges.push({ label: "Espaço amplo", color: "bg-blue-50 text-blue-700" });
+  // 24h access
+  if (space.features.includes("Acesso 24h")) badges.push({ label: "Acesso 24h", color: "bg-violet-50 text-violet-700" });
+  return badges.slice(0, 2);
+}
+
+// Space use-case hints based on type
+function getUseCaseHint(type: string): string {
+  switch (type) {
+    case "Garagem": return "Ideal para mudanças e itens volumosos";
+    case "Quarto": return "Perfeito para caixas e itens pessoais";
+    case "Depósito": return "Ótimo para estoque e equipamentos";
+    case "Área coberta": return "Bom para itens que precisam de ventilação";
+    case "Galpão": return "Para móveis grandes e volumes pesados";
+    default: return "Espaço versátil para diversas necessidades";
+  }
+}
 
 // ─── Helpers ───────────────────────────────────────────────────────
 function detectCity(locationStr: string): CityData {
@@ -671,6 +704,8 @@ const SearchResults = () => {
                 const reservedVol = Math.max(totalVol, 1);
                 const bp = calculatePrice(reservedVol, days);
                 const isHighlighted = highlightedSpaceId === space.id;
+                const badges = computeSmartBadges(space, filteredSortedSpaces, index);
+                const useHint = getUseCaseHint(space.type);
 
                 return (
                   <motion.div
@@ -698,40 +733,76 @@ const SearchResults = () => {
                               <MapPin size={11} className="text-primary" />
                               <span className="text-xs font-bold text-foreground">{space.distance}</span>
                             </div>
+                            {/* Smart badges */}
+                            {badges.length > 0 && (
+                              <div className="absolute top-2.5 right-2.5 flex flex-col gap-1">
+                                {badges.map((b) => (
+                                  <span key={b.label} className={`text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm backdrop-blur-sm ${b.color}`}>
+                                    {b.label}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                          <div className="flex-1 p-4 flex flex-col justify-between min-h-[160px]">
+                          <div className="flex-1 p-4 flex flex-col justify-between min-h-[170px]">
                             <div>
                               <div className="flex items-start justify-between gap-2 mb-1">
-                                <h3 className="font-bold text-foreground text-sm leading-snug">{space.name}</h3>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-bold text-foreground text-sm leading-snug">{space.name}</h3>
+                                  <p className="text-xs text-muted-foreground mt-0.5">{space.type} · {space.neighborhood}, {space.city}</p>
+                                </div>
                                 <div className="flex items-center gap-0.5 flex-shrink-0 bg-accent/10 rounded-md px-1.5 py-0.5">
                                   <Star size={11} className="text-accent fill-accent" />
                                   <span className="text-xs font-bold text-foreground">{space.rating}</span>
                                   <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
                                 </div>
                               </div>
-                              <p className="text-xs text-muted-foreground mb-1.5">{space.type} · {space.neighborhood}, {space.city}</p>
+
+                              {/* Use-case hint */}
+                              <p className="text-[11px] text-primary/80 font-medium mb-2">{useHint}</p>
+
+                              {/* Key metrics row */}
                               <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
-                                <span className="flex items-center gap-1"><Ruler size={11} className="text-primary" />Capacidade: {space.area} m³</span>
+                                <span className="flex items-center gap-1">
+                                  <Ruler size={11} className="text-primary" />
+                                  <span className="font-semibold text-foreground">{space.area} m³</span> disponível
+                                </span>
+                                <span className="text-border">•</span>
+                                <span className="flex items-center gap-1">
+                                  <Shield size={11} className="text-primary" />
+                                  {space.owner}
+                                </span>
                               </div>
-                              <div className="flex flex-wrap gap-1 mb-2">
-                                {space.features.slice(0, 3).map((f) => (
-                                  <span key={f} className="text-[10px] px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground font-medium">{f}</span>
+
+                              {/* Feature chips */}
+                              <div className="flex flex-wrap gap-1">
+                                {space.features.slice(0, 3).map((f: string) => (
+                                  <span key={f} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-medium flex items-center gap-0.5">
+                                    <CheckCircle2 size={9} className="text-primary" />
+                                    {f}
+                                  </span>
                                 ))}
                               </div>
                             </div>
-                            <div className="flex items-end justify-between gap-3 pt-2 border-t border-border/40">
+
+                            {/* Price + CTA */}
+                            <div className="flex items-end justify-between gap-3 pt-3 mt-2 border-t border-border/40">
                               <div>
-                                <div className="flex items-center gap-1.5 mb-1">
-                                  <Shield size={11} className="text-primary" />
-                                  <span className="text-[11px] text-muted-foreground font-medium">{space.owner}</span>
-                                </div>
-                                <p className="text-lg font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
-                                <p className="text-[10px] text-muted-foreground mt-0.5">
-                                  {reservedVol} m³ × {days} {days === 1 ? "dia" : "dias"}
+                                <p className="text-xl font-extrabold text-foreground leading-none">
+                                  R$ {bp.total.toFixed(0)}
+                                  <span className="text-xs font-medium text-muted-foreground ml-1">total</span>
                                 </p>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">
+                                  {reservedVol} m³ × {days} {days === 1 ? "dia" : "dias"} + taxa
+                                </p>
+                                {days > 1 && (
+                                  <p className="text-[10px] text-primary font-medium">
+                                    ≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m³/dia
+                                  </p>
+                                )}
                               </div>
-                              <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-4 shadow-sm text-xs" onClick={(e) => handleSelect(e, space)}>
-                                Selecionar
+                              <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm text-xs" onClick={(e) => handleSelect(e, space)}>
+                                Ver detalhes
                               </Button>
                             </div>
                           </div>
