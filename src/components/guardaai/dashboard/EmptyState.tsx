@@ -12,19 +12,19 @@ interface EmptyStateProps {
 }
 
 export const EmptyState = ({ icon: Icon, title, description, actionLabel, actionHref, actionOnClick }: EmptyStateProps) => (
-  <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
-      <Icon size={28} className="text-primary" />
+  <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
+    <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center mb-4">
+      <Icon size={24} className="text-muted-foreground/60" />
     </div>
-    <h3 className="text-lg font-semibold text-foreground mb-2">{title}</h3>
-    <p className="text-sm text-muted-foreground max-w-sm mb-6">{description}</p>
+    <h3 className="text-base font-semibold text-foreground mb-1.5">{title}</h3>
+    <p className="text-sm text-muted-foreground max-w-xs mb-5">{description}</p>
     {actionLabel && actionHref && (
-      <Button asChild>
+      <Button size="sm" asChild>
         <Link to={actionHref}>{actionLabel}</Link>
       </Button>
     )}
     {actionLabel && actionOnClick && (
-      <Button onClick={actionOnClick}>{actionLabel}</Button>
+      <Button size="sm" onClick={actionOnClick}>{actionLabel}</Button>
     )}
   </div>
 );
