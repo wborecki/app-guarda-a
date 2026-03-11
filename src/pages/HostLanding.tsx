@@ -63,6 +63,7 @@ const earningsExamples = [
 
 const HostLanding = () => {
   const { user, displayName, loading: authLoading } = useAuth();
+  const [step, setStep] = useState(1);
 
   const [form, setForm] = useState({
     name: "", whatsapp: "", email: "",
