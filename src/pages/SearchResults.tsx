@@ -138,37 +138,37 @@ const reviewsPool = [
 ];
 
 // ─── Smart badges logic ────────────────────────────────────────────
-type SmartBadge = { label: string; color: string };
+// HIERARCHY: Only ONE primary badge per card (the strongest differentiator)
+type SmartBadge = { label: string; tier: "primary" };
 
-function computeSmartBadges(space: any, allSpaces: any[], index: number): SmartBadge[] {
-  const badges: SmartBadge[] = [];
-  // Closest
-  const sorted = [...allSpaces].sort((a, b) => a.distanceNum - b.distanceNum);
-  if (sorted[0]?.id === space.id) badges.push({ label: "Mais próximo", color: "bg-primary/10 text-primary" });
-  // Best rated
+function computePrimaryBadge(space: any, allSpaces: any[]): SmartBadge | null {
+  // Priority order: best value → closest → best rated → large capacity
+  const byPrice = [...allSpaces].sort((a, b) => a.pricePerDay - b.pricePerDay);
+  if (byPrice[0]?.id === space.id) return { label: "Melhor custo", tier: "primary" };
+  
+  const byDist = [...allSpaces].sort((a, b) => a.distanceNum - b.distanceNum);
+  if (byDist[0]?.id === space.id) return { label: "Mais próximo", tier: "primary" };
+  
   const byRating = [...allSpaces].sort((a, b) => b.rating - a.rating);
-  if (byRating[0]?.id === space.id) badges.push({ label: "Melhor avaliação", color: "bg-accent/10 text-accent" });
-  // Best value (lowest price per m³)
-  const byArea = [...allSpaces].sort((a, b) => a.pricePerDay - b.pricePerDay);
-  if (byArea[0]?.id === space.id) badges.push({ label: "Melhor custo-benefício", color: "bg-emerald-50 text-emerald-700" });
-  // Large capacity
-  if (space.area >= 20) badges.push({ label: "Espaço amplo", color: "bg-blue-50 text-blue-700" });
-  // 24h access
-  if (space.features.includes("Acesso 24h")) badges.push({ label: "Acesso 24h", color: "bg-violet-50 text-violet-700" });
-  return badges.slice(0, 2);
+  if (byRating[0]?.id === space.id) return { label: "Mais bem avaliado", tier: "primary" };
+  
+  if (space.area >= 20) return { label: "Grande capacidade", tier: "primary" };
+  
+  return null;
 }
 
-// Space use-case hints based on type
+// Contextual one-liner — not a badge, just guidance text
 function getUseCaseHint(type: string): string {
   switch (type) {
     case "Garagem": return "Ideal para mudanças e itens volumosos";
-    case "Quarto": return "Perfeito para caixas e itens pessoais";
+    case "Quarto": return "Perfeito para caixas e objetos pessoais";
     case "Depósito": return "Ótimo para estoque e equipamentos";
     case "Área coberta": return "Bom para itens que precisam de ventilação";
     case "Galpão": return "Para móveis grandes e volumes pesados";
     default: return "Espaço versátil para diversas necessidades";
   }
 }
+
 
 // ─── Helpers ───────────────────────────────────────────────────────
 function detectCity(locationStr: string): CityData {
