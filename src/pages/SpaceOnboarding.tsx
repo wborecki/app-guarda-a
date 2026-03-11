@@ -75,6 +75,38 @@ type SpaceData = {
   onboarding_step: number;
 };
 
+// Debounced field hook — keeps local state, saves after delay
+const useDebouncedField = (
+  initialValue: string,
+  onSave: (val: string) => void,
+  delay = 800
+) => {
+  const [local, setLocal] = useState(initialValue);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onSaveRef = useRef(onSave);
+  onSaveRef.current = onSave;
+
+  // Sync from DB when initialValue changes externally (e.g. after load)
+  const prevInit = useRef(initialValue);
+  useEffect(() => {
+    if (initialValue !== prevInit.current) {
+      setLocal(initialValue);
+      prevInit.current = initialValue;
+    }
+  }, [initialValue]);
+
+  const onChange = useCallback((val: string) => {
+    setLocal(val);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => onSaveRef.current(val), delay);
+  }, [delay]);
+
+  // Flush on unmount
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
+
+  return [local, onChange] as const;
+};
+
 const SpaceOnboarding = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -137,6 +169,15 @@ const SpaceOnboarding = () => {
     }
     setSaving(false);
   }, [space]);
+
+  // Debounced text fields
+  const [descLocal, setDescLocal] = useDebouncedField(space?.description || "", v => updateSpace({ description: v }));
+  const [rulesLocal, setRulesLocal] = useDebouncedField(space?.rules || "", v => updateSpace({ rules: v }));
+  const [securityLocal, setSecurityLocal] = useDebouncedField(space?.security_features || "", v => updateSpace({ security_features: v }));
+  const [notesLocal, setNotesLocal] = useDebouncedField(space?.notes || "", v => updateSpace({ notes: v }));
+  const [pixKeyLocal, setPixKeyLocal] = useDebouncedField(space?.pix_key || "", v => updateSpace({ pix_key: v }));
+  const [beneficiaryLocal, setBeneficiaryLocal] = useDebouncedField(space?.beneficiary_name || "", v => updateSpace({ beneficiary_name: v }));
+  const [documentLocal, setDocumentLocal] = useDebouncedField(space?.document_number || "", v => updateSpace({ document_number: v }));
 
   const goToStep = async (step: number) => {
     setCurrentStep(step);
