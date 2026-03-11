@@ -45,10 +45,10 @@ const FinalCTA = () => {
                 className="bg-accent hover:bg-accent/90 text-accent-foreground text-base md:text-lg px-8 md:px-10 h-13 md:h-14 group shadow-xl shadow-accent/30 font-semibold rounded-xl md:rounded-2xl w-full sm:w-auto"
                 asChild
               >
-                <a href={simulatorHref}>
+                <Link to="/quero-guardar">
                   Encontrar um espaço
                   <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </a>
+                </Link>
               </Button>
               <Button
                 size="lg"
