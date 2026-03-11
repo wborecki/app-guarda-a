@@ -810,11 +810,15 @@ const SearchResults = () => {
                               {/* Title + rating */}
                               <div className="flex items-start justify-between gap-2 mb-0.5">
                                 <h3 className="font-bold text-foreground text-sm leading-snug">{space.name}</h3>
-                                <div className="flex items-center gap-0.5 flex-shrink-0">
-                                  <Star size={11} className="text-accent fill-accent" />
-                                  <span className="text-xs font-bold text-foreground">{space.rating}</span>
-                                  <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
-                                </div>
+                                {space.reviews > 0 ? (
+                                  <div className="flex items-center gap-0.5 flex-shrink-0">
+                                    <Star size={11} className="text-accent fill-accent" />
+                                    <span className="text-xs font-bold text-foreground">{space.rating}</span>
+                                    <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
+                                  </div>
+                                ) : (
+                                  <span className="text-[10px] text-muted-foreground flex-shrink-0">Novo</span>
+                                )}
                               </div>
 
                               {/* Location line — type + neighborhood */}
