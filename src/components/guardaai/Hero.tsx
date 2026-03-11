@@ -90,7 +90,7 @@ const Hero = () => {
             </div>
 
             {/* Headline */}
-            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-4 tracking-tight">
+            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-5 tracking-tight">
               Guarde perto.<br />
               <span className="text-primary">Pague menos.</span>
             </h1>
@@ -104,7 +104,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.45 }}
-              className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-6"
+              className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-7"
             >
               {/* ── Desktop layout ── */}
               <div className="hidden md:block p-2.5">
@@ -235,18 +235,18 @@ const Hero = () => {
             </motion.div>
 
             {/* Secondary links */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
               <Button
                 size="sm"
                 variant="outline"
-                className="text-sm border-primary/40 text-primary hover:bg-primary/5 bg-card/80 backdrop-blur-sm font-medium"
+                className="text-sm border-primary/40 text-primary hover:bg-primary/5 bg-card/80 backdrop-blur-sm font-medium px-4"
                 asChild
               >
                 <Link to="/anunciar">Quero anunciar meu espaço</Link>
               </Button>
               <a
                 href="#simulador"
-                className="text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
+                className="text-[13px] text-muted-foreground hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
               >
                 Precisa calcular em detalhe? Use o simulador ↓
               </a>
