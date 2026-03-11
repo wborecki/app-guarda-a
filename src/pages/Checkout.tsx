@@ -113,7 +113,10 @@ const Checkout = () => {
     const newPreviews = newFiles.map((f) => URL.createObjectURL(f));
     setPhotos((prev) => [...prev, ...newFiles]);
     setPhotoPreviews((prev) => [...prev, ...newPreviews]);
-    if (analysisStatus !== "pending") setAnalysisStatus("pending");
+    if (analysisStatus !== "pending") {
+      setAnalysisStatus("pending");
+      setAnalysisResult(null);
+    }
   };
 
   const handlePhotoRemove = (index: number) => {
