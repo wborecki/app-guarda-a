@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
 import Simulator from "@/components/guardaai/Simulator";

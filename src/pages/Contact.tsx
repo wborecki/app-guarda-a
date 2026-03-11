@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
 import ReactMarkdown from "react-markdown";
+import SEO from "@/components/SEO";
 
 type Msg = { role: "user" | "assistant"; content: string };
 

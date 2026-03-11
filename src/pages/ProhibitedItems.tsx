@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Ban, Flame, Skull, Bug, Beef, Swords, FlaskConical, Bomb, ShieldAlert } from "lucide-react";

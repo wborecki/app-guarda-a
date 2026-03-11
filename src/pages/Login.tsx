@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Package, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff } from "lucide-react";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import SEO from "@/components/SEO";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
