@@ -88,6 +88,7 @@ const Checkout = () => {
 
   const allTermsAccepted = renterTerms && prohibitedTerms;
   const photosApproved = photos.length > 0 && analysisStatus === "approved";
+  const photosBlocked = analysisStatus === "blocked" || analysisStatus === "review";
   const verificationComplete = photosApproved && allTermsAccepted;
 
   if (!space) {
