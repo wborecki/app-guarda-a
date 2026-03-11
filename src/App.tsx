@@ -28,6 +28,7 @@ import DashboardFinanceiro from "./pages/dashboard/DashboardFinanceiro";
 import DashboardPerfil from "./pages/dashboard/DashboardPerfil";
 import { AuthProvider } from "./hooks/useAuth";
 import ScrollToTop from "./components/ScrollToTop";
+import FloatingChat from "./components/guardaai/FloatingChat";
 
 const queryClient = new QueryClient();
 
