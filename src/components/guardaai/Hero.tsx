@@ -115,6 +115,7 @@ const Hero = () => {
                       value={location}
                       onChange={setLocation}
                       placeholder="Onde quer guardar?"
+                      hideGps
                       className="border-0 shadow-none bg-transparent h-9 px-0 text-sm font-medium placeholder:text-muted-foreground/60 focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
