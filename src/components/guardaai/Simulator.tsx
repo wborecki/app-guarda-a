@@ -68,23 +68,23 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
   };
 
   const simulatorContent = (
-    <>
-      <div className="mb-5">
+    <div className="space-y-4">
+      <div>
         <ItemDimensionInput items={items} onItemsChange={handleItemsChange} />
       </div>
 
-      <div className="mb-5 md:mb-4">
-        <label className="text-sm font-medium text-foreground mb-2 block">Seu endereço</label>
+      <div>
+        <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Seu endereço</label>
         <LocationAutocomplete
           value={location}
           onChange={setLocation}
           placeholder="Ex: São Paulo, Pinheiros"
-          className="h-11 md:h-10"
+          className="h-10"
         />
       </div>
 
       {/* Date Range Picker + Time inputs */}
-      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-4 mb-5 md:mb-4 items-end">
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-3 items-end">
         <DateRangePicker
           deliveryDate={deliveryDate}
           pickupDate={pickupDate}
@@ -92,30 +92,30 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
           onPickupChange={setPickupDate}
         />
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-2 block">Hora entrada</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Hora entrada</label>
           <Input
             type="time"
             value={deliveryTime}
             onChange={(e) => setDeliveryTime(e.target.value)}
-            className="w-24 h-11 md:h-10"
+            className="w-24 h-10"
           />
         </div>
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-2 block">Hora retirada</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Hora retirada</label>
           <Input
             type="time"
             value={pickupTime}
             onChange={(e) => setPickupTime(e.target.value)}
-            className="w-24 h-11 md:h-10"
+            className="w-24 h-10"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 md:mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">Tipo de espaço</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Tipo de espaço</label>
           <Select value={spaceType} onValueChange={setSpaceType}>
-            <SelectTrigger className="h-11 md:h-10">
+            <SelectTrigger className="h-10">
               <SelectValue placeholder="Qualquer tipo" />
             </SelectTrigger>
             <SelectContent>
@@ -129,9 +129,9 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
           </Select>
         </div>
         <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">Uso</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Uso</label>
           <Select value={usage} onValueChange={setUsage}>
-            <SelectTrigger className="h-11 md:h-10">
+            <SelectTrigger className="h-10">
               <SelectValue placeholder="Selecione" />
             </SelectTrigger>
             <SelectContent>
@@ -143,7 +143,7 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
       </div>
 
       <Button
-        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base h-12"
+        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-11"
         onClick={handleSimulate}
         disabled={items.length === 0 || !deliveryDate || !pickupDate}
       >
@@ -211,7 +211,7 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
       <p className="text-[10px] md:text-xs text-muted-foreground mt-3 md:mt-4 text-center">
         O sistema calcula automaticamente o volume e encontra o melhor espaço.
       </p>
-    </>
+    </div>
   );
 
   if (embedded) {
