@@ -311,28 +311,29 @@ const Checkout = () => {
 
   // ─── CHECKOUT PAGE ────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-background pb-28 lg:pb-8">
+    <div className="min-h-screen bg-background pb-24 sm:pb-28 lg:pb-8">
       <SEO title="Checkout" description="Finalize sua reserva de espaço na GuardaAí. Pagamento seguro via Pix." noIndex />
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-30">
-        <div className="container py-3 flex items-center gap-3 max-w-5xl">
-          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0">
-            <ArrowLeft size={20} />
+        <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 max-w-5xl">
+          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0 h-8 w-8 sm:h-9 sm:w-9">
+            <ArrowLeft size={18} />
           </Button>
-          <h1 className="text-base font-bold text-foreground">Finalizar reserva</h1>
-          <div className="hidden sm:flex items-center gap-1 ml-auto">
+          <h1 className="text-sm sm:text-base font-bold text-foreground">Finalizar reserva</h1>
+          <div className="flex items-center gap-1 ml-auto">
             {STEPS.map((s, i) => (
-              <div key={s.key} className="flex items-center gap-1">
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+              <div key={s.key} className="flex items-center gap-0.5 sm:gap-1">
+                <span className={`text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full ${
                   i === currentStep
                     ? "bg-primary text-primary-foreground"
                     : i < currentStep
                     ? "bg-primary/20 text-primary"
                     : "bg-secondary text-muted-foreground"
                 }`}>
-                  {s.label}
+                  <span className="hidden sm:inline">{s.label}</span>
+                  <span className="sm:hidden">{i + 1}</span>
                 </span>
-                {i < STEPS.length - 1 && <ChevronRight size={12} className="text-muted-foreground/40" />}
+                {i < STEPS.length - 1 && <ChevronRight size={10} className="text-muted-foreground/40" />}
               </div>
             ))}
           </div>
