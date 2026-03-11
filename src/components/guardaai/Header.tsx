@@ -66,10 +66,10 @@ const Header = () => {
 
         <div className="hidden lg:flex items-center gap-3">
           <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground" asChild>
-            {isHostPage ? (
-              <Link to="/#simulador">Quero guardar</Link>
-            ) : (
+            {isHomePage ? (
               <a href="#simulador">Quero guardar</a>
+            ) : (
+              <Link to="/#simulador">Quero guardar</Link>
             )}
           </Button>
           <Button size="sm" variant="outline" className="border-primary text-primary hover:bg-primary/5" asChild>
