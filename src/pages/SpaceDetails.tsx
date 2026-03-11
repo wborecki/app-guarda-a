@@ -1,3 +1,4 @@
+import SpaceDetailsSkeleton from "@/components/guardaai/skeletons/SpaceDetailsSkeleton";
 import SEO from "@/components/SEO";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
