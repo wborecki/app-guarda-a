@@ -138,11 +138,11 @@ const Hero = () => {
                   </div>
 
                   {/* Divider */}
-                  <div className="w-px self-stretch my-3 bg-border" />
+                  <div className="w-px self-stretch my-4 bg-border" />
 
                   {/* Volume */}
-                  <div className="flex-[0.8] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                  <div className="flex-[0.8] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
+                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Volume
                     </label>
                     <div className="relative">
