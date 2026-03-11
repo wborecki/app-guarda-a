@@ -48,8 +48,8 @@ const SpaceCard = ({
       >
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
-            {/* Photo */}
-            <div className="sm:w-52 lg:w-48 xl:w-52 h-48 sm:h-auto bg-muted flex-shrink-0 relative">
+            {/* Photo — taller on mobile for visual impact */}
+            <div className="sm:w-52 lg:w-48 xl:w-52 h-52 sm:h-auto bg-muted flex-shrink-0 relative">
               <CardCarousel photos={space.photos} name={space.name} />
               <div className="absolute top-2.5 left-2.5 bg-background/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1">
                 <MapPin size={10} className="text-primary" />
@@ -62,28 +62,35 @@ const SpaceCard = ({
                   </span>
                 </div>
               )}
+              {/* Mobile: rating badge on photo */}
+              {space.reviews > 0 && (
+                <div className="absolute top-2.5 right-2.5 sm:hidden bg-background/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-0.5">
+                  <Star size={10} className="text-accent fill-accent" />
+                  <span className="text-[11px] font-bold text-foreground">{space.rating}</span>
+                </div>
+              )}
             </div>
 
             {/* Content */}
-            <div className="flex-1 p-4 flex flex-col justify-between min-h-[170px]">
+            <div className="flex-1 p-3.5 sm:p-4 flex flex-col justify-between min-h-0 sm:min-h-[170px]">
               <div>
                 <div className="flex items-start justify-between gap-2 mb-0.5">
                   <h3 className="font-bold text-foreground text-sm leading-snug">{space.name}</h3>
                   {space.reviews > 0 ? (
-                    <div className="flex items-center gap-0.5 flex-shrink-0">
+                    <div className="hidden sm:flex items-center gap-0.5 flex-shrink-0">
                       <Star size={11} className="text-accent fill-accent" />
                       <span className="text-xs font-bold text-foreground">{space.rating}</span>
                       <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
                     </div>
                   ) : (
-                    <span className="text-[10px] text-muted-foreground flex-shrink-0">Novo</span>
+                    <span className="hidden sm:block text-[10px] text-muted-foreground flex-shrink-0">Novo</span>
                   )}
                 </div>
 
-                <p className="text-xs text-muted-foreground mb-1.5">{space.type} · {space.neighborhood}, {space.city}</p>
-                <p className="text-[11px] text-muted-foreground/70 italic mb-2.5">{useHint}</p>
+                <p className="text-xs text-muted-foreground mb-1">{space.type} · {space.neighborhood}, {space.city}</p>
+                <p className="text-[11px] text-muted-foreground/70 italic mb-2 hidden sm:block">{useHint}</p>
 
-                <div className="flex items-center gap-2.5 text-[11px] text-muted-foreground mb-2.5">
+                <div className="flex items-center gap-2.5 text-[11px] text-muted-foreground mb-2">
                   <span className="flex items-center gap-1">
                     <Ruler size={10} className="text-primary/70" />
                     <span className="font-medium text-foreground">{space.area} m³</span>
@@ -102,9 +109,10 @@ const SpaceCard = ({
                 </div>
               </div>
 
-              <div className="flex items-end justify-between gap-3 pt-3 mt-2 border-t border-border/30">
+              {/* Price + CTA */}
+              <div className="flex items-end justify-between gap-3 pt-2.5 sm:pt-3 mt-2 border-t border-border/30">
                 <div>
-                  <p className="text-xl font-extrabold text-foreground leading-none">
+                  <p className="text-lg sm:text-xl font-extrabold text-foreground leading-none">
                     R$ {bp.total.toFixed(0)}
                     <span className="text-[10px] font-normal text-muted-foreground ml-1">total</span>
                   </p>
@@ -117,7 +125,7 @@ const SpaceCard = ({
                     </p>
                   )}
                 </div>
-                <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-5 shadow-sm text-xs" onClick={onSelect}>
+                <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-4 sm:px-5 shadow-sm text-xs" onClick={onSelect}>
                   Ver detalhes
                 </Button>
               </div>
