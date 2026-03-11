@@ -50,17 +50,19 @@ const Hero = () => {
         }}
         aria-hidden="true"
       />
+      {/* Lateral overlay — softer, less white wash */}
       <div
         className="absolute inset-0 z-10 hidden md:block"
         style={{
           background:
-            "linear-gradient(90deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.96) 30%, hsl(var(--background) / 0.78) 50%, hsl(var(--background) / 0.4) 68%, hsl(var(--background) / 0.12) 82%, transparent 100%)",
+            "linear-gradient(90deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.95) 28%, hsl(var(--background) / 0.72) 48%, hsl(var(--background) / 0.32) 66%, hsl(var(--background) / 0.08) 80%, transparent 100%)",
         }}
       />
+      {/* Bottom fade — reduced height and softer */}
       <div
-        className="absolute inset-x-0 bottom-0 h-32 z-10 hidden md:block"
+        className="absolute inset-x-0 bottom-0 h-20 z-10 hidden md:block"
         style={{
-          background: "linear-gradient(to top, hsl(var(--background)), transparent)",
+          background: "linear-gradient(to top, hsl(var(--background) / 0.7), transparent)",
         }}
         aria-hidden="true"
       />
@@ -73,26 +75,27 @@ const Hero = () => {
         aria-hidden="true"
       />
 
-      <div className="container relative z-20 min-h-[auto] md:min-h-[92vh] flex items-center py-16 pt-28 md:py-36">
-        <div className="max-w-[640px] w-full">
+      <div className="container relative z-20 min-h-[auto] md:min-h-[94vh] flex items-center py-20 pt-32 md:py-0">
+        <div className="max-w-[660px] w-full md:py-28">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55 }}
+            className="space-y-0"
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-5 md:mb-7 border border-primary/20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 md:mb-8 border border-primary/20">
               <Package size={14} />
               Self storage descentralizado
             </div>
 
             {/* Headline */}
-            <h1 className="text-[2rem] md:text-5xl lg:text-[3.5rem] font-extrabold text-foreground leading-[1.15] mb-3 md:mb-4 tracking-tight">
+            <h1 className="text-[2rem] md:text-5xl lg:text-[3.5rem] font-extrabold text-foreground leading-[1.15] mb-4 md:mb-5 tracking-tight">
               Guarde perto.<br />
               <span className="text-primary">Pague menos.</span>
             </h1>
 
-            <p className="text-[15px] md:text-lg text-muted-foreground mb-8 md:mb-10 max-w-md leading-relaxed">
+            <p className="text-[15px] md:text-lg text-muted-foreground mb-10 md:mb-12 max-w-md leading-relaxed">
               Encontre espaços para armazenar seus objetos perto de você, por diárias ou mensalidades.
             </p>
 
@@ -101,14 +104,14 @@ const Hero = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.45 }}
-              className="rounded-2xl bg-card/95 backdrop-blur-lg border border-border/70 shadow-xl shadow-foreground/[0.04] mb-5"
+              className="rounded-2xl bg-card/95 backdrop-blur-lg border border-border/70 shadow-xl shadow-foreground/[0.04] mb-7 md:mb-8"
             >
               {/* ── Desktop layout ── */}
-              <div className="hidden md:block p-2">
+              <div className="hidden md:block p-3">
                 <div className="flex items-stretch gap-0">
                   {/* Location */}
-                  <div className="flex-[1.4] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/50 transition-colors group">
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                  <div className="flex-[1.4] min-w-0 px-4 py-3.5 rounded-xl hover:bg-muted/50 transition-colors group">
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Localização
                     </label>
                     <LocationAutocomplete
@@ -121,10 +124,10 @@ const Hero = () => {
                   </div>
 
                   {/* Divider */}
-                  <div className="w-px self-stretch my-3 bg-border/60" />
+                  <div className="w-px self-stretch my-3.5 bg-border/60" />
 
                   {/* Dates */}
-                  <div className="flex-[1.1] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/50 transition-colors">
+                  <div className="flex-[1.1] min-w-0 px-4 py-3.5 rounded-xl hover:bg-muted/50 transition-colors">
                     <DateRangePicker
                       deliveryDate={deliveryDate}
                       pickupDate={pickupDate}
@@ -135,11 +138,11 @@ const Hero = () => {
                   </div>
 
                   {/* Divider */}
-                  <div className="w-px self-stretch my-3 bg-border/60" />
+                  <div className="w-px self-stretch my-3.5 bg-border/60" />
 
                   {/* Volume */}
-                  <div className="flex-[0.7] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/50 transition-colors">
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                  <div className="flex-[0.7] min-w-0 px-4 py-3.5 rounded-xl hover:bg-muted/50 transition-colors">
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Volume
                     </label>
                     <div className="relative">
@@ -250,7 +253,7 @@ const Hero = () => {
             </div>
 
             {/* Mobile highlight chips */}
-            <div className="flex flex-wrap gap-2 mt-6 md:hidden">
+            <div className="flex flex-wrap gap-2 mt-8 md:hidden">
               {highlights.map((h, i) => (
                 <motion.div
                   key={i}
