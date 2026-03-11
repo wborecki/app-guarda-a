@@ -356,8 +356,9 @@ const Checkout = () => {
                         <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">2</span>
                         Verificação dos itens
                       </h2>
-                      <p className="text-xs text-muted-foreground mb-5">
-                        Envie fotos dos seus itens e aceite os termos para prosseguir.
+                       <p className="text-xs text-muted-foreground mb-5">
+                         Envie fotos dos seus itens para análise automática de conformidade. A aprovação depende da verificação dos itens conforme a política da plataforma.
+                       </p>
                       </p>
 
                       {/* ── Photo Upload ── */}
