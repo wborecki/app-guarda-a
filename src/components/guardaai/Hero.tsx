@@ -240,7 +240,7 @@ const Hero = () => {
               </motion.div>
 
               {/* Secondary links */}
-              <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
+              <div className="flex flex-col sm:flex-row items-center sm:items-center gap-2.5 sm:gap-4">
                 <Button
                   size="sm"
                   variant="outline"
