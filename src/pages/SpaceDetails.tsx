@@ -514,10 +514,11 @@ const SpaceDetails = () => {
                       className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base shadow-md"
                       onClick={handleContinue}
                     >
-                      Continuar reserva
+                      Reservar online
                     </Button>
-
-                    <button
+                    <p className="text-center text-[10px] text-muted-foreground mt-2">
+                      Reserva rápida, segura e sem compromisso até a confirmação.
+                    </p>
                       onClick={() => setEditingReservation(!editingReservation)}
                       className="w-full text-center text-sm text-primary font-semibold mt-3 hover:underline flex items-center justify-center gap-1.5"
                     >
