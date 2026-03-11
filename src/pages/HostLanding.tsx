@@ -68,7 +68,7 @@ const HostLanding = () => {
   const [step, setStep] = useState(1);
 
   const [form, setForm] = useState({
-    location: "", neighborhood: "",
+    location: "",
     spaceType: "", spaceCategory: "",
     height: "", width: "", length: "",
     covered: false, closed: false, easyAccess: false,
