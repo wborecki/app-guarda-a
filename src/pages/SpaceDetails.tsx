@@ -570,7 +570,7 @@ const SpaceDetails = () => {
             className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold shadow-md"
             onClick={handleContinue}
           >
-            Continuar reserva
+            Reservar online
           </Button>
         </div>
       </div>
