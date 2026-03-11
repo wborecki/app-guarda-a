@@ -14,7 +14,7 @@ const DashboardAgenda = () => (
         title="Sua agenda está vazia"
         description="Quando você tiver reservas ou espaços anunciados, seus compromissos aparecerão aqui com datas de entrada e saída."
         actionLabel="Buscar espaço"
-        actionHref="/"
+        actionHref="/buscar"
       />
     </div>
   </div>

@@ -176,7 +176,7 @@ const DashboardOverview = () => {
               </p>
               <div className="flex gap-2">
                 <Button size="sm" className="h-8 text-xs" asChild>
-                  <Link to="/">Buscar espaço</Link>
+                  <Link to="/buscar">Buscar espaço</Link>
                 </Button>
                 <Button size="sm" variant="outline" className="h-8 text-xs" asChild>
                   <Link to="/anunciar">Anunciar</Link>
