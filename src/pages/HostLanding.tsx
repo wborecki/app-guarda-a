@@ -68,7 +68,7 @@ const HostLanding = () => {
   const [step, setStep] = useState(1);
 
   const [form, setForm] = useState({
-    location: "", neighborhood: "",
+    location: "",
     spaceType: "", spaceCategory: "",
     height: "", width: "", length: "",
     covered: false, closed: false, easyAccess: false,
@@ -96,7 +96,7 @@ const HostLanding = () => {
       : form.availability === "weekends" ? "Finais de semana"
       : "Personalizada";
     const message = encodeURIComponent(
-      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nBairro: ${form.neighborhood}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
+      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
     );
     window.open(`https://wa.me/5511994541862?text=${message}`, "_blank");
   };
@@ -361,12 +361,6 @@ const HostLanding = () => {
                         {/* Notes + photos */}
                         <div className="space-y-2.5">
                           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Detalhes adicionais</p>
-                          <Input
-                            placeholder="Bairro (opcional)"
-                            value={form.neighborhood}
-                            onChange={e => setForm({...form, neighborhood: e.target.value})}
-                            className="h-10 text-sm"
-                          />
                           <Textarea
                             placeholder="Observações, restrições, regras... (opcional)"
                             value={form.notes}
