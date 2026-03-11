@@ -450,8 +450,8 @@ const SpaceDetails = () => {
                         <span className="text-foreground font-medium">R$ {subtotal.toFixed(2).replace(".", ",")}</span>
                       </div>
                       <div className="text-[11px] text-muted-foreground/70 pl-0.5">
-                        {effectiveReservedArea} m² × {days} {days === 1 ? "dia" : "dias"} → R$ {bp.pricePerM2.toFixed(2).replace(".", ",")}/m²
-                        {days > 1 && <> (≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m²/dia)</>}
+                        {effectiveReservedArea} m³ × {days} {days === 1 ? "dia" : "dias"} → R$ {bp.pricePerM3.toFixed(2).replace(".", ",")}/m³
+                        {days > 1 && <> (≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m³/dia)</>}
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Taxa de serviço (fixa)</span>
