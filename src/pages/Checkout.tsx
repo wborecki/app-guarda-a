@@ -769,8 +769,8 @@ const Checkout = () => {
                     {/* Reservation details */}
                     <div className="space-y-2 mb-4 pb-4 border-b border-border/50">
                       <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Área reservada</span>
-                        <span className="text-foreground font-medium">{reservedArea} m²</span>
+                        <span className="text-muted-foreground">Volume reservado</span>
+                        <span className="text-foreground font-medium">{reservedArea} m³</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Período</span>
