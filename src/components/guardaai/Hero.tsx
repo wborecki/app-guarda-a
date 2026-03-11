@@ -84,7 +84,7 @@ const Hero = () => {
             className="space-y-0"
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-5 border border-primary/20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 md:mb-7 border border-primary/20">
               <Package size={14} />
               Self storage descentralizado
             </div>
