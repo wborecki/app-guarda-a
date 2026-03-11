@@ -133,6 +133,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO title="Entrar" description="Acesse sua conta GuardaAí para gerenciar reservas, espaços e mensagens." canonical="/entrar" noIndex />
       <Header />
       <main className="flex-1 pt-24 pb-16">
         <div className="container max-w-lg mx-auto">

@@ -148,6 +148,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SEO title="Fale Conosco" description="Entre em contato com a GuardaAí. Tire dúvidas, envie sugestões ou fale com nosso assistente virtual." canonical="/fale-conosco" noIndex />
       <Header />
       <main className="flex-1 flex flex-col pt-[52px] md:pt-[72px]">
         <div className="container max-w-2xl flex-1 flex flex-col px-4 md:px-8 py-4 md:py-6">

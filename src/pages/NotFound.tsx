@@ -13,6 +13,7 @@ const NotFound = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
+      <SEO title="Página não encontrada" noIndex />
       <div className="text-center max-w-md px-6">
         <h1 className="mb-3 text-6xl font-extrabold text-foreground">404</h1>
         <p className="mb-2 text-xl font-semibold text-foreground">Página não encontrada</p>
