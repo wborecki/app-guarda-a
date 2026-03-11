@@ -11,7 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Package, Search, DollarSign, Zap, MapPin, Info } from "lucide-react";
 import { calculatePrice, PRICING_HINT_SHORT, SERVICE_FEE } from "@/lib/pricing";
 
-const Simulator = () => {
+interface SimulatorProps {
+  embedded?: boolean;
+}
+
+const Simulator = ({ embedded = false }: SimulatorProps) => {
   const navigate = useNavigate();
   const [items, setItems] = useState<AddedItem[]>([]);
   const [location, setLocation] = useState("");
