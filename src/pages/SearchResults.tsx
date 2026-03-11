@@ -704,7 +704,7 @@ const SearchResults = () => {
                 const reservedVol = Math.max(totalVol, 1);
                 const bp = calculatePrice(reservedVol, days);
                 const isHighlighted = highlightedSpaceId === space.id;
-                const badges = computeSmartBadges(space, filteredSortedSpaces, index);
+                const primaryBadge = computePrimaryBadge(space, filteredSortedSpaces);
                 const useHint = getUseCaseHint(space.type);
 
                 return (
@@ -727,58 +727,60 @@ const SearchResults = () => {
                     >
                       <CardContent className="p-0">
                         <div className="flex flex-col sm:flex-row">
+                          {/* Photo */}
                           <div className="sm:w-52 lg:w-48 xl:w-52 h-48 sm:h-auto bg-muted flex-shrink-0 relative">
                             <CardCarousel photos={space.photos} name={space.name} />
-                            <div className="absolute top-2.5 left-2.5 bg-background/95 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm">
-                              <MapPin size={11} className="text-primary" />
-                              <span className="text-xs font-bold text-foreground">{space.distance}</span>
+                            {/* Distance metric — objective data */}
+                            <div className="absolute top-2.5 left-2.5 bg-background/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1">
+                              <MapPin size={10} className="text-primary" />
+                              <span className="text-[11px] font-semibold text-foreground">{space.distance}</span>
                             </div>
-                            {/* Smart badges */}
-                            {badges.length > 0 && (
-                              <div className="absolute top-2.5 right-2.5 flex flex-col gap-1">
-                                {badges.map((b) => (
-                                  <span key={b.label} className={`text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm backdrop-blur-sm ${b.color}`}>
-                                    {b.label}
-                                  </span>
-                                ))}
+                            {/* Primary badge — max 1, strong differentiator */}
+                            {primaryBadge && (
+                              <div className="absolute bottom-2.5 left-2.5">
+                                <span className="text-[10px] font-semibold tracking-wide uppercase px-2.5 py-1 rounded-md bg-foreground/80 text-background backdrop-blur-sm shadow-sm">
+                                  {primaryBadge.label}
+                                </span>
                               </div>
                             )}
                           </div>
+
+                          {/* Content */}
                           <div className="flex-1 p-4 flex flex-col justify-between min-h-[170px]">
                             <div>
-                              <div className="flex items-start justify-between gap-2 mb-1">
-                                <div className="flex-1 min-w-0">
-                                  <h3 className="font-bold text-foreground text-sm leading-snug">{space.name}</h3>
-                                  <p className="text-xs text-muted-foreground mt-0.5">{space.type} · {space.neighborhood}, {space.city}</p>
-                                </div>
-                                <div className="flex items-center gap-0.5 flex-shrink-0 bg-accent/10 rounded-md px-1.5 py-0.5">
+                              {/* Title + rating */}
+                              <div className="flex items-start justify-between gap-2 mb-0.5">
+                                <h3 className="font-bold text-foreground text-sm leading-snug">{space.name}</h3>
+                                <div className="flex items-center gap-0.5 flex-shrink-0">
                                   <Star size={11} className="text-accent fill-accent" />
                                   <span className="text-xs font-bold text-foreground">{space.rating}</span>
                                   <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
                                 </div>
                               </div>
 
-                              {/* Use-case hint */}
-                              <p className="text-[11px] text-primary/80 font-medium mb-2">{useHint}</p>
+                              {/* Location line — type + neighborhood */}
+                              <p className="text-xs text-muted-foreground mb-1.5">{space.type} · {space.neighborhood}, {space.city}</p>
 
-                              {/* Key metrics row */}
-                              <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
+                              {/* Use-case hint — soft contextual guidance */}
+                              <p className="text-[11px] text-muted-foreground/70 italic mb-2.5">{useHint}</p>
+
+                              {/* Key metrics */}
+                              <div className="flex items-center gap-2.5 text-[11px] text-muted-foreground mb-2.5">
                                 <span className="flex items-center gap-1">
-                                  <Ruler size={11} className="text-primary" />
-                                  <span className="font-semibold text-foreground">{space.area} m³</span> disponível
+                                  <Ruler size={10} className="text-primary/70" />
+                                  <span className="font-medium text-foreground">{space.area} m³</span>
                                 </span>
-                                <span className="text-border">•</span>
+                                <span className="w-px h-3 bg-border" />
                                 <span className="flex items-center gap-1">
-                                  <Shield size={11} className="text-primary" />
+                                  <Shield size={10} className="text-primary/70" />
                                   {space.owner}
                                 </span>
                               </div>
 
-                              {/* Feature chips */}
-                              <div className="flex flex-wrap gap-1">
+                              {/* Feature attributes — quiet, text-level */}
+                              <div className="flex flex-wrap gap-x-3 gap-y-0.5">
                                 {space.features.slice(0, 3).map((f: string) => (
-                                  <span key={f} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-medium flex items-center gap-0.5">
-                                    <CheckCircle2 size={9} className="text-primary" />
+                                  <span key={f} className="text-[10px] text-muted-foreground/60 font-medium">
                                     {f}
                                   </span>
                                 ))}
@@ -786,17 +788,17 @@ const SearchResults = () => {
                             </div>
 
                             {/* Price + CTA */}
-                            <div className="flex items-end justify-between gap-3 pt-3 mt-2 border-t border-border/40">
+                            <div className="flex items-end justify-between gap-3 pt-3 mt-2 border-t border-border/30">
                               <div>
                                 <p className="text-xl font-extrabold text-foreground leading-none">
                                   R$ {bp.total.toFixed(0)}
-                                  <span className="text-xs font-medium text-muted-foreground ml-1">total</span>
+                                  <span className="text-[10px] font-normal text-muted-foreground ml-1">total</span>
                                 </p>
                                 <p className="text-[10px] text-muted-foreground mt-0.5">
-                                  {reservedVol} m³ × {days} {days === 1 ? "dia" : "dias"} + taxa
+                                  {reservedVol} m³ × {days}d + taxa
                                 </p>
                                 {days > 1 && (
-                                  <p className="text-[10px] text-primary font-medium">
+                                  <p className="text-[10px] text-primary/70 font-medium">
                                     ≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m³/dia
                                   </p>
                                 )}
