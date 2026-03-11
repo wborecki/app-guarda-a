@@ -69,22 +69,22 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
 
   const simulatorContent = (
     <div className="space-y-4">
-      <div className="mb-5">
+      <div>
         <ItemDimensionInput items={items} onItemsChange={handleItemsChange} />
       </div>
 
-      <div className="mb-5 md:mb-4">
-        <label className="text-sm font-medium text-foreground mb-2 block">Seu endereço</label>
+      <div>
+        <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Seu endereço</label>
         <LocationAutocomplete
           value={location}
           onChange={setLocation}
           placeholder="Ex: São Paulo, Pinheiros"
-          className="h-11 md:h-10"
+          className="h-10"
         />
       </div>
 
       {/* Date Range Picker + Time inputs */}
-      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-4 mb-5 md:mb-4 items-end">
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_auto] gap-3 items-end">
         <DateRangePicker
           deliveryDate={deliveryDate}
           pickupDate={pickupDate}
