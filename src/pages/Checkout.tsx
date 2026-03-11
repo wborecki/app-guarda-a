@@ -278,7 +278,12 @@ const Checkout = () => {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Período</span>
-                  <span className="font-medium text-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
+                  <span className="font-medium text-foreground">
+                    {simulation?.deliveryDate && simulation?.pickupDate
+                      ? `${format(new Date(simulation.deliveryDate), "dd/MM", { locale: ptBR })} → ${format(new Date(simulation.pickupDate), "dd/MM", { locale: ptBR })} · `
+                      : ""
+                    }{days} {days === 1 ? "dia" : "dias"}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Fotos verificadas</span>
