@@ -127,28 +127,34 @@ const DashboardOverview = () => {
           icon={Package}
           label="Reservas ativas"
           value="0"
-          subtitle="Nenhuma reserva no momento"
+          subtitle="Em breve"
           color="bg-primary/10 text-primary"
         />
         <StatCard
           icon={Home}
           label="Espaços anunciados"
-          value="0"
-          subtitle="Comece anunciando seu espaço"
+          value={spacesCount !== null ? String(spacesCount) : "—"}
+          subtitle={
+            spacesCount === null
+              ? "Carregando..."
+              : spacesCount === 0
+              ? "Comece anunciando seu espaço"
+              : `${publishedCount} publicado${publishedCount !== 1 ? "s" : ""}`
+          }
           color="bg-accent/10 text-accent"
         />
         <StatCard
           icon={CalendarDays}
           label="Próximos eventos"
           value="0"
-          subtitle="Sem eventos agendados"
+          subtitle="Em breve"
           color="bg-blue-100/80 text-blue-600"
         />
         <StatCard
           icon={Wallet}
           label="Saldo disponível"
           value="R$ 0"
-          subtitle="Balanço atualizado"
+          subtitle="Em breve"
           color="bg-emerald-100/80 text-emerald-600"
         />
       </div>
