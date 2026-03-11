@@ -205,7 +205,7 @@ const SpaceDetails = () => {
                   <Ruler size={14} className="text-primary" />
                   <div>
                     <p className="text-xs text-muted-foreground">Capacidade total</p>
-                    <p className="text-sm font-bold text-foreground">{space.area} m²</p>
+                    <p className="text-sm font-bold text-foreground">{space.area} m³</p>
                   </div>
                 </div>
                 <div className="w-px h-8 bg-border/60" />
