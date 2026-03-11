@@ -35,7 +35,7 @@ const DashboardReservas = () => (
             title="Nenhuma reserva agendada"
             description="Você não tem reservas futuras no momento."
             actionLabel="Buscar espaço"
-            actionHref="/"
+            actionHref="/buscar"
           />
         </div>
       </TabsContent>
