@@ -109,7 +109,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.45 }}
-                className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-8 md:mb-10"
+                className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-5 md:mb-6"
               >
                 {/* ── Desktop layout ── */}
                 <div className="hidden md:block p-2.5">
@@ -252,7 +252,7 @@ const Hero = () => {
                 <span className="hidden sm:inline text-border">|</span>
                 <a
                   href="#simulador"
-                  className="text-[13px] text-muted-foreground hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
+                  className="text-sm text-muted-foreground/80 hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
                 >
                   Precisa calcular em detalhe? Use o simulador ↓
                 </a>
