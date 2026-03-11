@@ -46,6 +46,7 @@ const App = () => (
           <Route path="/termos/anfitriao" element={<TermsHost />} />
           <Route path="/itens-proibidos" element={<ProhibitedItems />} />
           <Route path="/contato" element={<Contact />} />
+          <Route path="/fale-conosco" element={<Contact />} />
           
           {/* Dashboard - Área do cliente */}
           <Route path="/minha-conta" element={<DashboardLayout />}>
