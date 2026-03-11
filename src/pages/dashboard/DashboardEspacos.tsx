@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, Plus, MapPin, Ruler, Edit2, Eye, Loader2, FileEdit } from "lucide-react";
+import { Home, Plus, MapPin, Ruler, Edit2, Eye, Loader2, FileEdit, Trash2, EyeOff, MoreVertical } from "lucide-react";
 import { EmptyState } from "@/components/guardaai/dashboard/EmptyState";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { toast } from "@/hooks/use-toast";
 
 type Space = {
   id: string;
@@ -31,66 +34,113 @@ const typeLabels: Record<string, string> = {
   comercial: "Espaço comercial",
 };
 
-const SpaceCard = ({ space }: { space: Space }) => {
+const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete: (id: string) => void; onToggleStatus: (id: string, newStatus: string) => void }) => {
   const isDraft = space.status === "draft";
+  const isInactive = space.status === "inactive";
   const thumb = space.photos?.[0];
   const shortLocation = space.location?.split(",").slice(0, 2).join(", ") || "Sem localização";
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
-    <div className="flex gap-4 p-4 rounded-xl border border-border bg-card hover:shadow-sm transition-shadow">
-      {/* Thumbnail */}
-      <div className="w-20 h-20 rounded-lg bg-secondary shrink-0 overflow-hidden">
-        {thumb ? (
-          <img src={thumb} alt="Espaço" className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Home size={24} className="text-muted-foreground/40" />
-          </div>
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="text-sm font-semibold text-foreground truncate">
-            {typeLabels[space.space_type] || space.space_type || "Espaço"}
-          </h3>
-          <Badge
-            variant={isDraft ? "secondary" : "default"}
-            className={`shrink-0 text-[10px] ${isDraft ? "" : "bg-primary/10 text-primary border-primary/20"}`}
-          >
-            {isDraft ? "Rascunho" : "Publicado"}
-          </Badge>
+    <>
+      <div className="flex gap-4 p-4 rounded-xl border border-border bg-card hover:shadow-sm transition-shadow">
+        <div className="w-20 h-20 rounded-lg bg-secondary shrink-0 overflow-hidden">
+          {thumb ? (
+            <img src={thumb} alt="Espaço" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Home size={24} className="text-muted-foreground/40" />
+            </div>
+          )}
         </div>
 
-        <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1 truncate">
-          <MapPin size={11} className="shrink-0" /> {shortLocation}
-        </p>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h3 className="text-sm font-semibold text-foreground truncate">
+              {typeLabels[space.space_type] || space.space_type || "Espaço"}
+            </h3>
+            <Badge
+              variant={isDraft ? "secondary" : isInactive ? "outline" : "default"}
+              className={`shrink-0 text-[10px] ${
+                isDraft ? "" : isInactive ? "text-muted-foreground" : "bg-primary/10 text-primary border-primary/20"
+              }`}
+            >
+              {isDraft ? "Rascunho" : isInactive ? "Inativo" : "Publicado"}
+            </Badge>
+          </div>
 
-        <p className="text-xs text-muted-foreground flex items-center gap-1">
-          <Ruler size={11} className="shrink-0" />
-          {space.width}m × {space.length}m × {space.height}m
-          {space.volume ? ` · ${Number(space.volume).toFixed(1)} m³` : ""}
-        </p>
+          <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1 truncate">
+            <MapPin size={11} className="shrink-0" /> {shortLocation}
+          </p>
+
+          <p className="text-xs text-muted-foreground flex items-center gap-1">
+            <Ruler size={11} className="shrink-0" />
+            {space.width}m × {space.length}m × {space.height}m
+            {space.volume ? ` · ${Number(space.volume).toFixed(1)} m³` : ""}
+          </p>
+        </div>
+
+        <div className="flex items-start gap-1 shrink-0">
+          {isDraft ? (
+            <Button size="sm" variant="outline" className="text-xs h-8 gap-1" asChild>
+              <Link to={`/anunciar/finalizar?id=${space.id}`}>
+                <FileEdit size={12} /> Continuar
+              </Link>
+            </Button>
+          ) : (
+            <Button size="sm" variant="outline" className="text-xs h-8 gap-1" asChild>
+              <Link to={`/anunciar/finalizar?id=${space.id}`}>
+                <Edit2 size={12} /> Editar
+              </Link>
+            </Button>
+          )}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                <MoreVertical size={14} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {space.status === "published" && (
+                <DropdownMenuItem onClick={() => onToggleStatus(space.id, "inactive")} className="gap-2 text-xs">
+                  <EyeOff size={13} /> Desativar
+                </DropdownMenuItem>
+              )}
+              {space.status === "inactive" && (
+                <DropdownMenuItem onClick={() => onToggleStatus(space.id, "published")} className="gap-2 text-xs">
+                  <Eye size={13} /> Reativar
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setConfirmDelete(true)} className="gap-2 text-xs text-destructive focus:text-destructive">
+                <Trash2 size={13} /> Excluir
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex flex-col gap-1.5 shrink-0">
-        {isDraft ? (
-          <Button size="sm" variant="outline" className="text-xs h-8 gap-1" asChild>
-            <Link to={`/anunciar/finalizar?id=${space.id}`}>
-              <FileEdit size={12} /> Continuar
-            </Link>
-          </Button>
-        ) : (
-          <Button size="sm" variant="outline" className="text-xs h-8 gap-1" asChild>
-            <Link to={`/anunciar/finalizar?id=${space.id}`}>
-              <Edit2 size={12} /> Editar
-            </Link>
-          </Button>
-        )}
-      </div>
-    </div>
+      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir espaço?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Essa ação é permanente e não pode ser desfeita. Todos os dados deste espaço serão removidos.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => onDelete(space.id)}
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 
@@ -101,21 +151,44 @@ const DashboardEspacos = () => {
 
   useEffect(() => {
     if (!user) return;
-    const load = async () => {
-      setLoading(true);
-      const { data } = await supabase
-        .from("spaces")
-        .select("id, location, space_type, width, length, height, volume, photos, status, onboarding_step, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      setSpaces((data as Space[]) || []);
-      setLoading(false);
-    };
-    load();
+    loadSpaces();
   }, [user]);
+
+  const loadSpaces = async () => {
+    if (!user) return;
+    setLoading(true);
+    const { data } = await supabase
+      .from("spaces")
+      .select("id, location, space_type, width, length, height, volume, photos, status, onboarding_step, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+    setSpaces((data as Space[]) || []);
+    setLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase.from("spaces").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Erro ao excluir", description: error.message, variant: "destructive" });
+    } else {
+      setSpaces(prev => prev.filter(s => s.id !== id));
+      toast({ title: "Espaço excluído" });
+    }
+  };
+
+  const handleToggleStatus = async (id: string, newStatus: string) => {
+    const { error } = await supabase.from("spaces").update({ status: newStatus, updated_at: new Date().toISOString() }).eq("id", id);
+    if (error) {
+      toast({ title: "Erro ao atualizar", description: error.message, variant: "destructive" });
+    } else {
+      setSpaces(prev => prev.map(s => s.id === id ? { ...s, status: newStatus } : s));
+      toast({ title: newStatus === "inactive" ? "Espaço desativado" : "Espaço reativado" });
+    }
+  };
 
   const published = spaces.filter(s => s.status === "published");
   const drafts = spaces.filter(s => s.status === "draft");
+  const inactive = spaces.filter(s => s.status === "inactive");
 
   return (
     <div className="max-w-5xl">
@@ -134,7 +207,7 @@ const DashboardEspacos = () => {
           <Loader2 className="animate-spin text-accent" size={28} />
         </div>
       ) : (
-        <Tabs defaultValue={drafts.length > 0 && published.length === 0 ? "rascunhos" : "publicados"} className="w-full">
+        <Tabs defaultValue={drafts.length > 0 && published.length === 0 && inactive.length === 0 ? "rascunhos" : "publicados"} className="w-full">
           <TabsList className="mb-6">
             <TabsTrigger value="publicados">
               Publicados{published.length > 0 && <span className="ml-1.5 text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">{published.length}</span>}
@@ -142,39 +215,38 @@ const DashboardEspacos = () => {
             <TabsTrigger value="rascunhos">
               Rascunhos{drafts.length > 0 && <span className="ml-1.5 text-[10px] bg-accent/10 text-accent px-1.5 py-0.5 rounded-full">{drafts.length}</span>}
             </TabsTrigger>
+            <TabsTrigger value="inativos">
+              Inativos{inactive.length > 0 && <span className="ml-1.5 text-[10px] bg-muted-foreground/10 text-muted-foreground px-1.5 py-0.5 rounded-full">{inactive.length}</span>}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="publicados">
             {published.length === 0 ? (
               <div className="rounded-2xl border bg-card">
-                <EmptyState
-                  icon={Eye}
-                  title="Nenhum espaço publicado"
-                  description="Seus espaços publicados aparecerão aqui. Finalize um rascunho ou anuncie um novo espaço."
-                  actionLabel="Anunciar espaço"
-                  actionHref="/anunciar"
-                />
+                <EmptyState icon={Eye} title="Nenhum espaço publicado" description="Seus espaços publicados aparecerão aqui." actionLabel="Anunciar espaço" actionHref="/anunciar" />
               </div>
             ) : (
-              <div className="space-y-3">
-                {published.map(s => <SpaceCard key={s.id} space={s} />)}
-              </div>
+              <div className="space-y-3">{published.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
             )}
           </TabsContent>
 
           <TabsContent value="rascunhos">
             {drafts.length === 0 ? (
               <div className="rounded-2xl border bg-card">
-                <EmptyState
-                  icon={FileEdit}
-                  title="Nenhum rascunho"
-                  description="Quando você iniciar o cadastro de um espaço sem finalizar, ele aparecerá aqui."
-                />
+                <EmptyState icon={FileEdit} title="Nenhum rascunho" description="Rascunhos de espaços não finalizados aparecerão aqui." />
               </div>
             ) : (
-              <div className="space-y-3">
-                {drafts.map(s => <SpaceCard key={s.id} space={s} />)}
+              <div className="space-y-3">{drafts.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="inativos">
+            {inactive.length === 0 ? (
+              <div className="rounded-2xl border bg-card">
+                <EmptyState icon={EyeOff} title="Nenhum espaço inativo" description="Espaços desativados aparecerão aqui. Você pode reativá-los a qualquer momento." />
               </div>
+            ) : (
+              <div className="space-y-3">{inactive.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
             )}
           </TabsContent>
         </Tabs>
