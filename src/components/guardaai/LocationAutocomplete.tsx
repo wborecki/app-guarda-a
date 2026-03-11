@@ -13,11 +13,13 @@ interface LocationAutocompleteProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
-  /** Hide the GPS locate button for compact layouts */
+  /** Hide the GPS locate button */
   hideGps?: boolean;
+  /** Show only the icon (no text label) for compact layouts */
+  compactGps?: boolean;
 }
 
-const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta, 1200, São Paulo", className, hideGps = false }: LocationAutocompleteProps) => {
+const LocationAutocomplete = ({ value, onChange, placeholder = "Ex: Rua Augusta, 1200, São Paulo", className, hideGps = false, compactGps = false }: LocationAutocompleteProps) => {
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
