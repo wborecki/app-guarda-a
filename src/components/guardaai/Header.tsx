@@ -133,8 +133,8 @@ const Header = () => {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 top-14 z-40 bg-background/98 backdrop-blur-lg overflow-y-auto">
-          <nav className="container flex flex-col gap-1 pt-6 pb-8">
+        <div className="lg:hidden fixed inset-0 top-[52px] z-40 bg-background/98 backdrop-blur-lg overflow-y-auto">
+          <nav className="container flex flex-col gap-0.5 pt-5 pb-8">
             {navLinks.map((link) =>
               link.isRoute ? (
                 <Link
