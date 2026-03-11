@@ -864,13 +864,13 @@ const Checkout = () => {
 
       {/* Mobile sticky CTA */}
       {user && verificationComplete && (
-        <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-4 z-30 lg:hidden">
+        <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden safe-area-bottom">
           <div className="container max-w-5xl">
             <Button
-              size="lg"
+              size="default"
               disabled={processing}
               onClick={handlePay}
-              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base h-13 shadow-lg"
+              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm sm:text-base h-12 sm:h-13 shadow-lg"
             >
               {processing ? (
                 <span className="flex items-center gap-2">
