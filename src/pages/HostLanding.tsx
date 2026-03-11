@@ -17,10 +17,11 @@ import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/hooks/use-toast";
 import {
   Home, ArrowRight, Camera, FileText, Ban, UserX, Clock,
   Warehouse, BedDouble, Container, Tent, Building2, Store,
-  Shield, Upload, CheckCircle2, DollarSign, MapPin, CalendarCheck, Lock, Eye
+  Shield, Upload, CheckCircle2, DollarSign, MapPin, CalendarCheck, Lock, Eye, X
 } from "lucide-react";
 
 const spaceTypes = [
