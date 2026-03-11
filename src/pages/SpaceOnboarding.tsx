@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -75,6 +75,38 @@ type SpaceData = {
   onboarding_step: number;
 };
 
+// Debounced field hook — keeps local state, saves after delay
+const useDebouncedField = (
+  initialValue: string,
+  onSave: (val: string) => void,
+  delay = 800
+) => {
+  const [local, setLocal] = useState(initialValue);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onSaveRef = useRef(onSave);
+  onSaveRef.current = onSave;
+
+  // Sync from DB when initialValue changes externally (e.g. after load)
+  const prevInit = useRef(initialValue);
+  useEffect(() => {
+    if (initialValue !== prevInit.current) {
+      setLocal(initialValue);
+      prevInit.current = initialValue;
+    }
+  }, [initialValue]);
+
+  const onChange = useCallback((val: string) => {
+    setLocal(val);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => onSaveRef.current(val), delay);
+  }, [delay]);
+
+  // Flush on unmount
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
+
+  return [local, onChange] as const;
+};
+
 const SpaceOnboarding = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -137,6 +169,15 @@ const SpaceOnboarding = () => {
     }
     setSaving(false);
   }, [space]);
+
+  // Debounced text fields
+  const [descLocal, setDescLocal] = useDebouncedField(space?.description || "", v => updateSpace({ description: v }));
+  const [rulesLocal, setRulesLocal] = useDebouncedField(space?.rules || "", v => updateSpace({ rules: v }));
+  const [securityLocal, setSecurityLocal] = useDebouncedField(space?.security_features || "", v => updateSpace({ security_features: v }));
+  const [notesLocal, setNotesLocal] = useDebouncedField(space?.notes || "", v => updateSpace({ notes: v }));
+  const [pixKeyLocal, setPixKeyLocal] = useDebouncedField(space?.pix_key || "", v => updateSpace({ pix_key: v }));
+  const [beneficiaryLocal, setBeneficiaryLocal] = useDebouncedField(space?.beneficiary_name || "", v => updateSpace({ beneficiary_name: v }));
+  const [documentLocal, setDocumentLocal] = useDebouncedField(space?.document_number || "", v => updateSpace({ document_number: v }));
 
   const goToStep = async (step: number) => {
     setCurrentStep(step);
@@ -462,8 +503,8 @@ const SpaceOnboarding = () => {
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Descrição do espaço</label>
                       <Textarea
                         placeholder="Descreva seu espaço para que os clientes entendam o que estão reservando..."
-                        value={space.description}
-                        onChange={e => updateSpace({ description: e.target.value })}
+                        value={descLocal}
+                        onChange={e => setDescLocal(e.target.value)}
                         rows={3}
                         className="text-sm resize-none"
                       />
@@ -473,8 +514,8 @@ const SpaceOnboarding = () => {
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Regras do espaço</label>
                       <Textarea
                         placeholder="Ex: Não armazenar líquidos, não ultrapassar o limite do espaço..."
-                        value={space.rules}
-                        onChange={e => updateSpace({ rules: e.target.value })}
+                        value={rulesLocal}
+                        onChange={e => setRulesLocal(e.target.value)}
                         rows={2}
                         className="text-sm resize-none"
                       />
@@ -484,8 +525,8 @@ const SpaceOnboarding = () => {
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Recursos de segurança</label>
                       <Textarea
                         placeholder="Ex: Câmera, portão eletrônico, alarme, portaria..."
-                        value={space.security_features}
-                        onChange={e => updateSpace({ security_features: e.target.value })}
+                        value={securityLocal}
+                        onChange={e => setSecurityLocal(e.target.value)}
                         rows={2}
                         className="text-sm resize-none"
                       />
@@ -495,8 +536,8 @@ const SpaceOnboarding = () => {
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Observações adicionais</label>
                       <Textarea
                         placeholder="Qualquer informação extra relevante..."
-                        value={space.notes}
-                        onChange={e => updateSpace({ notes: e.target.value })}
+                        value={notesLocal}
+                        onChange={e => setNotesLocal(e.target.value)}
                         rows={2}
                         className="text-sm resize-none"
                       />
@@ -615,8 +656,8 @@ const SpaceOnboarding = () => {
                     <div>
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Chave Pix</label>
                       <Input
-                        value={space.pix_key}
-                        onChange={e => updateSpace({ pix_key: e.target.value })}
+                        value={pixKeyLocal}
+                        onChange={e => setPixKeyLocal(e.target.value)}
                         placeholder="Informe sua chave Pix"
                         className="h-10 text-sm"
                       />
@@ -625,8 +666,8 @@ const SpaceOnboarding = () => {
                     <div>
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Nome do favorecido</label>
                       <Input
-                        value={space.beneficiary_name}
-                        onChange={e => updateSpace({ beneficiary_name: e.target.value })}
+                        value={beneficiaryLocal}
+                        onChange={e => setBeneficiaryLocal(e.target.value)}
                         placeholder="Nome completo do titular"
                         className="h-10 text-sm"
                       />
@@ -635,8 +676,8 @@ const SpaceOnboarding = () => {
                     <div>
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">CPF ou CNPJ</label>
                       <Input
-                        value={space.document_number}
-                        onChange={e => updateSpace({ document_number: e.target.value })}
+                        value={documentLocal}
+                        onChange={e => setDocumentLocal(e.target.value)}
                         placeholder="000.000.000-00"
                         className="h-10 text-sm"
                       />
