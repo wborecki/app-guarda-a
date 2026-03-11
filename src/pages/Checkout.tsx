@@ -309,7 +309,7 @@ const Checkout = () => {
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-30">
         <div className="container py-3 flex items-center gap-3 max-w-5xl">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="flex-shrink-0">
+          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0">
             <ArrowLeft size={20} />
           </Button>
           <h1 className="text-base font-bold text-foreground">Finalizar reserva</h1>
