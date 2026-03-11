@@ -42,7 +42,7 @@ const Contact = () => {
 
               {/* Phone */}
               <a
-                href="tel:+5511994541862"
+                href="tel:+55119945418626"
                 className="flex items-center gap-4 p-5 rounded-xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all group"
               >
                 <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
@@ -50,7 +50,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground mb-0.5">Telefone / WhatsApp</p>
-                  <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">(11) 9 9454-1862</p>
+                  <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">(11) 9 9454-18626</p>
                 </div>
               </a>
             </div>
