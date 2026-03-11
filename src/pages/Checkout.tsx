@@ -219,7 +219,7 @@ const Checkout = () => {
     }
   };
 
-  const handlePay = () => {
+  const handlePay = async () => {
     if (!user) {
       toast({ title: "Faça login primeiro", variant: "destructive" });
       return;
@@ -233,10 +233,74 @@ const Checkout = () => {
       return;
     }
     setProcessing(true);
-    setTimeout(() => {
+
+    try {
+      // Calculate dates
+      const startDate = simulation?.deliveryDate
+        ? new Date(simulation.deliveryDate).toISOString().split("T")[0]
+        : new Date().toISOString().split("T")[0];
+      const endDate = simulation?.pickupDate
+        ? new Date(simulation.pickupDate).toISOString().split("T")[0]
+        : new Date(Date.now() + days * 86400000).toISOString().split("T")[0];
+
+      // Create reservation
+      const { data: reservation, error: resError } = await supabase
+        .from("reservations")
+        .insert({
+          renter_id: user.id,
+          host_id: user.id, // placeholder — will be the space owner in production
+          space_id: null, // mock spaces don't have real UUIDs yet
+          start_date: startDate,
+          end_date: endDate,
+          volume: reservedArea,
+          total_price: bp.total,
+          status: "confirmed",
+          notes: `Espaço: ${space.name} | ${space.neighborhood}, ${space.city}`,
+        })
+        .select("id")
+        .single();
+
+      if (resError) {
+        console.error("Reservation error:", resError);
+        toast({ title: "Erro ao criar reserva", description: resError.message, variant: "destructive" });
+        setProcessing(false);
+        return;
+      }
+
+      // Create payment record
+      const { error: payError } = await supabase
+        .from("payments")
+        .insert({
+          reservation_id: reservation.id,
+          payer_id: user.id,
+          recipient_id: user.id, // placeholder
+          amount: bp.total,
+          platform_fee: bp.serviceFee,
+          status: "paid",
+          payment_method: paymentMethod,
+          paid_at: new Date().toISOString(),
+        });
+
+      if (payError) {
+        console.error("Payment error:", payError);
+        // Reservation was created, payment failed — still show success but warn
+        toast({ title: "Reserva criada", description: "Houve um erro ao registrar o pagamento, mas sua reserva foi criada.", variant: "destructive" });
+      }
+
+      // Save terms acceptances
+      const termsToInsert = [
+        { user_id: user.id, term_type: "renter", term_version: "1.0", context: "checkout" },
+        { user_id: user.id, term_type: "prohibited_items", term_version: "1.0", context: "checkout" },
+      ];
+      await supabase.from("terms_acceptances").insert(termsToInsert);
+
       setProcessing(false);
       setConfirmed(true);
-    }, 2200);
+    } catch (err) {
+      console.error("Checkout error:", err);
+      toast({ title: "Erro inesperado", description: "Tente novamente.", variant: "destructive" });
+      setProcessing(false);
+    }
   };
 
   // ─── SUCCESS STATE ────────────────────────────────────────────
@@ -293,9 +357,14 @@ const Checkout = () => {
                 Enviamos os detalhes para <strong>{user?.email}</strong>.<br />
                 Você também pode acompanhar na sua conta.
               </p>
-              <Button className="w-full" onClick={() => navigate("/")}>
-                Voltar ao início
-              </Button>
+              <div className="flex gap-3">
+                <Button className="flex-1" onClick={() => navigate("/minha-conta/reservas")}>
+                  Minhas reservas
+                </Button>
+                <Button variant="outline" className="flex-1" onClick={() => navigate("/")}>
+                  Voltar ao início
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
