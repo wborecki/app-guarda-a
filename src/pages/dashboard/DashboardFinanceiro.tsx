@@ -3,34 +3,40 @@ import { EmptyState } from "@/components/guardaai/dashboard/EmptyState";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const DashboardFinanceiro = () => (
-  <div className="max-w-5xl">
+  <div className="w-full max-w-7xl mx-auto">
     <div className="mb-6">
-      <h1 className="text-2xl font-bold text-foreground mb-1">Financeiro</h1>
+      <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">Financeiro</h1>
       <p className="text-muted-foreground text-sm">Acompanhe pagamentos, recebimentos e repasses.</p>
     </div>
 
     {/* Summary cards */}
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-      <div className="rounded-2xl border bg-card p-5">
-        <div className="flex items-center gap-2 mb-2">
-          <ArrowDownRight size={16} className="text-primary" />
-          <span className="text-sm text-muted-foreground">Pagamentos realizados</span>
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
+      <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+            <ArrowDownRight size={18} className="text-primary" />
+          </div>
         </div>
-        <p className="text-xl font-bold text-foreground">R$ 0,00</p>
+        <p className="text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
+        <p className="text-sm text-muted-foreground mt-1">Pagamentos realizados</p>
       </div>
-      <div className="rounded-2xl border bg-card p-5">
-        <div className="flex items-center gap-2 mb-2">
-          <ArrowUpRight size={16} className="text-emerald-600" />
-          <span className="text-sm text-muted-foreground">Valores recebidos</span>
+      <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald-100/80 flex items-center justify-center">
+            <ArrowUpRight size={18} className="text-emerald-600" />
+          </div>
         </div>
-        <p className="text-xl font-bold text-foreground">R$ 0,00</p>
+        <p className="text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
+        <p className="text-sm text-muted-foreground mt-1">Valores recebidos</p>
       </div>
-      <div className="rounded-2xl border bg-card p-5">
-        <div className="flex items-center gap-2 mb-2">
-          <Wallet size={16} className="text-accent" />
-          <span className="text-sm text-muted-foreground">Saldo disponível</span>
+      <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center">
+            <Wallet size={18} className="text-accent" />
+          </div>
         </div>
-        <p className="text-xl font-bold text-foreground">R$ 0,00</p>
+        <p className="text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
+        <p className="text-sm text-muted-foreground mt-1">Saldo disponível</p>
       </div>
     </div>
 
@@ -42,7 +48,7 @@ const DashboardFinanceiro = () => (
       </TabsList>
 
       <TabsContent value="todos">
-        <div className="rounded-2xl border bg-card">
+        <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
           <EmptyState
             icon={Wallet}
             title="Nenhuma movimentação"
@@ -51,12 +57,12 @@ const DashboardFinanceiro = () => (
         </div>
       </TabsContent>
       <TabsContent value="pagamentos">
-        <div className="rounded-2xl border bg-card">
+        <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
           <EmptyState icon={Wallet} title="Nenhum pagamento" description="Pagamentos por reservas aparecerão aqui." />
         </div>
       </TabsContent>
       <TabsContent value="recebimentos">
-        <div className="rounded-2xl border bg-card">
+        <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
           <EmptyState icon={Wallet} title="Nenhum recebimento" description="Recebimentos por espaços anunciados aparecerão aqui." />
         </div>
       </TabsContent>
