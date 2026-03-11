@@ -58,7 +58,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/92 backdrop-blur-md border-b border-border/60">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/97 backdrop-blur-md border-b border-border/60">
         <div className="container flex items-center justify-between h-[52px] md:h-[72px]">
           <Link to="/" className="flex items-center">
             <img src={logo} alt="GuardaAí" className="h-[26px] md:h-9" />
@@ -87,7 +87,7 @@ const Header = () => {
             {!loading && (
               <>
                 {user ? (
-                  <Button size="sm" variant="ghost" className="text-foreground hover:bg-secondary gap-2" asChild>
+                  <Button size="sm" variant="ghost" className="bg-secondary/80 hover:bg-secondary text-foreground gap-2" asChild>
                     <Link to="/minha-conta">
                       <Avatar className="h-6 w-6">
                         <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
@@ -106,7 +106,7 @@ const Header = () => {
                   </Button>
                 )}
                 {isAdmin && (
-                  <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
+                  <Button size="sm" variant="ghost" className="bg-secondary/80 hover:bg-secondary text-foreground gap-1.5" asChild>
                     <Link to="/admin">
                       <ShieldCheck size={16} />
                       Admin
