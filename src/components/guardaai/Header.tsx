@@ -55,7 +55,7 @@ const Header = () => {
             ) : (
               <a
                 key={link.href}
-                href={isHostPage ? `/${link.href}` : link.href}
+                href={isHomePage ? link.href : `/${link.href}`}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.label}
