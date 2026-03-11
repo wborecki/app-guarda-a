@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -63,10 +64,10 @@ const earningsExamples = [
 
 const HostLanding = () => {
   const { user, displayName, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
   const [form, setForm] = useState({
-    name: "", whatsapp: "", email: "",
     location: "", neighborhood: "",
     spaceType: "", spaceCategory: "",
     height: "", width: "", length: "",
@@ -76,17 +77,6 @@ const HostLanding = () => {
     accessType: "",
     notes: "",
   });
-
-  useEffect(() => {
-    if (user) {
-      setForm(prev => ({
-        ...prev,
-        name: prev.name || displayName || "",
-        email: prev.email || user.email || "",
-        whatsapp: prev.whatsapp || user.user_metadata?.phone || "",
-      }));
-    }
-  }, [user, displayName]);
 
   const isLoggedIn = !!user;
 
@@ -100,14 +90,13 @@ const HostLanding = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalName = isLoggedIn ? (displayName || form.name) : form.name;
-    const finalEmail = isLoggedIn ? (user.email || form.email) : form.email;
+    if (!isLoggedIn) return;
     const availabilityText = form.availability === "continuous" ? "Contínua / Indeterminada"
       : form.availability === "weekdays" ? "Dias úteis"
       : form.availability === "weekends" ? "Finais de semana"
       : "Personalizada";
     const message = encodeURIComponent(
-      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${finalName}\nE-mail: ${finalEmail}\nWhatsApp: ${form.whatsapp}\nLocalização: ${form.location}\nBairro: ${form.neighborhood}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
+      `Olá! Quero cadastrar meu espaço no GuardaAí.\n\nNome: ${displayName || "Não informado"}\nE-mail: ${user.email || "Não informado"}\nLocalização: ${form.location}\nBairro: ${form.neighborhood}\nTipo: ${form.spaceType}\nCategoria: ${form.spaceCategory || "Não informada"}\nDimensões: ${form.width}m x ${form.length}m x ${form.height}m${volume ? `\nVolume: ${volume} m³` : ""}\nCoberto: ${form.covered ? "Sim" : "Não"}\nFechado: ${form.closed ? "Sim" : "Não"}\nFácil acesso: ${form.easyAccess ? "Sim" : "Não"}\nDisponibilidade: ${availabilityText}\nHorário de acesso: ${form.accessHours || "Não informado"}\nTipo de acesso: ${form.accessType || "Não informado"}\nObs: ${form.notes}`
     );
     window.open(`https://wa.me/5511994541862?text=${message}`, "_blank");
   };
@@ -217,27 +206,31 @@ const HostLanding = () => {
                   </div>
 
                   <div className="p-5 space-y-4">
+                    {!isLoggedIn ? (
+                      <div className="text-center py-6 space-y-3">
+                        <Lock size={24} className="mx-auto text-muted-foreground" />
+                        <p className="text-sm font-medium text-foreground">Faça login para cadastrar seu espaço</p>
+                        <p className="text-xs text-muted-foreground">Entre na sua conta ou crie uma para começar.</p>
+                        <Button
+                          type="button"
+                          className="bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-10 px-6"
+                          onClick={() => navigate("/entrar")}
+                        >
+                          Entrar ou criar conta
+                        </Button>
+                      </div>
+                    ) : (
+                    <>
                     {step === 1 ? (
                       <>
-                        {/* === PERSONAL DATA === */}
-                        {!isLoggedIn ? (
-                          <div className="space-y-2.5">
-                            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Seus dados</p>
-                            <Input placeholder="Nome completo" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="h-10 text-sm" />
-                            <div className="grid grid-cols-2 gap-2.5">
-                              <Input placeholder="E-mail" type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required className="h-10 text-sm" />
-                              <Input placeholder="WhatsApp" value={form.whatsapp} onChange={e => setForm({...form, whatsapp: e.target.value})} required className="h-10 text-sm" />
-                            </div>
+                        {/* Connected user badge */}
+                        <div className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/60 border border-border/60">
+                          <CheckCircle2 size={15} className="text-primary shrink-0" />
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium text-foreground truncate">{displayName || user.email}</p>
+                            <p className="text-[10px] text-muted-foreground">Conectado</p>
                           </div>
-                        ) : (
-                          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/60 border border-border/60">
-                            <CheckCircle2 size={15} className="text-primary shrink-0" />
-                            <div className="min-w-0">
-                              <p className="text-xs font-medium text-foreground truncate">{displayName || user.email}</p>
-                              <p className="text-[10px] text-muted-foreground">Conectado — dados preenchidos</p>
-                            </div>
-                          </div>
-                        )}
+                        </div>
 
                         {/* === LOCATION === */}
                         <div className="space-y-2.5">
@@ -405,6 +398,8 @@ const HostLanding = () => {
                           </Button>
                         </div>
                       </>
+                    )}
+                    </>
                     )}
                   </div>
                 </form>
