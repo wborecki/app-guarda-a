@@ -364,8 +364,8 @@ const SpaceDetails = () => {
             </motion.div>
           </div>
 
-          {/* ═══ RIGHT COLUMN — Reservation Summary (sticky on desktop) ═══ */}
-          <div className="mt-6 lg:mt-0">
+          {/* ═══ RIGHT COLUMN — Reservation Summary (sticky on desktop, hidden on mobile) ═══ */}
+          <div className="hidden lg:block mt-0">
             <div className="lg:sticky lg:top-20 space-y-4">
               {/* Reservation Card */}
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
