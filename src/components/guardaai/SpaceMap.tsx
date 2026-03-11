@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useEffect, useRef, useCallback } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Star, MapPin } from "lucide-react";
@@ -12,7 +11,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-// Custom pin icons
 function createPinIcon(isHighlighted: boolean) {
   const color = isHighlighted ? "#16a34a" : "#1e40af";
   const size = isHighlighted ? 38 : 30;
@@ -58,83 +56,88 @@ interface SpaceMapProps {
   className?: string;
 }
 
-// Sub-component to fit bounds
-function FitBounds({ spaces }: { spaces: MapSpace[] }) {
-  const map = useMap();
+export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick, className }: SpaceMapProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<Map<number, L.Marker>>(new Map());
+
+  // Initialize map
   useEffect(() => {
+    if (!containerRef.current || mapRef.current) return;
     if (spaces.length === 0) return;
+
+    const map = L.map(containerRef.current, {
+      center: [spaces[0].lat, spaces[0].lng],
+      zoom: 13,
+      scrollWheelZoom: true,
+      zoomControl: false,
+    });
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    mapRef.current = map;
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+      markersRef.current.clear();
+    };
+  }, []);
+
+  // Update markers when spaces change
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || spaces.length === 0) return;
+
+    // Remove old markers
+    markersRef.current.forEach((m) => m.remove());
+    markersRef.current.clear();
+
+    // Add new markers
+    spaces.forEach((space) => {
+      const marker = L.marker([space.lat, space.lng], {
+        icon: createPinIcon(false),
+      }).addTo(map);
+
+      marker.bindPopup(
+        `<div class="p-0" style="margin: -14px -20px -14px -20px">
+          <img src="${space.photo}" alt="${space.name}" style="width:100%;height:112px;object-fit:cover;border-radius:8px 8px 0 0;" />
+          <div style="padding:12px">
+            <p style="font-weight:bold;font-size:14px;margin:0 0 2px 0;">${space.name}</p>
+            <p style="font-size:12px;color:#888;margin:0 0 8px 0;">${space.type} · ${space.neighborhood}</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;">⭐ ${space.rating} (${space.reviews})</span>
+              <span style="font-size:12px;color:#1e40af;">📍 ${space.distance}</span>
+            </div>
+            <p style="font-weight:800;font-size:14px;margin:8px 0 0 0;">${space.price}</p>
+          </div>
+        </div>`,
+        { closeButton: false, maxWidth: 240, minWidth: 200, className: "space-popup" }
+      );
+
+      marker.on("mouseover", () => onPinHover(space.id));
+      marker.on("mouseout", () => onPinHover(null));
+      marker.on("click", () => onPinClick(space.id));
+
+      markersRef.current.set(space.id, marker);
+    });
+
+    // Fit bounds
     const bounds = L.latLngBounds(spaces.map((s) => [s.lat, s.lng]));
     map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
-  }, [spaces, map]);
-  return null;
-}
+  }, [spaces, onPinHover, onPinClick]);
 
-// Highlighted marker needs to update its icon
-function SpaceMarker({
-  space,
-  isHighlighted,
-  onHover,
-  onClick,
-}: {
-  space: MapSpace;
-  isHighlighted: boolean;
-  onHover: (id: number | null) => void;
-  onClick: (id: number) => void;
-}) {
-  const markerRef = useRef<L.Marker>(null);
-
+  // Update highlighted marker icon
   useEffect(() => {
-    const marker = markerRef.current;
-    if (!marker) return;
-    marker.setIcon(createPinIcon(isHighlighted));
-    if (isHighlighted) {
-      marker.setZIndexOffset(1000);
-    } else {
-      marker.setZIndexOffset(0);
-    }
-  }, [isHighlighted]);
+    markersRef.current.forEach((marker, id) => {
+      const isHighlighted = id === highlightedId;
+      marker.setIcon(createPinIcon(isHighlighted));
+      marker.setZIndexOffset(isHighlighted ? 1000 : 0);
+    });
+  }, [highlightedId]);
 
-  return (
-    <Marker
-      ref={markerRef}
-      position={[space.lat, space.lng]}
-      icon={createPinIcon(isHighlighted)}
-      eventHandlers={{
-        mouseover: () => onHover(space.id),
-        mouseout: () => onHover(null),
-        click: () => onClick(space.id),
-      }}
-    >
-      <Popup closeButton={false} className="space-popup" maxWidth={240} minWidth={200}>
-        <div className="p-0" style={{ margin: "-14px -20px -14px -20px" }}>
-          <img
-            src={space.photo}
-            alt={space.name}
-            className="w-full h-28 object-cover rounded-t-lg"
-          />
-          <div className="p-3">
-            <p className="font-bold text-sm text-foreground leading-tight mb-0.5">{space.name}</p>
-            <p className="text-xs text-muted-foreground mb-1.5">{space.type} · {space.neighborhood}</p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1">
-                <Star size={11} className="text-amber-500 fill-amber-500" />
-                <span className="text-xs font-bold">{space.rating}</span>
-                <span className="text-[10px] text-muted-foreground">({space.reviews})</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <MapPin size={10} className="text-primary" />
-                <span className="text-xs font-semibold text-primary">{space.distance}</span>
-              </div>
-            </div>
-            <p className="text-sm font-extrabold text-foreground mt-2">{space.price}</p>
-          </div>
-        </div>
-      </Popup>
-    </Marker>
-  );
-}
-
-export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick, className }: SpaceMapProps) {
   if (spaces.length === 0) {
     return (
       <div className={`flex items-center justify-center bg-muted rounded-xl ${className}`}>
@@ -143,32 +146,9 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
     );
   }
 
-  const center: [number, number] = [spaces[0].lat, spaces[0].lng];
-
   return (
     <div className={`rounded-xl overflow-hidden border border-border/60 shadow-sm ${className}`}>
-      <MapContainer
-        center={center}
-        zoom={13}
-        scrollWheelZoom={true}
-        style={{ height: "100%", width: "100%", minHeight: "400px" }}
-        zoomControl={false}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <FitBounds spaces={spaces} />
-        {spaces.map((space) => (
-          <SpaceMarker
-            key={space.id}
-            space={space}
-            isHighlighted={highlightedId === space.id}
-            onHover={onPinHover}
-            onClick={onPinClick}
-          />
-        ))}
-      </MapContainer>
+      <div ref={containerRef} style={{ height: "100%", width: "100%", minHeight: "400px" }} />
     </div>
   );
 }
