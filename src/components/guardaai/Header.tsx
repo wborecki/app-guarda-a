@@ -18,6 +18,7 @@ const navLinks = [
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const isHomePage = location.pathname === "/";
   const isHostPage = location.pathname === "/anunciar";
   const { user, displayName, loading } = useAuth();
 
