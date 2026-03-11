@@ -28,6 +28,7 @@ import DashboardFinanceiro from "./pages/dashboard/DashboardFinanceiro";
 import DashboardPerfil from "./pages/dashboard/DashboardPerfil";
 import { AuthProvider } from "./hooks/useAuth";
 import ScrollToTop from "./components/ScrollToTop";
+import FloatingChat from "./components/guardaai/FloatingChat";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <FloatingChat />
       </BrowserRouter>
     </TooltipProvider>
     </AuthProvider>
