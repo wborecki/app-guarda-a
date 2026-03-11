@@ -107,11 +107,11 @@ const Hero = () => {
               className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-8 md:mb-10"
             >
               {/* ── Desktop layout ── */}
-              <div className="hidden md:block p-3.5">
+              <div className="hidden md:block p-4">
                 <div className="flex items-stretch gap-0">
                   {/* Location */}
-                  <div className="flex-[1.5] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+                  <div className="flex-[1.5] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
+                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Localização
                     </label>
                     <LocationAutocomplete
