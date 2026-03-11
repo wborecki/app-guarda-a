@@ -20,15 +20,14 @@ const Hero = () => {
 
   const handleSearch = () => {
     const totalVol = parseFloat(volume) || 0;
-    navigate("/buscar", {
-      state: {
-        location: location || "São Paulo",
-        deliveryDate: deliveryDate?.toISOString(),
-        pickupDate: pickupDate?.toISOString(),
-        totalVol,
-        days: days || 1,
-      },
+    const qs = encodeSearchParams({
+      location: location || "São Paulo",
+      days: days || 1,
+      totalVol,
+      deliveryDate: deliveryDate?.toISOString(),
+      pickupDate: pickupDate?.toISOString(),
     });
+    navigate(`/buscar?${qs}`);
   };
 
   return (
