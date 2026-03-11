@@ -161,10 +161,10 @@ const Header = () => {
 
             <div className="flex flex-col gap-3 px-4">
               <Button className="bg-accent hover:bg-accent/90 text-accent-foreground h-12 text-base" asChild>
-                {isHostPage ? (
-                  <Link to="/#simulador" onClick={() => setMobileOpen(false)}>Quero guardar</Link>
-                ) : (
+                {isHomePage ? (
                   <a href="#simulador" onClick={() => setMobileOpen(false)}>Quero guardar</a>
+                ) : (
+                  <Link to="/#simulador" onClick={() => setMobileOpen(false)}>Quero guardar</Link>
                 )}
               </Button>
               <Button variant="outline" className="border-primary text-primary hover:bg-primary/5 h-12 text-base" asChild>
