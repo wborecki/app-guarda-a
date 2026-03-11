@@ -275,7 +275,9 @@ const SearchResults = () => {
               </span>
             </div>
 
-            {filteredSortedSpaces.length === 0 ? (
+            {isLoading ? (
+              <SearchCardSkeletonList count={4} />
+            ) : filteredSortedSpaces.length === 0 ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
                 <p className="text-muted-foreground text-sm mb-2">Nenhum espaço encontrado com esses filtros.</p>
                 <Button variant="outline" size="sm" onClick={clearAll}>Limpar filtros</Button>
