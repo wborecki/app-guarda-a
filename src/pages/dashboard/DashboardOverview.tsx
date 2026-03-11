@@ -93,6 +93,9 @@ const DashboardOverview = () => {
         </p>
       </div>
 
+      {/* ── Onboarding Checklist ──────────────────────── */}
+      <OnboardingChecklist />
+
       {/* ── Stats Grid ───────────────────────────────── */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
         <StatCard
