@@ -36,10 +36,10 @@ const Header = () => {
   }, [mobileOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b">
-      <div className="container flex items-center justify-between h-14 md:h-[72px]">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="GuardaAí" className="h-8 md:h-9" />
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/92 backdrop-blur-md border-b border-border/60">
+      <div className="container flex items-center justify-between h-[52px] md:h-[72px]">
+        <Link to="/" className="flex items-center">
+          <img src={logo} alt="GuardaAí" className="h-[26px] md:h-9" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-7">
@@ -101,40 +101,40 @@ const Header = () => {
         </div>
 
         {/* Mobile: login icon + hamburger */}
-        <div className="flex lg:hidden items-center gap-1">
+        <div className="flex lg:hidden items-center gap-0">
           {!loading && (
             user ? (
-              <Button size="icon" variant="ghost" className="h-10 w-10" asChild>
+              <Button size="icon" variant="ghost" className="h-9 w-9" asChild>
                 <Link to="/minha-conta">
-                  <Avatar className="h-7 w-7">
-                    <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
+                  <Avatar className="h-6 w-6">
+                    <AvatarFallback className="bg-primary/10 text-primary text-[9px] font-medium">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
                 </Link>
               </Button>
             ) : (
-              <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground" asChild>
+              <Button size="icon" variant="ghost" className="h-9 w-9 text-muted-foreground" asChild>
                 <Link to="/entrar">
-                  <LogIn size={20} />
+                  <LogIn size={18} />
                 </Link>
               </Button>
             )
           )}
           <button
-            className="p-2 text-foreground"
+            className="p-1.5 text-foreground"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Menu"
           >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 top-14 z-40 bg-background/98 backdrop-blur-lg overflow-y-auto">
-          <nav className="container flex flex-col gap-1 pt-6 pb-8">
+        <div className="lg:hidden fixed inset-0 top-[52px] z-40 bg-background/98 backdrop-blur-lg overflow-y-auto">
+          <nav className="container flex flex-col gap-0.5 pt-5 pb-8">
             {navLinks.map((link) =>
               link.isRoute ? (
                 <Link
