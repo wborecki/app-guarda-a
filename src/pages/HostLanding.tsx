@@ -31,7 +31,7 @@ const spaceTypes = [
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Renda passiva", desc: "Ganhe até R$45/m³ por mês com espaço ocioso." },
+  { icon: DollarSign, title: "Renda por reserva", desc: "Receba por cada m³ reservado no seu espaço." },
   { icon: Shield, title: "Seguro e intermediado", desc: "Termos claros, fotos obrigatórias e intermediação digital." },
   { icon: CheckCircle2, title: "Você no controle", desc: "Defina regras, aceite ou recuse solicitações." },
 ];
@@ -47,9 +47,9 @@ const securityItems = [
 
 const faqItems = [
   { q: "Que tipo de espaço posso anunciar?", a: "Garagens, quartos vazios, depósitos, áreas cobertas, galpões pequenos e espaços comerciais ociosos." },
-  { q: "Como o valor é calculado?", a: "O valor base é de R$45/m³ por mês. O sistema calcula automaticamente com base no volume do espaço." },
+  { q: "Como o valor é calculado?", a: "O preço cobrado do cliente segue uma tabela progressiva de R$ 5 (1 dia) a R$ 45 (30 dias) por m³. Seu ganho é calculado sobre esse valor, descontada a comissão da plataforma." },
   { q: "Posso recusar objetos?", a: "Sim. O anfitrião tem total direito de recusar objetos inadequados ou fora das regras da plataforma." },
-  { q: "Como recebo meu pagamento?", a: "Os pagamentos são processados pela plataforma e repassados diretamente para sua conta." },
+  { q: "Como recebo meu pagamento?", a: "Os pagamentos são processados pela plataforma e repassados diretamente para sua conta, descontada a comissão." },
   { q: "Que itens são proibidos?", a: "Drogas, armas, explosivos, materiais perecíveis, animais vivos e qualquer item ilegal." },
 ];
 
@@ -62,7 +62,6 @@ const HostLanding = () => {
     covered: false, closed: false, easyAccess: false, notes: "",
   });
 
-  // Pre-fill form with user data when available
   useEffect(() => {
     if (user) {
       setForm(prev => ({
@@ -90,7 +89,7 @@ const HostLanding = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        {/* Hero + Form — side by side on desktop, stacked on mobile */}
+        {/* Hero + Form — side by side */}
         <section className="relative pt-24 pb-14 md:pt-32 md:pb-20 overflow-hidden">
           <div className="absolute inset-0 -z-10">
             <div className="absolute top-20 left-0 w-72 h-72 bg-accent/8 rounded-full blur-3xl" />
@@ -109,7 +108,7 @@ const HostLanding = () => {
                   Transforme espaço vazio em <span className="text-accent">renda extra</span>
                 </h1>
                 <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-lg leading-relaxed">
-                  Garagens, quartos, depósitos e áreas cobertas podem virar dinheiro. Cadastre seu espaço e comece a ganhar até R$45/m³ por mês.
+                  Garagens, quartos, depósitos e áreas cobertas podem gerar renda. Cadastre seu espaço e receba por cada reserva.
                 </p>
 
                 {/* Benefits */}
@@ -128,7 +127,7 @@ const HostLanding = () => {
                   ))}
                 </div>
 
-                {/* Earnings preview */}
+                {/* Earnings preview — corrected */}
                 <div className="mt-8 grid grid-cols-3 gap-3">
                   {[
                     { size: "3 m³", value: "R$ 135", label: "Garagem" },
@@ -136,13 +135,15 @@ const HostLanding = () => {
                     { size: "10 m³", value: "R$ 450", label: "Depósito" },
                   ].map((e, i) => (
                     <div key={i} className="p-3 rounded-xl bg-card border text-center">
-                      <p className="text-[10px] text-muted-foreground">{e.label}</p>
-                      <p className="text-xs font-semibold text-foreground">{e.size}</p>
-                      <p className="text-sm font-bold text-accent mt-0.5">até {e.value}<span className="text-[10px] font-normal text-muted-foreground">/mês</span></p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Estimativa bruta</p>
+                      <p className="text-xs font-semibold text-foreground mt-1">{e.label} · {e.size}</p>
+                      <p className="text-lg font-bold text-accent mt-0.5">{e.value}<span className="text-[10px] font-normal text-muted-foreground">/mês</span></p>
                     </div>
                   ))}
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-2">* Valores ilustrativos baseados em R$45/m³ por mês.</p>
+                <p className="text-[10px] text-muted-foreground mt-2">
+                  * Valores brutos estimados com ocupação total a R$ 45/m³ por 30 dias. Rendimento real depende da demanda e da comissão da plataforma.
+                </p>
               </motion.div>
 
               {/* Right: Compact Form */}
@@ -154,7 +155,7 @@ const HostLanding = () => {
                 >
                   <div className="text-center mb-1">
                     <h2 className="text-lg font-bold text-foreground">Cadastre seu espaço</h2>
-                    <p className="text-xs text-muted-foreground">Preencha os dados e comece a ganhar.</p>
+                    <p className="text-xs text-muted-foreground">Preencha os dados para cadastrar seu espaço.</p>
                   </div>
 
                   {/* Personal data — smart: hidden or pre-filled if logged in */}
@@ -239,7 +240,7 @@ const HostLanding = () => {
           </div>
         </section>
 
-        {/* Space types — condensed */}
+        {/* Space types */}
         <section className="py-14 md:py-20 bg-secondary/40">
           <div className="container max-w-4xl">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-8">Espaços aceitos</h2>
@@ -257,7 +258,7 @@ const HostLanding = () => {
           </div>
         </section>
 
-        {/* Security — condensed */}
+        {/* Security */}
         <section className="py-14 md:py-20">
           <div className="container max-w-5xl">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-3">Segurança para anfitriões</h2>
@@ -279,7 +280,7 @@ const HostLanding = () => {
           </div>
         </section>
 
-        {/* FAQ — condensed */}
+        {/* FAQ */}
         <section className="py-14 md:py-20 bg-secondary/40">
           <div className="container max-w-2xl">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-8">Perguntas frequentes</h2>
