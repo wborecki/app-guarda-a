@@ -124,10 +124,10 @@ const Hero = () => {
                   </div>
 
                   {/* Divider */}
-                  <div className="w-px self-stretch my-3 bg-border" />
+                  <div className="w-px self-stretch my-4 bg-border" />
 
                   {/* Dates */}
-                  <div className="flex-[1.2] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                  <div className="flex-[1.2] min-w-0 px-5 py-4 rounded-xl hover:bg-muted/40 transition-colors">
                     <DateRangePicker
                       deliveryDate={deliveryDate}
                       pickupDate={pickupDate}
