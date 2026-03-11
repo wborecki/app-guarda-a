@@ -165,12 +165,12 @@ const Hero = () => {
                   <Link to="/anunciar">Quero anunciar meu espaço</Link>
                 </Button>
                 <span className="text-border">|</span>
-                <a
-                  href="#simulador"
+                <Link
+                  to="/quero-guardar"
                   className="text-sm text-muted-foreground/85 hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
                 >
-                  Precisa calcular em detalhe? Use o simulador ↓
-                </a>
+                  Precisa calcular em detalhe? Use o simulador →
+                </Link>
               </div>
             </div>
           </motion.div>
