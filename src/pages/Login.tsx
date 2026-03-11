@@ -107,6 +107,22 @@ const Login = () => {
     }
   };
 
+  const handleGoogle = async () => {
+    setSocialLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast({ title: "Erro ao entrar com Google", description: String(result.error), variant: "destructive" });
+      }
+    } catch (e: any) {
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } finally {
+      setSocialLoading(false);
+    }
+  };
+
   const title = mode === "login" ? "Acesse sua conta" : mode === "signup" ? "Crie sua conta" : "Recuperar acesso";
   const subtitle = mode === "login"
     ? "Entre para acompanhar suas reservas e espaços anunciados."
