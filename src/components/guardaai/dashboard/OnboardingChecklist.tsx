@@ -48,7 +48,7 @@ export const OnboardingChecklist = () => {
           .from("profiles")
           .select("display_name, phone")
           .eq("user_id", user.id)
-          .single(),
+          .maybeSingle(),
         supabase
           .from("spaces")
           .select("id")
