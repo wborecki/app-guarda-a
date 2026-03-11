@@ -22,6 +22,7 @@ import {
 import SpaceCard from "@/components/guardaai/search/SpaceCard";
 import FilterBar from "@/components/guardaai/search/FilterBar";
 import MobileFilterDrawer from "@/components/guardaai/search/MobileFilterDrawer";
+import { SearchCardSkeletonList } from "@/components/guardaai/skeletons/SearchCardSkeleton";
 
 // Lazy-load map for performance
 const SpaceMap = lazy(() => import("@/components/guardaai/SpaceMap"));
@@ -45,13 +46,15 @@ const SearchResults = () => {
 
   // Fetch real published spaces from database
   const [dbSpaces, setDbSpaces] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchPublished = async () => {
+      setIsLoading(true);
       const { data } = await supabase
         .from("spaces")
         .select("*")
         .eq("status", "published");
-      if (!data || data.length === 0) { setDbSpaces([]); return; }
+      if (!data || data.length === 0) { setDbSpaces([]); setIsLoading(false); return; }
 
       const typeMap: Record<string, string> = {
         garagem: "Garagem", quarto: "Quarto", deposito: "Depósito",
@@ -93,6 +96,7 @@ const SearchResults = () => {
         };
       });
       setDbSpaces(mapped);
+      setIsLoading(false);
     };
     fetchPublished();
   }, []);
@@ -271,7 +275,9 @@ const SearchResults = () => {
               </span>
             </div>
 
-            {filteredSortedSpaces.length === 0 ? (
+            {isLoading ? (
+              <SearchCardSkeletonList count={4} />
+            ) : filteredSortedSpaces.length === 0 ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
                 <p className="text-muted-foreground text-sm mb-2">Nenhum espaço encontrado com esses filtros.</p>
                 <Button variant="outline" size="sm" onClick={clearAll}>Limpar filtros</Button>
