@@ -202,169 +202,210 @@ const HostLanding = () => {
                 >
                   {/* Form header */}
                   <div className="px-5 pt-5 pb-3 border-b border-border/60 bg-secondary/30">
-                    <h2 className="text-base font-bold text-foreground">Cadastre seu espaço</h2>
-                    <p className="text-xs text-muted-foreground mt-0.5">Preencha os dados abaixo para começar.</p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-base font-bold text-foreground">Cadastre seu espaço</h2>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {step === 1 ? "Dados básicos do espaço" : "Detalhes e finalização"}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className={`w-2 h-2 rounded-full transition-colors ${step >= 1 ? "bg-accent" : "bg-border"}`} />
+                        <div className={`w-2 h-2 rounded-full transition-colors ${step >= 2 ? "bg-accent" : "bg-border"}`} />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="p-5 space-y-4">
-                    {/* === PERSONAL DATA === */}
-                    {!isLoggedIn ? (
-                      <div className="space-y-2.5">
-                        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Seus dados</p>
-                        <Input placeholder="Nome completo" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="h-10 text-sm" />
-                        <div className="grid grid-cols-2 gap-2.5">
-                          <Input placeholder="E-mail" type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required className="h-10 text-sm" />
-                          <Input placeholder="WhatsApp" value={form.whatsapp} onChange={e => setForm({...form, whatsapp: e.target.value})} required className="h-10 text-sm" />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/60 border border-border/60">
-                        <CheckCircle2 size={15} className="text-primary shrink-0" />
-                        <div className="min-w-0">
-                          <p className="text-xs font-medium text-foreground truncate">{displayName || user.email}</p>
-                          <p className="text-[10px] text-muted-foreground">Conectado — dados preenchidos</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* === LOCATION === */}
-                    <div className="space-y-2.5">
-                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
-                        <MapPin size={11} />
-                        Localização
-                      </p>
-                      <LocationAutocomplete
-                        value={form.location}
-                        onChange={(v) => setForm({...form, location: v})}
-                        placeholder="Endereço ou região do espaço"
-                        className="h-10 text-sm"
-                      />
-                      <Input
-                        placeholder="Bairro (opcional)"
-                        value={form.neighborhood}
-                        onChange={e => setForm({...form, neighborhood: e.target.value})}
-                        className="h-10 text-sm"
-                      />
-                    </div>
-
-                    {/* === SPACE DETAILS === */}
-                    <div className="space-y-2.5">
-                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Sobre o espaço</p>
-                      <div className="grid grid-cols-2 gap-2.5">
-                        <Select value={form.spaceType} onValueChange={v => setForm({...form, spaceType: v})}>
-                          <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Tipo de espaço" /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="garagem">Garagem</SelectItem>
-                            <SelectItem value="quarto">Quarto vazio</SelectItem>
-                            <SelectItem value="deposito">Depósito</SelectItem>
-                            <SelectItem value="area-coberta">Área coberta</SelectItem>
-                            <SelectItem value="galpao">Pequeno galpão</SelectItem>
-                            <SelectItem value="comercial">Espaço comercial</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <Select value={form.spaceCategory} onValueChange={v => setForm({...form, spaceCategory: v})}>
-                          <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Categoria" /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="residencial">Residencial</SelectItem>
-                            <SelectItem value="comercial">Comercial</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        <div>
-                          <label className="text-[10px] text-muted-foreground mb-1 block">Altura (m)</label>
-                          <Input type="number" step="0.1" min="0" value={form.height} onChange={e => setForm({...form, height: e.target.value})} className="h-10 text-sm" />
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-muted-foreground mb-1 block">Largura (m)</label>
-                          <Input type="number" step="0.1" min="0" value={form.width} onChange={e => setForm({...form, width: e.target.value})} className="h-10 text-sm" />
-                        </div>
-                        <div>
-                          <label className="text-[10px] text-muted-foreground mb-1 block">Compr. (m)</label>
-                          <Input type="number" step="0.1" min="0" value={form.length} onChange={e => setForm({...form, length: e.target.value})} className="h-10 text-sm" />
-                        </div>
-                      </div>
-                      {volume && (
-                        <p className="text-xs text-primary font-medium">Volume útil estimado: {volume} m³</p>
-                      )}
-
-                      <div className="grid grid-cols-3 gap-2">
-                        {[
-                          { id: "covered", label: "Coberto", value: form.covered, key: "covered" as const },
-                          { id: "closed", label: "Fechado", value: form.closed, key: "closed" as const },
-                          { id: "easyAccess", label: "Fácil acesso", value: form.easyAccess, key: "easyAccess" as const },
-                        ].map(s => (
-                          <div key={s.id} className="flex items-center justify-between p-2 rounded-lg bg-secondary/40 border border-border/60">
-                            <Label htmlFor={s.id} className="cursor-pointer text-[11px]">{s.label}</Label>
-                            <Switch id={s.id} checked={s.value} onCheckedChange={v => setForm({...form, [s.key]: v})} className="scale-[0.85]" />
+                    {step === 1 ? (
+                      <>
+                        {/* === PERSONAL DATA === */}
+                        {!isLoggedIn ? (
+                          <div className="space-y-2.5">
+                            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Seus dados</p>
+                            <Input placeholder="Nome completo" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="h-10 text-sm" />
+                            <div className="grid grid-cols-2 gap-2.5">
+                              <Input placeholder="E-mail" type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required className="h-10 text-sm" />
+                              <Input placeholder="WhatsApp" value={form.whatsapp} onChange={e => setForm({...form, whatsapp: e.target.value})} required className="h-10 text-sm" />
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
+                        ) : (
+                          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/60 border border-border/60">
+                            <CheckCircle2 size={15} className="text-primary shrink-0" />
+                            <div className="min-w-0">
+                              <p className="text-xs font-medium text-foreground truncate">{displayName || user.email}</p>
+                              <p className="text-[10px] text-muted-foreground">Conectado — dados preenchidos</p>
+                            </div>
+                          </div>
+                        )}
 
-                    {/* === AVAILABILITY === */}
-                    <div className="space-y-2.5">
-                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
-                        <CalendarCheck size={11} />
-                        Disponibilidade
-                      </p>
-                      <Select value={form.availability} onValueChange={v => setForm({...form, availability: v})}>
-                        <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="continuous">Contínua / Indeterminada</SelectItem>
-                          <SelectItem value="weekdays">Apenas dias úteis</SelectItem>
-                          <SelectItem value="weekends">Apenas finais de semana</SelectItem>
-                          <SelectItem value="custom">Personalizada (informar nas obs.)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <div className="grid grid-cols-2 gap-2.5">
-                        <div>
-                          <label className="text-[10px] text-muted-foreground mb-1 block">Horário de acesso</label>
-                          <Select value={form.accessHours} onValueChange={v => setForm({...form, accessHours: v})}>
-                            <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                        {/* === LOCATION === */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+                            <MapPin size={11} />
+                            Localização
+                          </p>
+                          <LocationAutocomplete
+                            value={form.location}
+                            onChange={(v) => setForm({...form, location: v})}
+                            placeholder="Endereço ou região do espaço"
+                            className="h-10 text-sm"
+                          />
+                        </div>
+
+                        {/* === SPACE TYPE === */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Tipo de espaço</p>
+                          <Select value={form.spaceType} onValueChange={v => setForm({...form, spaceType: v})}>
+                            <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Selecione o tipo" /></SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="livre">Livre / Sem restrição</SelectItem>
-                              <SelectItem value="comercial">Horário comercial (8h–18h)</SelectItem>
-                              <SelectItem value="combinado">A combinar</SelectItem>
+                              <SelectItem value="garagem">Garagem</SelectItem>
+                              <SelectItem value="quarto">Quarto vazio</SelectItem>
+                              <SelectItem value="deposito">Depósito</SelectItem>
+                              <SelectItem value="area-coberta">Área coberta</SelectItem>
+                              <SelectItem value="galpao">Pequeno galpão</SelectItem>
+                              <SelectItem value="comercial">Espaço comercial</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
-                        <div>
-                          <label className="text-[10px] text-muted-foreground mb-1 block">Tipo de acesso</label>
-                          <Select value={form.accessType} onValueChange={v => setForm({...form, accessType: v})}>
-                            <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Selecione" /></SelectTrigger>
+
+                        {/* === DIMENSIONS === */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Dimensões aproximadas</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <label className="text-[10px] text-muted-foreground mb-1 block">Altura (m)</label>
+                              <Input type="number" step="0.1" min="0" value={form.height} onChange={e => setForm({...form, height: e.target.value})} className="h-10 text-sm" />
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-muted-foreground mb-1 block">Largura (m)</label>
+                              <Input type="number" step="0.1" min="0" value={form.width} onChange={e => setForm({...form, width: e.target.value})} className="h-10 text-sm" />
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-muted-foreground mb-1 block">Compr. (m)</label>
+                              <Input type="number" step="0.1" min="0" value={form.length} onChange={e => setForm({...form, length: e.target.value})} className="h-10 text-sm" />
+                            </div>
+                          </div>
+                          {volume && (
+                            <p className="text-xs text-primary font-medium">Volume útil estimado: {volume} m³</p>
+                          )}
+                        </div>
+
+                        {/* === STEP 1 CTA === */}
+                        <Button
+                          type="button"
+                          size="lg"
+                          className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-11 group"
+                          onClick={() => setStep(2)}
+                        >
+                          Continuar
+                          <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        {/* === STEP 2: DETAILS === */}
+
+                        {/* Category + toggles */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Características</p>
+                          <Select value={form.spaceCategory} onValueChange={v => setForm({...form, spaceCategory: v})}>
+                            <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Residencial ou comercial?" /></SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="independente">Independente</SelectItem>
-                              <SelectItem value="acompanhado">Acompanhado</SelectItem>
-                              <SelectItem value="combinar">A combinar</SelectItem>
+                              <SelectItem value="residencial">Residencial</SelectItem>
+                              <SelectItem value="comercial">Comercial</SelectItem>
                             </SelectContent>
                           </Select>
+                          <div className="grid grid-cols-3 gap-2">
+                            {[
+                              { id: "covered", label: "Coberto", value: form.covered, key: "covered" as const },
+                              { id: "closed", label: "Fechado", value: form.closed, key: "closed" as const },
+                              { id: "easyAccess", label: "Fácil acesso", value: form.easyAccess, key: "easyAccess" as const },
+                            ].map(s => (
+                              <div key={s.id} className="flex items-center justify-between p-2 rounded-lg bg-secondary/40 border border-border/60">
+                                <Label htmlFor={s.id} className="cursor-pointer text-[11px]">{s.label}</Label>
+                                <Switch id={s.id} checked={s.value} onCheckedChange={v => setForm({...form, [s.key]: v})} className="scale-[0.85]" />
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    </div>
 
-                    {/* === NOTES + PHOTOS === */}
-                    <div className="space-y-2.5">
-                      <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Detalhes adicionais</p>
-                      <Textarea
-                        placeholder="Observações, restrições, regras do espaço... (opcional)"
-                        value={form.notes}
-                        onChange={e => setForm({...form, notes: e.target.value})}
-                        rows={2}
-                        className="text-sm resize-none"
-                      />
-                      <label className="flex items-center justify-center gap-2 p-3.5 rounded-xl border-2 border-dashed border-border hover:border-accent/40 transition-colors cursor-pointer bg-secondary/20">
-                        <Upload size={16} className="text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">Enviar fotos do espaço (máx. 5)</span>
-                        <input type="file" accept="image/*" multiple className="hidden" />
-                      </label>
-                    </div>
+                        {/* Availability */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+                            <CalendarCheck size={11} />
+                            Disponibilidade e acesso
+                          </p>
+                          <Select value={form.availability} onValueChange={v => setForm({...form, availability: v})}>
+                            <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="continuous">Contínua / Indeterminada</SelectItem>
+                              <SelectItem value="weekdays">Apenas dias úteis</SelectItem>
+                              <SelectItem value="weekends">Apenas finais de semana</SelectItem>
+                              <SelectItem value="custom">Personalizada (informar nas obs.)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <div className="grid grid-cols-2 gap-2.5">
+                            <Select value={form.accessHours} onValueChange={v => setForm({...form, accessHours: v})}>
+                              <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Horário de acesso" /></SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="livre">Livre / Sem restrição</SelectItem>
+                                <SelectItem value="comercial">Horário comercial</SelectItem>
+                                <SelectItem value="combinado">A combinar</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Select value={form.accessType} onValueChange={v => setForm({...form, accessType: v})}>
+                              <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Tipo de acesso" /></SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="independente">Independente</SelectItem>
+                                <SelectItem value="acompanhado">Acompanhado</SelectItem>
+                                <SelectItem value="combinar">A combinar</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
 
-                    {/* === SUBMIT === */}
-                    <Button type="submit" size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-11 group">
-                      Cadastrar meu espaço
-                      <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
+                        {/* Notes + photos */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Detalhes adicionais</p>
+                          <Input
+                            placeholder="Bairro (opcional)"
+                            value={form.neighborhood}
+                            onChange={e => setForm({...form, neighborhood: e.target.value})}
+                            className="h-10 text-sm"
+                          />
+                          <Textarea
+                            placeholder="Observações, restrições, regras... (opcional)"
+                            value={form.notes}
+                            onChange={e => setForm({...form, notes: e.target.value})}
+                            rows={2}
+                            className="text-sm resize-none"
+                          />
+                          <label className="flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-border hover:border-accent/40 transition-colors cursor-pointer bg-secondary/20">
+                            <Upload size={16} className="text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">Enviar fotos do espaço (máx. 5)</span>
+                            <input type="file" accept="image/*" multiple className="hidden" />
+                          </label>
+                        </div>
+
+                        {/* Navigation */}
+                        <div className="flex gap-2.5">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="lg"
+                            className="h-11 text-sm font-semibold px-5"
+                            onClick={() => setStep(1)}
+                          >
+                            Voltar
+                          </Button>
+                          <Button type="submit" size="lg" className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-11 group">
+                            Cadastrar meu espaço
+                            <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </form>
               </motion.div>
