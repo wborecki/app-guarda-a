@@ -36,7 +36,7 @@ const SecurityCard = ({ f, i, variant }: { f: typeof userFeatures[0]; i: number;
 
 const Security = () => {
   return (
-    <section id="seguranca" className="py-16 md:py-32 bg-secondary/50">
+    <section id="seguranca" className="py-14 md:py-20 bg-secondary/50">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
