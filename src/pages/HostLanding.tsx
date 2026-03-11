@@ -361,12 +361,6 @@ const HostLanding = () => {
                         {/* Notes + photos */}
                         <div className="space-y-2.5">
                           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Detalhes adicionais</p>
-                          <Input
-                            placeholder="Bairro (opcional)"
-                            value={form.neighborhood}
-                            onChange={e => setForm({...form, neighborhood: e.target.value})}
-                            className="h-10 text-sm"
-                          />
                           <Textarea
                             placeholder="Observações, restrições, regras... (opcional)"
                             value={form.notes}
