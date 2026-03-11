@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { OnboardingChecklist } from "@/components/guardaai/dashboard/OnboardingChecklist";
 
 /* ── Stat Card ─────────────────────────────────────────── */
 const StatCard = ({
@@ -91,6 +92,9 @@ const DashboardOverview = () => {
           Aqui está o resumo da sua conta no GuardaAí.
         </p>
       </div>
+
+      {/* ── Onboarding Checklist ──────────────────────── */}
+      <OnboardingChecklist />
 
       {/* ── Stats Grid ───────────────────────────────── */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
