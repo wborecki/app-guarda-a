@@ -503,8 +503,8 @@ const SpaceOnboarding = () => {
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Descrição do espaço</label>
                       <Textarea
                         placeholder="Descreva seu espaço para que os clientes entendam o que estão reservando..."
-                        value={space.description}
-                        onChange={e => updateSpace({ description: e.target.value })}
+                        value={descLocal}
+                        onChange={e => setDescLocal(e.target.value)}
                         rows={3}
                         className="text-sm resize-none"
                       />
@@ -514,8 +514,8 @@ const SpaceOnboarding = () => {
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Regras do espaço</label>
                       <Textarea
                         placeholder="Ex: Não armazenar líquidos, não ultrapassar o limite do espaço..."
-                        value={space.rules}
-                        onChange={e => updateSpace({ rules: e.target.value })}
+                        value={rulesLocal}
+                        onChange={e => setRulesLocal(e.target.value)}
                         rows={2}
                         className="text-sm resize-none"
                       />
@@ -525,8 +525,8 @@ const SpaceOnboarding = () => {
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Recursos de segurança</label>
                       <Textarea
                         placeholder="Ex: Câmera, portão eletrônico, alarme, portaria..."
-                        value={space.security_features}
-                        onChange={e => updateSpace({ security_features: e.target.value })}
+                        value={securityLocal}
+                        onChange={e => setSecurityLocal(e.target.value)}
                         rows={2}
                         className="text-sm resize-none"
                       />
@@ -536,8 +536,8 @@ const SpaceOnboarding = () => {
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Observações adicionais</label>
                       <Textarea
                         placeholder="Qualquer informação extra relevante..."
-                        value={space.notes}
-                        onChange={e => updateSpace({ notes: e.target.value })}
+                        value={notesLocal}
+                        onChange={e => setNotesLocal(e.target.value)}
                         rows={2}
                         className="text-sm resize-none"
                       />
