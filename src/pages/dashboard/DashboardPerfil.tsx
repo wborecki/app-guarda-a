@@ -21,7 +21,7 @@ const DashboardPerfil = () => {
         .from("profiles")
         .select("display_name, phone")
         .eq("user_id", user.id)
-        .single()
+        .maybeSingle()
         .then(({ data }) => {
           if (data) {
             setName(data.display_name || "");
