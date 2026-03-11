@@ -14,7 +14,7 @@ interface DateRangePickerProps {
   onDeliveryChange: (date: Date | undefined) => void;
   onPickupChange: (date: Date | undefined) => void;
   className?: string;
-  /** Compact mode for inline search bars — hides outer label and day count pill */
+  /** Compact mode for inline search bars — minimal chrome */
   compact?: boolean;
 }
 
@@ -67,6 +67,33 @@ export default function DateRangePicker({
     }
   };
 
+  // ── Compact trigger content ──
+  const compactTriggerContent = () => {
+    if (deliveryDate && pickupDate) {
+      return (
+        <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+          {format(deliveryDate, "dd/MM", { locale: pt })}
+          <ArrowRight size={11} className="text-muted-foreground" />
+          {format(pickupDate, "dd/MM", { locale: pt })}
+          <span className="ml-0.5 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[11px] font-bold leading-none">
+            {days}d
+          </span>
+        </span>
+      );
+    }
+    if (deliveryDate) {
+      return (
+        <span className="flex items-center gap-1.5 text-sm font-medium">
+          {format(deliveryDate, "dd/MM", { locale: pt })}
+          <ArrowRight size={11} className="text-muted-foreground" />
+          <span className="text-muted-foreground/60">Retirada</span>
+        </span>
+      );
+    }
+    return <span className="text-muted-foreground/60 text-sm">Quando?</span>;
+  };
+
+  // ── Standard trigger content ──
   const triggerLabel = () => {
     if (deliveryDate && pickupDate) {
       return (
@@ -89,37 +116,45 @@ export default function DateRangePicker({
         </span>
       );
     }
-    return <span className="text-muted-foreground text-sm">{compact ? "Quando?" : "Selecione as datas"}</span>;
+    return <span className="text-muted-foreground text-sm">Selecione as datas</span>;
   };
 
   return (
     <div className={className}>
-      {!compact && (
+      {/* Label */}
+      {compact ? (
+        <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1 block">
+          Período
+        </label>
+      ) : (
         <label className="text-sm font-medium text-foreground mb-2 block">
           Período da reserva
         </label>
       )}
-      {compact && (
-        <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
-          <CalendarIcon size={12} className="text-primary" />
-          Quando?
-        </label>
-      )}
+
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className={cn(
-              "w-full justify-start text-left font-normal",
-              compact ? "h-10 md:h-10" : "h-11 md:h-10",
-              !deliveryDate && "text-muted-foreground"
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
-            {triggerLabel()}
-          </Button>
+          {compact ? (
+            <button
+              type="button"
+              className="h-9 w-full text-left focus:outline-none cursor-pointer"
+            >
+              {compactTriggerContent()}
+            </button>
+          ) : (
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal h-11 md:h-10",
+                !deliveryDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
+              {triggerLabel()}
+            </Button>
+          )}
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start" sideOffset={4}>
+        <PopoverContent className="w-auto p-0" align="start" sideOffset={8}>
           <div className="p-3 pb-1.5 border-b border-border/40">
             <p className="text-xs font-semibold text-foreground">
               {step === "start" ? "📅 Selecione a data de entrada" : "📅 Selecione a data de retirada"}
@@ -152,7 +187,7 @@ export default function DateRangePicker({
         </PopoverContent>
       </Popover>
 
-      {/* Day count pill below — only in non-compact mode */}
+      {/* Day count pill — standard mode only */}
       {!compact && days > 0 && (
         <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
           <CalendarIcon size={12} className="text-primary" />
