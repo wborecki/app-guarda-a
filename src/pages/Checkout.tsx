@@ -447,19 +447,65 @@ const Checkout = () => {
                             <CheckCircle2 size={18} className="text-primary" />
                             <div>
                               <p className="text-sm font-medium text-foreground">Itens aprovados</p>
-                              <p className="text-xs text-muted-foreground">{photos.length} foto{photos.length > 1 ? "s" : ""} verificada{photos.length > 1 ? "s" : ""}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {analysisResult?.reason || `${photos.length} foto${photos.length > 1 ? "s" : ""} verificada${photos.length > 1 ? "s" : ""}`}
+                              </p>
+                              {analysisResult?.detected_items && analysisResult.detected_items.length > 0 && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  Itens detectados: {analysisResult.detected_items.join(", ")}
+                                </p>
+                              )}
                             </div>
+                          </div>
+                        )}
+
+                        {analysisStatus === "review" && (
+                          <div className="p-4 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                            <div className="flex items-center gap-2 mb-2">
+                              <ShieldAlert size={16} className="text-amber-600" />
+                              <p className="text-sm font-semibold text-foreground">Análise pendente de revisão</p>
+                            </div>
+                            <p className="text-xs text-muted-foreground mb-2">
+                              {analysisResult?.reason || "Não foi possível aprovar automaticamente. Seus itens serão avaliados manualmente."}
+                            </p>
+                            {analysisResult?.flagged_items && analysisResult.flagged_items.length > 0 && (
+                              <p className="text-xs text-destructive mb-2">
+                                Itens sinalizados: {analysisResult.flagged_items.join(", ")}
+                              </p>
+                            )}
+                            <p className="text-xs text-muted-foreground mb-3">
+                              A reserva não pode ser concluída até a revisão. Você pode reenviar novas fotos ou aguardar a revisão manual.
+                            </p>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-xs"
+                              onClick={() => {
+                                setAnalysisStatus("pending");
+                                setAnalysisResult(null);
+                              }}
+                            >
+                              Reenviar fotos
+                            </Button>
                           </div>
                         )}
 
                         {analysisStatus === "blocked" && (
                           <div className="p-4 rounded-lg bg-destructive/5 border border-destructive/15">
                             <div className="flex items-center gap-2 mb-2">
-                              <AlertTriangle size={16} className="text-destructive" />
-                              <p className="text-sm font-semibold text-foreground">Reserva bloqueada para revisão</p>
+                              <Ban size={16} className="text-destructive" />
+                              <p className="text-sm font-semibold text-foreground">Reserva bloqueada — itens proibidos detectados</p>
                             </div>
+                            <p className="text-xs text-muted-foreground mb-2">
+                              {analysisResult?.reason || "A análise identificou itens proibidos pela política da plataforma."}
+                            </p>
+                            {analysisResult?.flagged_items && analysisResult.flagged_items.length > 0 && (
+                              <p className="text-xs text-destructive font-medium mb-2">
+                                Itens proibidos detectados: {analysisResult.flagged_items.join(", ")}
+                              </p>
+                            )}
                             <p className="text-xs text-muted-foreground mb-3">
-                              A análise identificou possível irregularidade nos itens enviados.
+                              Não é possível prosseguir com a reserva. Caso acredite ser um erro, solicite revisão manual.
                             </p>
                             <Button variant="outline" size="sm" className="text-xs">
                               Solicitar revisão manual
