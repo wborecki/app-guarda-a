@@ -143,7 +143,7 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
       </div>
 
       <Button
-        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-base h-12"
+        className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-11"
         onClick={handleSimulate}
         disabled={items.length === 0 || !deliveryDate || !pickupDate}
       >
