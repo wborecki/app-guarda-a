@@ -48,6 +48,7 @@ export function DashboardSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const { displayName, signOut, user } = useAuth();
+  const { isAdmin } = useAdminCheck();
 
   const isActive = (path: string) => {
     if (path === "/minha-conta") return location.pathname === "/minha-conta";
