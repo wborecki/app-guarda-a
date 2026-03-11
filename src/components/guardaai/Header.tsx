@@ -13,7 +13,7 @@ const navLinks = [
   { label: "Segurança", href: "#seguranca" },
   { label: "Anunciar espaço", href: "/anunciar", isRoute: true },
   { label: "FAQ", href: "#faq" },
-  { label: "Contato", href: "/contato", isRoute: true },
+  { label: "Fale conosco", href: "/fale-conosco", isRoute: true },
 ];
 
 const Header = () => {
