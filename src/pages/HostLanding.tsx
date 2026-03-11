@@ -206,27 +206,31 @@ const HostLanding = () => {
                   </div>
 
                   <div className="p-5 space-y-4">
+                    {!isLoggedIn ? (
+                      <div className="text-center py-6 space-y-3">
+                        <Lock size={24} className="mx-auto text-muted-foreground" />
+                        <p className="text-sm font-medium text-foreground">Faça login para cadastrar seu espaço</p>
+                        <p className="text-xs text-muted-foreground">Entre na sua conta ou crie uma para começar.</p>
+                        <Button
+                          type="button"
+                          className="bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-semibold h-10 px-6"
+                          onClick={() => navigate("/entrar")}
+                        >
+                          Entrar ou criar conta
+                        </Button>
+                      </div>
+                    ) : (
+                    <>
                     {step === 1 ? (
                       <>
-                        {/* === PERSONAL DATA === */}
-                        {!isLoggedIn ? (
-                          <div className="space-y-2.5">
-                            <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Seus dados</p>
-                            <Input placeholder="Nome completo" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="h-10 text-sm" />
-                            <div className="grid grid-cols-2 gap-2.5">
-                              <Input placeholder="E-mail" type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required className="h-10 text-sm" />
-                              <Input placeholder="WhatsApp" value={form.whatsapp} onChange={e => setForm({...form, whatsapp: e.target.value})} required className="h-10 text-sm" />
-                            </div>
+                        {/* Connected user badge */}
+                        <div className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/60 border border-border/60">
+                          <CheckCircle2 size={15} className="text-primary shrink-0" />
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium text-foreground truncate">{displayName || user.email}</p>
+                            <p className="text-[10px] text-muted-foreground">Conectado</p>
                           </div>
-                        ) : (
-                          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/60 border border-border/60">
-                            <CheckCircle2 size={15} className="text-primary shrink-0" />
-                            <div className="min-w-0">
-                              <p className="text-xs font-medium text-foreground truncate">{displayName || user.email}</p>
-                              <p className="text-[10px] text-muted-foreground">Conectado — dados preenchidos</p>
-                            </div>
-                          </div>
-                        )}
+                        </div>
 
                         {/* === LOCATION === */}
                         <div className="space-y-2.5">
