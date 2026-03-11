@@ -68,7 +68,7 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
   };
 
   const simulatorContent = (
-    <>
+    <div className="space-y-4">
       <div className="mb-5">
         <ItemDimensionInput items={items} onItemsChange={handleItemsChange} />
       </div>

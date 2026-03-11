@@ -1,104 +1,134 @@
-import { useNavigate } from "react-router-dom";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
 import Simulator from "@/components/guardaai/Simulator";
 import { motion } from "framer-motion";
-import { Shield, Clock, DollarSign, MapPin, CheckCircle2, Lock, Camera, FileText, Package, ArrowRight } from "lucide-react";
+import { Shield, Clock, DollarSign, MapPin, CheckCircle2, Lock, Camera, FileText, Package, ArrowRight, TrendingDown } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 
 const steps = [
-  { icon: MapPin, title: "Busque", desc: "Encontre espaços disponíveis perto de você." },
-  { icon: Clock, title: "Reserve", desc: "Escolha as datas e reserve em poucos cliques." },
-  { icon: CheckCircle2, title: "Guarde", desc: "Leve seus itens ao local. Simples assim." },
+  { num: "1", icon: MapPin, title: "Simule e busque", desc: "Informe seus itens e encontre espaços disponíveis na sua região." },
+  { num: "2", icon: Clock, title: "Reserve online", desc: "Escolha datas, confirme o valor e reserve em poucos cliques." },
+  { num: "3", icon: CheckCircle2, title: "Guarde com segurança", desc: "Leve seus itens ao local. Tudo registrado e intermediado pela plataforma." },
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Mais acessível", desc: "Pague muito menos que um self storage tradicional." },
-  { icon: Shield, title: "Seguro e registrado", desc: "Itens fotografados e cadastrados na plataforma." },
-  { icon: Clock, title: "Flexibilidade total", desc: "A partir de 1 dia. Quanto mais tempo, menor o custo." },
+  { icon: DollarSign, title: "Mais acessível", desc: "Preços muito abaixo de self storages tradicionais." },
+  { icon: Shield, title: "Seguro e registrado", desc: "Itens fotografados, cadastrados e protegidos por termos." },
+  { icon: TrendingDown, title: "Tabela progressiva", desc: "Quanto mais dias, menor o custo por dia por m³." },
 ];
 
 const trustItems = [
-  { icon: Camera, title: "Registro fotográfico", desc: "Todos os objetos são fotografados e cadastrados na plataforma." },
-  { icon: FileText, title: "Termos claros", desc: "Responsabilidades definidas e aceitas por ambas as partes." },
-  { icon: Lock, title: "Intermediação digital", desc: "O GuardaAí atua como intermediador seguro entre as partes." },
+  { icon: Camera, title: "Registro fotográfico", desc: "Todos os objetos são fotografados antes do armazenamento." },
+  { icon: FileText, title: "Termos de responsabilidade", desc: "Regras claras aceitas por ambas as partes antes de cada reserva." },
+  { icon: Lock, title: "Intermediação pela plataforma", desc: "O GuardaAí atua como intermediador seguro em toda a operação." },
 ];
 
 const faqs = [
-  { q: "O que posso guardar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce e itens pessoais em geral. Itens ilegais, perigosos ou perecíveis são proibidos." },
-  { q: "Como o preço é calculado?", a: "O preço é baseado no volume (m³) e no período. Usamos uma tabela progressiva: quanto mais tempo, menor o valor por dia. Mínimo de 1 m³. Uma taxa de serviço fixa de R$ 28,00 é adicionada no checkout." },
-  { q: "Posso guardar por poucos dias?", a: "Sim! A partir de 1 dia. A cobrança segue tabela progressiva — períodos curtos também têm preço justo." },
-  { q: "Como funciona a segurança?", a: "Objetos são cadastrados com foto, ambas as partes aceitam termos de responsabilidade, e toda intermediação é feita pela plataforma." },
+  { q: "O que posso guardar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce e itens pessoais. Itens ilegais, perigosos ou perecíveis são proibidos." },
+  { q: "Como o preço é calculado?", a: "O preço é baseado no volume ocupado (m³) e no período. Usamos uma tabela progressiva de R$ 5/m³ (1 dia) a R$ 45/m³ (30 dias). Mínimo de 1 m³. Uma taxa de serviço de R$ 28,00 é adicionada no checkout." },
+  { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. A tabela progressiva garante preço justo para qualquer período." },
+  { q: "Como funciona a segurança?", a: "Objetos são cadastrados com foto, ambas as partes aceitam termos de responsabilidade, e toda intermediação é feita digitalmente pela plataforma." },
+];
+
+const pricingTiers = [
+  { period: "1 dia", price: "R$ 5", daily: "R$ 5,00/dia" },
+  { period: "7 dias", price: "R$ 15,75", daily: "R$ 2,25/dia" },
+  { period: "30 dias", price: "R$ 45", daily: "R$ 1,50/dia" },
 ];
 
 const QueroGuardar = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        {/* Hero + Simulator — side by side */}
-        <section className="relative pt-24 pb-14 md:pt-32 md:pb-20 overflow-hidden">
+        {/* ========== HERO + SIMULATOR ========== */}
+        <section className="relative pt-24 pb-10 md:pt-28 md:pb-16 overflow-hidden">
+          {/* Background blobs */}
           <div className="absolute inset-0 -z-10">
-            <div className="absolute top-20 left-0 w-72 h-72 bg-accent/8 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary/6 rounded-full blur-3xl" />
+            <div className="absolute top-16 -left-20 w-80 h-80 bg-primary/6 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-72 h-72 bg-accent/5 rounded-full blur-3xl" />
           </div>
 
           <div className="container">
-            <div className="grid lg:grid-cols-[1fr_420px] gap-10 lg:gap-14 items-start max-w-6xl mx-auto">
-              {/* Left: Value prop */}
-              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="pt-2 lg:pt-8">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-5">
-                  <Package size={14} />
-                  Para quem quer guardar
+            <div className="grid lg:grid-cols-[1fr_440px] gap-8 lg:gap-12 items-start max-w-6xl mx-auto">
+              {/* LEFT — Value prop */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45 }}
+                className="pt-1 lg:pt-6"
+              >
+                {/* Chip */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide uppercase mb-4">
+                  <Package size={13} />
+                  Armazenamento fácil e acessível
                 </div>
-                <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold text-foreground leading-tight mb-4">
-                  Guarde suas coisas por <span className="text-primary">muito menos</span>
+
+                {/* Headline */}
+                <h1 className="text-[1.75rem] md:text-4xl lg:text-[2.65rem] font-extrabold text-foreground leading-[1.15] mb-3">
+                  Guarde suas coisas<br className="hidden md:block" /> por <span className="text-primary">muito menos</span>
                 </h1>
-                <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-lg leading-relaxed">
-                  Encontre espaços disponíveis perto de você e pague muito menos que um self storage tradicional. Simule agora e veja o preço.
+
+                {/* Subtitle */}
+                <p className="text-[15px] md:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
+                  Espaços reais perto de você, com preço justo e segurança garantida. Simule agora e descubra o valor.
                 </p>
 
                 {/* Benefits */}
-                <div className="space-y-4">
+                <div className="space-y-3 mb-6">
                   {benefits.map((b, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.1 }}
-                      className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                        <b.icon size={18} className="text-primary" />
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.25 + i * 0.08 }}
+                      className="flex items-center gap-3"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <b.icon size={16} className="text-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold text-foreground text-sm">{b.title}</p>
-                        <p className="text-xs text-muted-foreground">{b.desc}</p>
+                        <span className="font-semibold text-foreground text-sm">{b.title}</span>
+                        <span className="text-muted-foreground text-xs ml-1.5">— {b.desc}</span>
                       </div>
                     </motion.div>
                   ))}
                 </div>
 
-                {/* Pricing mini-cards */}
-                <div className="mt-8 grid grid-cols-3 gap-3">
-                  {[
-                    { period: "1 dia", price: "R$ 5,00", unit: "/m³" },
-                    { period: "7 dias", price: "R$ 15,75", unit: "/m³" },
-                    { period: "30 dias", price: "R$ 45,00", unit: "/m³" },
-                  ].map((p, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-card border text-center">
-                      <p className="text-[10px] text-muted-foreground">{p.period}</p>
-                      <p className="text-sm font-bold text-primary mt-0.5">{p.price}<span className="text-[10px] font-normal text-muted-foreground">{p.unit}</span></p>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-[10px] text-muted-foreground mt-2">Tabela progressiva — quanto mais dias, menor o custo por dia. + Taxa de serviço de R$ 28,00.</p>
+                {/* Pricing reference cards */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço por m³</p>
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {pricingTiers.map((t, i) => (
+                      <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-primary/30 transition-colors">
+                        <p className="text-[10px] font-medium text-muted-foreground mb-1">{t.period}</p>
+                        <p className="text-lg font-bold text-foreground leading-none">{t.price}</p>
+                        <p className="text-[10px] text-primary font-medium mt-1">{t.daily}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
+                    Tabela progressiva por m³. Quanto maior o período, menor o custo diário. Taxa de serviço de R$ 28,00 adicionada no checkout.
+                  </p>
+                </motion.div>
               </motion.div>
 
-              {/* Right: Simulator in card */}
-              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}>
-                <div className="rounded-2xl bg-card border shadow-lg overflow-hidden">
-                  <div className="text-center pt-5 pb-1 px-5">
-                    <h2 className="text-lg font-bold text-foreground">Simule seu armazenamento</h2>
-                    <p className="text-xs text-muted-foreground">Descubra o preço em segundos.</p>
+              {/* RIGHT — Simulator */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.12 }}
+                className="lg:sticky lg:top-24"
+              >
+                <div className="rounded-2xl bg-card border border-border/80 shadow-xl overflow-hidden">
+                  <div className="px-5 pt-5 pb-2 border-b border-border/60 bg-secondary/30">
+                    <h2 className="text-base font-bold text-foreground">Simule seu armazenamento</h2>
+                    <p className="text-xs text-muted-foreground mt-0.5">Calcule o volume e o preço em segundos.</p>
                   </div>
                   <Simulator embedded />
                 </div>
@@ -107,54 +137,60 @@ const QueroGuardar = () => {
           </div>
         </section>
 
-        {/* Como funciona */}
-        <section className="py-14 md:py-20 bg-secondary/40">
+        {/* ========== COMO FUNCIONA ========== */}
+        <section className="py-12 md:py-16 bg-secondary/40">
           <div className="container max-w-4xl">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-8">
-              Como funciona
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div className="text-center mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Como funciona</h2>
+              <p className="text-sm text-muted-foreground">Três passos simples para guardar seus itens com segurança.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {steps.map((step, i) => (
                 <motion.div
                   key={step.title}
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: i * 0.1 }}
-                  className="text-center"
+                  transition={{ duration: 0.35, delay: i * 0.08 }}
+                  className="relative p-5 rounded-xl bg-card border hover:border-primary/20 transition-colors"
                 >
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary mb-4">
-                    <step.icon size={22} />
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                      <step.icon size={18} className="text-primary" />
+                    </div>
+                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-xs font-bold text-primary">{step.num}</span>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-1">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground">{step.desc}</p>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">{step.title}</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Confiança e segurança */}
-        <section className="py-14 md:py-20">
+        {/* ========== SEGURANÇA E CONFIANÇA ========== */}
+        <section className="py-12 md:py-16">
           <div className="container max-w-4xl">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-3">
-              Segurança e confiança
-            </h2>
-            <p className="text-sm text-muted-foreground text-center mb-8 max-w-lg mx-auto">
-              Seus objetos protegidos com regras claras e intermediação digital.
-            </p>
+            <div className="text-center mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Segurança e confiança</h2>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                Seus objetos protegidos por regras claras, registro fotográfico e intermediação digital.
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {trustItems.map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  className="p-5 rounded-xl bg-card border text-center"
+                  transition={{ delay: i * 0.06 }}
+                  className="p-5 rounded-xl bg-card border hover:border-primary/20 transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                    <item.icon size={20} className="text-primary" />
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 group-hover:bg-primary/15 flex items-center justify-center mb-3 transition-colors">
+                    <item.icon size={18} className="text-primary" />
                   </div>
                   <h3 className="font-semibold text-foreground text-sm mb-1">{item.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -164,19 +200,20 @@ const QueroGuardar = () => {
           </div>
         </section>
 
-        {/* FAQ */}
-        <section className="py-14 md:py-20 bg-secondary/40">
+        {/* ========== FAQ ========== */}
+        <section className="py-12 md:py-16 bg-secondary/40">
           <div className="container max-w-2xl">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-8">
-              Perguntas frequentes
-            </h2>
+            <div className="text-center mb-6">
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Perguntas frequentes</h2>
+              <p className="text-sm text-muted-foreground">Tire suas dúvidas sobre o serviço.</p>
+            </div>
             <Accordion type="single" collapsible className="space-y-2">
               {faqs.map((faq, i) => (
-                <AccordionItem key={i} value={`faq-${i}`} className="bg-card border rounded-xl px-5">
-                  <AccordionTrigger className="text-left font-semibold text-foreground text-sm">
+                <AccordionItem key={i} value={`faq-${i}`} className="bg-card border rounded-xl px-5 data-[state=open]:border-primary/20 transition-colors">
+                  <AccordionTrigger className="text-left font-semibold text-foreground text-sm hover:no-underline py-3.5">
                     {faq.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm">
+                  <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -185,15 +222,27 @@ const QueroGuardar = () => {
           </div>
         </section>
 
-        {/* CTA final */}
-        <section className="py-14 md:py-20">
-          <div className="container text-center max-w-xl">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">Pronto para guardar?</h2>
-            <p className="text-sm text-muted-foreground mb-6">Simule o preço, encontre um espaço e guarde seus itens com segurança.</p>
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 group" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-              Simular agora
-              <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
+        {/* ========== CTA FINAL ========== */}
+        <section className="py-12 md:py-16">
+          <div className="container max-w-lg text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">Pronto para guardar?</h2>
+              <p className="text-sm text-muted-foreground mb-5">
+                Simule o preço, encontre um espaço e guarde seus itens com segurança.
+              </p>
+              <Button
+                size="lg"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 h-11 text-sm font-semibold group"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              >
+                Simular agora
+                <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </motion.div>
           </div>
         </section>
       </main>
