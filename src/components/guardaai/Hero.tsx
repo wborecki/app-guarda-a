@@ -235,18 +235,18 @@ const Hero = () => {
             </motion.div>
 
             {/* Secondary links */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
               <Button
                 size="sm"
                 variant="outline"
-                className="text-sm border-primary/40 text-primary hover:bg-primary/5 bg-card/80 backdrop-blur-sm font-medium"
+                className="text-sm border-primary/40 text-primary hover:bg-primary/5 bg-card/80 backdrop-blur-sm font-medium px-4"
                 asChild
               >
                 <Link to="/anunciar">Quero anunciar meu espaço</Link>
               </Button>
               <a
                 href="#simulador"
-                className="text-xs text-muted-foreground hover:text-primary transition-colors underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
+                className="text-[13px] text-muted-foreground hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
               >
                 Precisa calcular em detalhe? Use o simulador ↓
               </a>
