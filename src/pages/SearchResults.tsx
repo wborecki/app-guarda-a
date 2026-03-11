@@ -416,9 +416,9 @@ const SearchResults = () => {
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
   const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | null>(null);
+  const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | string | null>(null);
   const [mobileView, setMobileView] = useState<"list" | "map">("list");
-  const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const cardRefs = useRef<Record<number | string, HTMLDivElement | null>>({});
 
   // ── Filter + Sort logic ──
   const filteredSortedSpaces = useMemo(() => {
