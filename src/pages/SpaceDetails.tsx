@@ -211,7 +211,7 @@ const SpaceDetails = () => {
                 <div className="w-px h-8 bg-border/60" />
                 <div>
                   <p className="text-xs text-muted-foreground">Disponível agora</p>
-                  <p className="text-sm font-bold text-primary">{availableArea} m²</p>
+                  <p className="text-sm font-bold text-primary">{availableArea} m³</p>
                 </div>
               </div>
 
