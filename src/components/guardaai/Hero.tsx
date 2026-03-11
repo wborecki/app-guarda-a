@@ -83,173 +83,180 @@ const Hero = () => {
             transition={{ duration: 0.55 }}
             className="space-y-0"
           >
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-5 border border-primary/20">
-              <Package size={14} />
-              Self storage descentralizado
+            {/* ── BLOCO 1: Selo + Headline + Subtítulo ── */}
+            <div className="mb-10 md:mb-14">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 border border-primary/20">
+                <Package size={14} />
+                Self storage descentralizado
+              </div>
+
+              {/* Headline */}
+              <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-6 md:mb-7 tracking-tight">
+                Guarde perto.<br />
+                <span className="text-primary">Pague menos.</span>
+              </h1>
+
+              <p className="text-[15px] md:text-[17px] text-muted-foreground max-w-lg leading-relaxed">
+                Encontre espaços para armazenar seus objetos perto de você, por diárias ou mensalidades.
+              </p>
             </div>
 
-            {/* Headline */}
-            <h1 className="text-[2rem] md:text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-5 tracking-tight">
-              Guarde perto.<br />
-              <span className="text-primary">Pague menos.</span>
-            </h1>
+            {/* ── BLOCO 2: Card de busca + CTA secundário ── */}
+            <div>
+              {/* ══════ SEARCH CARD ══════ */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.45 }}
+                className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-8 md:mb-10"
+              >
+                {/* ── Desktop layout ── */}
+                <div className="hidden md:block p-2.5">
+                  <div className="flex items-stretch gap-0">
+                    {/* Location */}
+                    <div className="flex-[1.5] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                      <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                        Localização
+                      </label>
+                      <LocationAutocomplete
+                        value={location}
+                        onChange={setLocation}
+                        placeholder="Onde quer guardar?"
+                        hideGps
+                        className="border-0 shadow-none bg-transparent h-9 px-0 text-[15px] font-medium placeholder:text-muted-foreground/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      />
+                    </div>
 
-            <p className="text-[15px] md:text-[17px] text-muted-foreground mb-8 max-w-lg leading-relaxed">
-              Encontre espaços para armazenar seus objetos perto de você, por diárias ou mensalidades.
-            </p>
+                    {/* Divider */}
+                    <div className="w-px self-stretch my-3 bg-border" />
 
-            {/* ══════ SEARCH CARD ══════ */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 0.45 }}
-              className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-7"
-            >
-              {/* ── Desktop layout ── */}
-              <div className="hidden md:block p-2.5">
-                <div className="flex items-stretch gap-0">
+                    {/* Dates */}
+                    <div className="flex-[1.2] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                      <DateRangePicker
+                        deliveryDate={deliveryDate}
+                        pickupDate={pickupDate}
+                        onDeliveryChange={setDeliveryDate}
+                        onPickupChange={setPickupDate}
+                        compact
+                      />
+                    </div>
+
+                    {/* Divider */}
+                    <div className="w-px self-stretch my-3 bg-border" />
+
+                    {/* Volume */}
+                    <div className="flex-[0.8] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                      <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                        Volume
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.5"
+                          value={volume}
+                          onChange={(e) => setVolume(e.target.value)}
+                          placeholder="Quanto? (m³)"
+                          className="h-9 w-full bg-transparent text-[15px] font-medium placeholder:text-muted-foreground/50 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        {volume && (
+                          <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">m³</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="flex items-center pl-3 pr-1">
+                      <Button
+                        onClick={handleSearch}
+                        size="lg"
+                        className="bg-accent hover:bg-accent/90 text-accent-foreground h-[44px] px-7 rounded-xl shadow-lg shadow-accent/25 text-[15px] font-bold gap-2.5 transition-all hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]"
+                      >
+                        <Search size={18} />
+                        Buscar
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Mobile layout ── */}
+                <div className="md:hidden p-3.5 space-y-4">
                   {/* Location */}
-                  <div className="flex-[1.5] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                  <div>
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                       Localização
                     </label>
                     <LocationAutocomplete
                       value={location}
                       onChange={setLocation}
                       placeholder="Onde quer guardar?"
-                      hideGps
-                      className="border-0 shadow-none bg-transparent h-9 px-0 text-[15px] font-medium placeholder:text-muted-foreground/50 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className="h-12 text-base"
                     />
                   </div>
 
-                  {/* Divider */}
-                  <div className="w-px self-stretch my-3 bg-border" />
-
-                  {/* Dates */}
-                  <div className="flex-[1.2] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                    <DateRangePicker
-                      deliveryDate={deliveryDate}
-                      pickupDate={pickupDate}
-                      onDeliveryChange={setDeliveryDate}
-                      onPickupChange={setPickupDate}
-                      compact
-                    />
-                  </div>
-
-                  {/* Divider */}
-                  <div className="w-px self-stretch my-3 bg-border" />
-
-                  {/* Volume */}
-                  <div className="flex-[0.8] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                    <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                      Volume
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        min="0"
-                        step="0.5"
-                        value={volume}
-                        onChange={(e) => setVolume(e.target.value)}
-                        placeholder="Quanto? (m³)"
-                        className="h-9 w-full bg-transparent text-[15px] font-medium placeholder:text-muted-foreground/50 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  {/* Dates & Volume row */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <DateRangePicker
+                        deliveryDate={deliveryDate}
+                        pickupDate={pickupDate}
+                        onDeliveryChange={setDeliveryDate}
+                        onPickupChange={setPickupDate}
+                        compact
                       />
-                      {volume && (
-                        <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">m³</span>
-                      )}
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                        Volume
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.5"
+                          value={volume}
+                          onChange={(e) => setVolume(e.target.value)}
+                          placeholder="Ex: 2"
+                          className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 pr-10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">m³</span>
+                      </div>
                     </div>
                   </div>
 
                   {/* CTA */}
-                  <div className="flex items-center pl-3 pr-1">
-                    <Button
-                      onClick={handleSearch}
-                      size="lg"
-                      className="bg-accent hover:bg-accent/90 text-accent-foreground h-[44px] px-7 rounded-xl shadow-lg shadow-accent/25 text-[15px] font-bold gap-2.5 transition-all hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]"
-                    >
-                      <Search size={18} />
-                      Buscar
-                    </Button>
-                  </div>
+                  <Button
+                    onClick={handleSearch}
+                    size="lg"
+                    className="bg-accent hover:bg-accent/90 text-accent-foreground h-13 text-base w-full shadow-lg shadow-accent/20 rounded-xl font-semibold gap-2 group"
+                  >
+                    <Search size={18} />
+                    Buscar espaços
+                    <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                  </Button>
                 </div>
-              </div>
+              </motion.div>
 
-              {/* ── Mobile layout ── */}
-              <div className="md:hidden p-3.5 space-y-4">
-                {/* Location */}
-                <div>
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                    Localização
-                  </label>
-                  <LocationAutocomplete
-                    value={location}
-                    onChange={setLocation}
-                    placeholder="Onde quer guardar?"
-                    className="h-12 text-base"
-                  />
-                </div>
-
-                {/* Dates & Volume row */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <DateRangePicker
-                      deliveryDate={deliveryDate}
-                      pickupDate={pickupDate}
-                      onDeliveryChange={setDeliveryDate}
-                      onPickupChange={setPickupDate}
-                      compact
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                      Volume
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        min="0"
-                        step="0.5"
-                        value={volume}
-                        onChange={(e) => setVolume(e.target.value)}
-                        placeholder="Ex: 2"
-                        className="flex h-12 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 pr-10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                      />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">m³</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* CTA */}
+              {/* Secondary links */}
+              <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
                 <Button
-                  onClick={handleSearch}
-                  size="lg"
-                  className="bg-accent hover:bg-accent/90 text-accent-foreground h-13 text-base w-full shadow-lg shadow-accent/20 rounded-xl font-semibold gap-2 group"
+                  size="sm"
+                  variant="outline"
+                  className="text-sm border-primary/40 text-primary hover:bg-primary/5 bg-card/80 backdrop-blur-sm font-medium px-5"
+                  asChild
                 >
-                  <Search size={18} />
-                  Buscar espaços
-                  <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                  <Link to="/anunciar">Quero anunciar meu espaço</Link>
                 </Button>
+                <span className="hidden sm:inline text-border">|</span>
+                <a
+                  href="#simulador"
+                  className="text-[13px] text-muted-foreground hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
+                >
+                  Precisa calcular em detalhe? Use o simulador ↓
+                </a>
               </div>
-            </motion.div>
-
-            {/* Secondary links */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
-              <Button
-                size="sm"
-                variant="outline"
-                className="text-sm border-primary/40 text-primary hover:bg-primary/5 bg-card/80 backdrop-blur-sm font-medium px-4"
-                asChild
-              >
-                <Link to="/anunciar">Quero anunciar meu espaço</Link>
-              </Button>
-              <a
-                href="#simulador"
-                className="text-[13px] text-muted-foreground hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
-              >
-                Precisa calcular em detalhe? Use o simulador ↓
-              </a>
             </div>
 
             {/* Mobile highlight chips */}
