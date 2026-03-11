@@ -95,13 +95,17 @@ const QueroGuardar = () => {
 
               {/* Right: Simulator in card */}
               <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}>
-              <div className="rounded-2xl bg-card border shadow-lg overflow-hidden">
-                <div className="text-center pt-5 pb-1 px-5">
-                  <h2 className="text-lg font-bold text-foreground">Simule seu armazenamento</h2>
-                  <p className="text-xs text-muted-foreground">Descubra o preço em segundos.</p>
+                <div className="rounded-2xl bg-card border shadow-lg overflow-hidden">
+                  <div className="text-center pt-5 pb-1 px-5">
+                    <h2 className="text-lg font-bold text-foreground">Simule seu armazenamento</h2>
+                    <p className="text-xs text-muted-foreground">Descubra o preço em segundos.</p>
+                  </div>
+                  <Simulator embedded />
                 </div>
-                <Simulator embedded />
-              </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
 
         {/* Como funciona */}
         <section className="py-14 md:py-20 bg-secondary/40">
