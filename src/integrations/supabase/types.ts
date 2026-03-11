@@ -41,6 +41,143 @@ export type Database = {
         }
         Relationships: []
       }
+      reservation_photos: {
+        Row: {
+          created_at: string
+          id: string
+          photo_path: string
+          reservation_ref: string
+          risk_notes: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          photo_path: string
+          reservation_ref: string
+          risk_notes?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          photo_path?: string
+          reservation_ref?: string
+          risk_notes?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      review_requests: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          id: string
+          protocol_number: string
+          reason: string
+          risk_analysis_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          protocol_number: string
+          reason: string
+          risk_analysis_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          protocol_number?: string
+          reason?: string
+          risk_analysis_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_requests_risk_analysis_id_fkey"
+            columns: ["risk_analysis_id"]
+            isOneToOne: false
+            referencedRelation: "risk_analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      risk_analyses: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          reservation_ref: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          risk_level: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          reservation_ref: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_level?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          reservation_ref?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_level?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      terms_acceptances: {
+        Row: {
+          accepted_at: string
+          context: string | null
+          id: string
+          term_type: string
+          term_version: string
+          user_id: string
+        }
+        Insert: {
+          accepted_at?: string
+          context?: string | null
+          id?: string
+          term_type: string
+          term_version?: string
+          user_id: string
+        }
+        Update: {
+          accepted_at?: string
+          context?: string | null
+          id?: string
+          term_type?: string
+          term_version?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
