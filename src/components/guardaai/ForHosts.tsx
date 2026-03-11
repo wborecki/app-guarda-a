@@ -64,7 +64,7 @@ const ForHosts = () => {
               </motion.div>
             ))}
             <p className="text-[10px] md:text-xs text-muted-foreground text-center">
-              * Valores ilustrativos baseados em R$45/m² por mês.
+              * Valores ilustrativos baseados em R$45/m³ por mês.
             </p>
           </motion.div>
         </div>

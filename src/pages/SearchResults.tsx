@@ -622,7 +622,7 @@ const SearchResults = () => {
                               </div>
                               <p className="text-xl font-extrabold text-foreground leading-none">R$ {bp.subtotal.toFixed(0)}</p>
                               <p className="text-[11px] text-muted-foreground mt-0.5">
-                                {reservedArea} m² reservado{reservedArea > 1 ? "s" : ""} × {days} {days === 1 ? "dia" : "dias"}
+                                {reservedVol} m³ × {days} {days === 1 ? "dia" : "dias"}
                               </p>
                               <p className="text-[10px] text-muted-foreground/60">+ taxa fixa R$ 28,00 no checkout</p>
                             </div>
