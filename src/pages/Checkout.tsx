@@ -273,8 +273,8 @@ const Checkout = () => {
                   <span className="font-medium text-foreground truncate max-w-[180px]">{space.name}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Área reservada</span>
-                  <span className="font-medium text-foreground">{reservedArea} m²</span>
+                  <span className="text-muted-foreground">Volume reservado</span>
+                  <span className="font-medium text-foreground">{reservedArea} m³</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Período</span>
