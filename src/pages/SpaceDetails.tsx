@@ -74,7 +74,7 @@ const SpaceDetails = () => {
     navigate("/checkout", {
       state: {
         space,
-        reservedArea: effectiveReservedArea,
+        reservedVolume: effectiveReservedArea,
         days,
         simulation,
       },
