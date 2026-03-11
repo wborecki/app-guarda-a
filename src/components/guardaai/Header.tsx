@@ -87,7 +87,7 @@ const Header = () => {
             {!loading && (
               <>
                 {user ? (
-                  <Button size="sm" variant="ghost" className="text-foreground hover:bg-secondary gap-2" asChild>
+                  <Button size="sm" variant="ghost" className="bg-secondary/80 hover:bg-secondary text-foreground gap-2" asChild>
                     <Link to="/minha-conta">
                       <Avatar className="h-6 w-6">
                         <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
