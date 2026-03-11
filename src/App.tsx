@@ -73,6 +73,15 @@ const App = () => (
             <Route path="perfil" element={<DashboardPerfil />} />
           </Route>
 
+
+          {/* Admin */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverview />} />
+            <Route path="espacos" element={<AdminEspacos />} />
+            <Route path="analises" element={<AdminAnalises />} />
+            <Route path="usuarios" element={<AdminUsuarios />} />
+          </Route>
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
