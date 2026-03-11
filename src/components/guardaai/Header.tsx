@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { Menu, X, User, LogIn, LayoutDashboard } from "lucide-react";
+import { Menu, X, User, LogIn, LayoutDashboard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import logo from "@/assets/guardaai-logo-transparent.png";
 
@@ -20,6 +21,7 @@ const Header = () => {
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
   const { user, displayName, loading } = useAuth();
+  const { isAdmin } = useAdminCheck();
 
   const initials = displayName
     ? displayName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
@@ -83,25 +85,35 @@ const Header = () => {
             </Button>
 
             {!loading && (
-              user ? (
-                <Button size="sm" variant="ghost" className="text-foreground hover:bg-secondary gap-2" asChild>
-                  <Link to="/minha-conta">
-                    <Avatar className="h-6 w-6">
-                      <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="max-w-[100px] truncate text-sm">{displayName || "Minha conta"}</span>
-                  </Link>
-                </Button>
-              ) : (
-                <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
-                  <Link to="/entrar">
-                    <User size={16} />
-                    Entrar
-                  </Link>
-                </Button>
-              )
+              <>
+                {user ? (
+                  <Button size="sm" variant="ghost" className="text-foreground hover:bg-secondary gap-2" asChild>
+                    <Link to="/minha-conta">
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-medium">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="max-w-[100px] truncate text-sm">{displayName || "Minha conta"}</span>
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
+                    <Link to="/entrar">
+                      <User size={16} />
+                      Entrar
+                    </Link>
+                  </Button>
+                )}
+                {isAdmin && (
+                  <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground gap-1.5" asChild>
+                    <Link to="/admin">
+                      <ShieldCheck size={16} />
+                      Admin
+                    </Link>
+                  </Button>
+                )}
+              </>
             )}
           </div>
 
@@ -162,12 +174,22 @@ const Header = () => {
               </Button>
 
               {user ? (
-                <Button variant="ghost" className="text-foreground hover:bg-secondary gap-2 h-12 text-base" asChild>
-                  <Link to="/minha-conta" onClick={() => setMobileOpen(false)}>
-                    <LayoutDashboard size={18} />
-                    Minha conta
-                  </Link>
-                </Button>
+                <>
+                  <Button variant="ghost" className="text-foreground hover:bg-secondary gap-2 h-12 text-base" asChild>
+                    <Link to="/minha-conta" onClick={() => setMobileOpen(false)}>
+                      <LayoutDashboard size={18} />
+                      Minha conta
+                    </Link>
+                  </Button>
+                  {isAdmin && (
+                    <Button variant="ghost" className="text-muted-foreground hover:text-foreground gap-2 h-12 text-base" asChild>
+                      <Link to="/admin" onClick={() => setMobileOpen(false)}>
+                        <ShieldCheck size={18} />
+                        Painel admin
+                      </Link>
+                    </Button>
+                  )}
+                </>
               ) : (
                 <Button variant="ghost" className="text-muted-foreground hover:text-foreground gap-2 h-12 text-base" asChild>
                   <Link to="/entrar" onClick={() => setMobileOpen(false)}>
