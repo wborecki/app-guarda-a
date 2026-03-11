@@ -137,7 +137,7 @@ export default function DateRangePicker({
           {compact ? (
             <button
               type="button"
-              className="h-9 w-full text-left focus:outline-none cursor-pointer"
+              className="h-11 w-full text-left focus:outline-none cursor-pointer flex items-center rounded-xl border border-input bg-background px-3 text-[14px]"
             >
               {compactTriggerContent()}
             </button>
