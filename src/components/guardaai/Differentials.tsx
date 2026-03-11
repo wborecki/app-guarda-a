@@ -12,39 +12,37 @@ const items = [
 
 const Differentials = () => {
   return (
-    <section className="py-14 md:py-20">
-      <div className="container">
+    <section className="py-10 md:py-20">
+      <div className="container px-5 md:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-8 md:mb-14"
+          className="text-center mb-6 md:mb-14"
         >
-          <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4">
+          <h2 className="text-[1.3rem] md:text-4xl font-bold text-foreground mb-1.5 md:mb-4 leading-tight">
             Por que escolher o GuardaAí?
           </h2>
-          <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-[13px] md:text-lg max-w-2xl mx-auto">
             Vantagens que fazem do GuardaAí a melhor opção.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 md:gap-6">
           {items.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="group flex items-start gap-4 md:flex-col md:items-start p-4 md:p-6 rounded-xl md:rounded-2xl bg-card border hover:border-primary/30 hover:shadow-lg transition-all duration-300"
+              transition={{ delay: i * 0.06 }}
+              className="group flex flex-col items-center text-center md:items-start md:text-left p-3.5 md:p-6 rounded-xl md:rounded-2xl bg-card border border-border/60 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
             >
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-primary/10 group-hover:bg-primary/20 flex items-center justify-center shrink-0 transition-colors">
-                <item.icon size={20} className="text-primary md:w-6 md:h-6" />
+              <div className="w-9 h-9 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-primary/8 group-hover:bg-primary/15 flex items-center justify-center shrink-0 mb-2 md:mb-3 transition-colors">
+                <item.icon size={18} className="text-primary md:w-6 md:h-6" />
               </div>
-              <div>
-                <h3 className="text-sm md:text-lg font-semibold text-foreground mb-0.5 md:mb-2">{item.title}</h3>
-                <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
+              <h3 className="text-[12.5px] md:text-lg font-semibold text-foreground mb-0.5 md:mb-2 leading-tight">{item.title}</h3>
+              <p className="text-[11px] md:text-sm text-muted-foreground/75 leading-relaxed">{item.desc}</p>
             </motion.div>
           ))}
         </div>
