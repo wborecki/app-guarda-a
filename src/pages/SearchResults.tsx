@@ -449,7 +449,7 @@ const SearchResults = () => {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-5 p-3 md:p-4 rounded-xl bg-primary/[0.04] border border-primary/15">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
             <div className="flex items-center gap-1.5"><MapPin size={14} className="text-primary flex-shrink-0" /><span className="text-foreground font-semibold">{shortLocation}</span></div>
-            <div className="flex items-center gap-1.5"><Ruler size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{totalArea.toFixed(1)} m²</span></div>
+            <div className="flex items-center gap-1.5"><Ruler size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{totalVol.toFixed(1)} m³</span></div>
             <div className="flex items-center gap-1.5"><Calendar size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span></div>
             {state?.deliveryDate && (
               <div className="flex items-center gap-1.5"><Clock size={14} className="text-primary flex-shrink-0" /><span className="text-muted-foreground">{format(new Date(state.deliveryDate), "dd/MM", { locale: pt })} {state.deliveryTime}</span></div>
