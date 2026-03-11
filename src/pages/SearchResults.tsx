@@ -433,7 +433,7 @@ const SearchResults = () => {
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-20">
         <div className="container py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}><ArrowLeft size={20} /></Button>
+          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}><ArrowLeft size={20} /></Button>
           <div className="flex-1 min-w-0">
             <h1 className="text-lg font-bold text-foreground">Espaços disponíveis</h1>
             <p className="text-sm text-muted-foreground truncate">{shortLocation} · {totalArea.toFixed(1)} m² · {days} {days === 1 ? "dia" : "dias"}</p>

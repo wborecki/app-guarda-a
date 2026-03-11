@@ -25,7 +25,7 @@ const ProhibitedItems = () => {
       <Header />
       <main className="pt-24 pb-16">
         <div className="container max-w-4xl px-4 md:px-8">
-          <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-6 gap-1.5 text-muted-foreground">
+          <Button variant="ghost" size="sm" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")} className="mb-6 gap-1.5 text-muted-foreground">
             <ArrowLeft size={16} /> Voltar
           </Button>
 
