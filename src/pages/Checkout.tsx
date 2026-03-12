@@ -380,9 +380,7 @@ const Checkout = () => {
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-30">
         <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 max-w-5xl">
-          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0 h-8 w-8 sm:h-9 sm:w-9">
-            <ArrowLeft size={18} />
-          </Button>
+          <BackButton label="Voltar para detalhes" fallbackTo="/buscar" />
           <h1 className="text-sm sm:text-base font-bold text-foreground">Finalizar reserva</h1>
           <div className="flex items-center gap-1 ml-auto">
             {STEPS.map((s, i) => (
