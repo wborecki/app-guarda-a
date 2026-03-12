@@ -804,8 +804,8 @@ const Checkout = () => {
                     `Confirmar e pagar · ${formatBRL(bp.total)}`
                   )}
                 </Button>
-                <button onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="w-full text-center text-sm text-primary font-semibold mt-3 hover:underline">
-                  ← Voltar para editar reserva
+                <button onClick={() => window.history.length > 2 ? navigate(-1) : navigate("/buscar")} className="w-full text-center text-sm text-primary font-semibold mt-3 hover:underline">
+                  ← Editar reserva
                 </button>
               </div>
             )}
