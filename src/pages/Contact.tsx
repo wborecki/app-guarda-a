@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Send, Bot, User, Sparkles } from "lucide-react";
+import { Send, Bot, User, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/guardaai/Header";
+import BackButton from "@/components/guardaai/BackButton";
 import Footer from "@/components/guardaai/Footer";
 import ReactMarkdown from "react-markdown";
 import SEO from "@/components/SEO";
