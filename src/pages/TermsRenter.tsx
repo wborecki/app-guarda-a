@@ -1,10 +1,9 @@
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileText } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { FileText } from "lucide-react";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import BackButton from "@/components/guardaai/BackButton";
 
 const clauses = [
   "É o único responsável pelos bens, objetos, materiais, produtos e itens que cadastrar, transportar, entregar, armazenar ou mantiver vinculados à reserva realizada por meio da plataforma.",
