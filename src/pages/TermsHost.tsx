@@ -1,10 +1,9 @@
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileText } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { FileText } from "lucide-react";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import BackButton from "@/components/guardaai/BackButton";
 
 const clauses = [
   "É o responsável pelo espaço anunciado, declarando possuir legitimidade para disponibilizá-lo para uso, seja na condição de proprietário, possuidor, locatário autorizado ou titular de direito compatível com a oferta realizada.",
