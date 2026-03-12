@@ -8,11 +8,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  ArrowLeft, MapPin, Shield, Lock, CreditCard, QrCode,
+  MapPin, Shield, Lock, CreditCard, QrCode,
   CheckCircle2, Info, ChevronRight, Smartphone,
   Camera, Upload, ImagePlus, X, AlertTriangle, FileText, Ban,
   ShieldAlert, Loader2
 } from "lucide-react";
+import BackButton from "@/components/guardaai/BackButton";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import CheckoutAuth from "@/components/guardaai/CheckoutAuth";
@@ -362,7 +363,7 @@ const Checkout = () => {
                   Minhas reservas
                 </Button>
                 <Button variant="outline" className="flex-1" onClick={() => navigate("/")}>
-                  Voltar ao início
+                  Ir para o início
                 </Button>
               </div>
             </CardContent>
@@ -379,9 +380,7 @@ const Checkout = () => {
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-30">
         <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 max-w-5xl">
-          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0 h-8 w-8 sm:h-9 sm:w-9">
-            <ArrowLeft size={18} />
-          </Button>
+          <BackButton label="Voltar para detalhes" fallbackTo="/buscar" />
           <h1 className="text-sm sm:text-base font-bold text-foreground">Finalizar reserva</h1>
           <div className="flex items-center gap-1 ml-auto">
             {STEPS.map((s, i) => (
@@ -805,8 +804,8 @@ const Checkout = () => {
                     `Confirmar e pagar · ${formatBRL(bp.total)}`
                   )}
                 </Button>
-                <button onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="w-full text-center text-sm text-primary font-semibold mt-3 hover:underline">
-                  ← Voltar para editar reserva
+                <button onClick={() => window.history.length > 2 ? navigate(-1) : navigate("/buscar")} className="w-full text-center text-sm text-primary font-semibold mt-3 hover:underline">
+                  ← Editar reserva
                 </button>
               </div>
             )}

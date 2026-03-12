@@ -792,7 +792,7 @@ const SpaceOnboarding = () => {
                 disabled={currentStep === 1}
                 className="text-sm"
               >
-                <ArrowLeft size={14} className="mr-1" /> Voltar
+                <ArrowLeft size={14} className="mr-1" /> Etapa anterior
               </Button>
               <Button
                 type="button"

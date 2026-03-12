@@ -1,10 +1,9 @@
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileText } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { FileText } from "lucide-react";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import BackButton from "@/components/guardaai/BackButton";
 
 const clauses = [
   "É o responsável pelo espaço anunciado, declarando possuir legitimidade para disponibilizá-lo para uso, seja na condição de proprietário, possuidor, locatário autorizado ou titular de direito compatível com a oferta realizada.",
@@ -22,17 +21,13 @@ const clauses = [
 ];
 
 const TermsHost = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background">
       <SEO title="Termos do Anfitrião" description="Termos e condições para anfitriões na plataforma GuardaAí. Leia antes de anunciar seu espaço." canonical="/termos/anfitriao" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container max-w-3xl px-4 md:px-8">
-          <Button variant="ghost" size="sm" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")} className="mb-6 gap-1.5 text-muted-foreground">
-            <ArrowLeft size={16} /> Voltar
-          </Button>
+          <BackButton label="Página anterior" fallbackTo="/" className="mb-6" />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-3 mb-6">

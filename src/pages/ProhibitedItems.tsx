@@ -1,10 +1,9 @@
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Ban, Flame, Skull, Bug, Beef, Swords, FlaskConical, Bomb, ShieldAlert } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Ban, Flame, Skull, Bug, Beef, Swords, FlaskConical, Bomb, ShieldAlert } from "lucide-react";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import BackButton from "@/components/guardaai/BackButton";
 
 const categories = [
   { icon: Swords, title: "Armas e munições", items: ["Armas de fogo", "Armas brancas", "Munições de qualquer calibre", "Acessórios para armas"], color: "destructive" },
@@ -19,17 +18,13 @@ const categories = [
 ];
 
 const ProhibitedItems = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background">
       <SEO title="Itens proibidos" description="Confira a lista de itens proibidos para armazenamento na GuardaAí. Armas, explosivos, inflamáveis e outros materiais não permitidos." canonical="/itens-proibidos" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container max-w-4xl px-4 md:px-8">
-          <Button variant="ghost" size="sm" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")} className="mb-6 gap-1.5 text-muted-foreground">
-            <ArrowLeft size={16} /> Voltar
-          </Button>
+          <BackButton label="Página anterior" fallbackTo="/" className="mb-6" />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="text-center mb-10">

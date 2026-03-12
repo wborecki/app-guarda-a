@@ -5,8 +5,9 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import {
-  MapPin, Ruler, Calendar, ArrowLeft, Navigation, Info, Map as MapIcon, List, Pencil,
+  MapPin, Ruler, Calendar, Navigation, Info, Map as MapIcon, List, Pencil,
 } from "lucide-react";
+import BackButton from "@/components/guardaai/BackButton";
 import { useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
 import { calculatePrice, PRICING_HINT_SHORT } from "@/lib/pricing";
 import { getDailyRate } from "@/lib/pricing";
@@ -226,9 +227,7 @@ const SearchResults = () => {
       {/* ═══ STICKY HEADER ═══ */}
       <div className="bg-card border-b sticky top-0 z-20">
         <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3">
-          <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}>
-            <ArrowLeft size={18} />
-          </Button>
+          <BackButton label="Início" fallbackTo="/" />
           <div className="flex-1 min-w-0">
             <h1 className="text-sm sm:text-base font-bold text-foreground truncate">Espaços disponíveis</h1>
           </div>
@@ -271,7 +270,7 @@ const SearchResults = () => {
               </div>
             )}
             <button
-              onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}
+              onClick={() => window.history.length > 2 ? navigate(-1) : navigate("/")}
               className="ml-auto flex items-center gap-1 text-[11px] sm:text-xs text-primary font-medium hover:underline flex-shrink-0"
             >
               <Pencil size={10} />

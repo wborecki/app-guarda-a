@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Package, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff } from "lucide-react";
+import BackButton from "@/components/guardaai/BackButton";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
 import SEO from "@/components/SEO";
@@ -137,6 +138,7 @@ const Login = () => {
       <Header />
       <main className="flex-1 pt-24 pb-16">
         <div className="container max-w-lg mx-auto">
+          <BackButton label="Início" fallbackTo="/" className="mb-6" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
