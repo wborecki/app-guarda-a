@@ -5,10 +5,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  ArrowLeft, Star, MapPin, Shield, ChevronLeft, ChevronRight,
+  Star, MapPin, Shield, ChevronLeft, ChevronRight,
   MessageSquare, User, Clock, CheckCircle2, Lock, FileText,
   Camera, Package, Calendar, Pencil, Plus, Minus, Info, Ruler
 } from "lucide-react";
+import BackButton from "@/components/guardaai/BackButton";
 import { useToast } from "@/hooks/use-toast";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
