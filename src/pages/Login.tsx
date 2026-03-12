@@ -138,6 +138,7 @@ const Login = () => {
       <Header />
       <main className="flex-1 pt-24 pb-16">
         <div className="container max-w-lg mx-auto">
+          <BackButton label="Início" fallbackTo="/" className="mb-6" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

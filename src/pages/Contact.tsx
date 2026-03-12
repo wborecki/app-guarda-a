@@ -154,14 +154,7 @@ const Contact = () => {
       <main className="flex-1 flex flex-col pt-[52px] md:pt-[72px]">
         <div className="container max-w-2xl flex-1 flex flex-col px-4 md:px-8 py-4 md:py-6">
           {/* Back button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/"))}
-            className="mb-3 gap-1.5 text-muted-foreground self-start"
-          >
-            <ArrowLeft size={16} /> Voltar
-          </Button>
+          <BackButton label="Início" fallbackTo="/" className="mb-3 self-start" />
 
           {/* Chat area */}
           <div className="flex-1 flex flex-col rounded-2xl border bg-card overflow-hidden">

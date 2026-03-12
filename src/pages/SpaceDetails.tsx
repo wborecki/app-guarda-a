@@ -107,9 +107,7 @@ const SpaceDetails = () => {
       {/* Sticky Header */}
       <div className="bg-card border-b sticky top-0 z-30">
         <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 max-w-6xl">
-          <Button variant="ghost" size="icon" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/buscar")} className="flex-shrink-0 h-8 w-8 sm:h-9 sm:w-9">
-            <ArrowLeft size={18} />
-          </Button>
+          <BackButton label="Voltar para resultados" fallbackTo="/buscar" />
           <div className="flex-1 min-w-0">
             <h1 className="text-sm sm:text-base font-bold text-foreground truncate">{space.name}</h1>
             <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-muted-foreground">

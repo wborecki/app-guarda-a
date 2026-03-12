@@ -227,9 +227,7 @@ const SearchResults = () => {
       {/* ═══ STICKY HEADER ═══ */}
       <div className="bg-card border-b sticky top-0 z-20">
         <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3">
-          <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}>
-            <ArrowLeft size={18} />
-          </Button>
+          <BackButton label="Início" fallbackTo="/" />
           <div className="flex-1 min-w-0">
             <h1 className="text-sm sm:text-base font-bold text-foreground truncate">Espaços disponíveis</h1>
           </div>

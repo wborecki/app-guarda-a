@@ -363,7 +363,7 @@ const Checkout = () => {
                   Minhas reservas
                 </Button>
                 <Button variant="outline" className="flex-1" onClick={() => navigate("/")}>
-                  Voltar ao início
+                  Ir para o início
                 </Button>
               </div>
             </CardContent>
