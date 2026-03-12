@@ -8,11 +8,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  ArrowLeft, MapPin, Shield, Lock, CreditCard, QrCode,
+  MapPin, Shield, Lock, CreditCard, QrCode,
   CheckCircle2, Info, ChevronRight, Smartphone,
   Camera, Upload, ImagePlus, X, AlertTriangle, FileText, Ban,
   ShieldAlert, Loader2
 } from "lucide-react";
+import BackButton from "@/components/guardaai/BackButton";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import CheckoutAuth from "@/components/guardaai/CheckoutAuth";
