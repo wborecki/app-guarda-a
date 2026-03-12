@@ -270,7 +270,7 @@ const SearchResults = () => {
               </div>
             )}
             <button
-              onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}
+              onClick={() => window.history.length > 2 ? navigate(-1) : navigate("/")}
               className="ml-auto flex items-center gap-1 text-[11px] sm:text-xs text-primary font-medium hover:underline flex-shrink-0"
             >
               <Pencil size={10} />
