@@ -1,10 +1,9 @@
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Ban, Flame, Skull, Bug, Beef, Swords, FlaskConical, Bomb, ShieldAlert } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Ban, Flame, Skull, Bug, Beef, Swords, FlaskConical, Bomb, ShieldAlert } from "lucide-react";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import BackButton from "@/components/guardaai/BackButton";
 
 const categories = [
   { icon: Swords, title: "Armas e munições", items: ["Armas de fogo", "Armas brancas", "Munições de qualquer calibre", "Acessórios para armas"], color: "destructive" },
