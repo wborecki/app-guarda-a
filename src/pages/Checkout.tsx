@@ -272,6 +272,20 @@ const Checkout = () => {
       </div>
 
       <div className="container max-w-5xl py-4 sm:py-6">
+        {/* Mobile price summary — always visible on top */}
+        <div className="lg:hidden mb-4">
+          <div className="flex items-center justify-between bg-card border border-border/60 rounded-xl p-3 shadow-sm">
+            <div className="flex items-center gap-3 min-w-0">
+              <img src={space.photos?.[0]} alt={space.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0 bg-muted" />
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-foreground truncate">{space.name}</p>
+                <p className="text-[11px] text-muted-foreground">{reservedArea} m³ · {days} {days === 1 ? "dia" : "dias"}</p>
+              </div>
+            </div>
+            <p className="text-lg font-extrabold text-primary flex-shrink-0">{formatBRL(bp.total)}</p>
+          </div>
+        </div>
+
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8">
           {/* ═══ LEFT — Forms ═══ */}
           <div className="space-y-4 sm:space-y-6">
@@ -333,7 +347,7 @@ const Checkout = () => {
                         )}
 
                         {photoPreviews.length > 0 && (
-                          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-4">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
                             {photoPreviews.map((preview, i) => (
                               <div key={i} className="relative group rounded-lg overflow-hidden border bg-muted aspect-square">
                                 <img src={preview} alt={`Item ${i + 1}`} className="w-full h-full object-cover" />
@@ -630,19 +644,29 @@ const Checkout = () => {
       </div>
 
       {/* Mobile sticky CTA */}
-      {user && verificationComplete && (
-        <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden safe-area-bottom">
-          <div className="container max-w-5xl">
-            <Button size="default" disabled={processing} onClick={handlePay} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm sm:text-base h-12 sm:h-13 shadow-lg">
-              {processing ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 border-2 border-accent-foreground/40 border-t-accent-foreground rounded-full animate-spin" />
-                  Processando...
-                </span>
-              ) : (
-                `Confirmar e pagar · ${formatBRL(bp.total)}`
-              )}
-            </Button>
+      {user && (
+        <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+          <div className="container max-w-5xl flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-lg font-extrabold text-foreground leading-none">{formatBRL(bp.total)}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{reservedArea} m³ · {days}d</p>
+            </div>
+            {verificationComplete ? (
+              <Button size="default" disabled={processing} onClick={handlePay} className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm px-5 shadow-lg">
+                {processing ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-accent-foreground/40 border-t-accent-foreground rounded-full animate-spin" />
+                    Processando...
+                  </span>
+                ) : (
+                  "Confirmar e pagar"
+                )}
+              </Button>
+            ) : (
+              <Button size="default" disabled className="font-semibold text-sm px-5">
+                Complete a verificação
+              </Button>
+            )}
           </div>
         </div>
       )}

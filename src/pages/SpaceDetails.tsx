@@ -403,6 +403,39 @@ const SpaceDetails = () => {
               </motion.div>
             </div>
 
+            {/* MOBILE Reservation Editor — visible only on mobile, below features */}
+            <div className="lg:hidden px-4 mb-4">
+              <Card className="border-primary/20">
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-foreground text-sm mb-3 flex items-center gap-2">
+                    <Package size={14} className="text-primary" /> Sua reserva
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Volume (m³)</label>
+                      <div className="flex items-center gap-3 bg-secondary/50 rounded-lg p-2.5">
+                        <button onClick={() => adjustArea(-1)} disabled={effectiveReservedArea <= 1} className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center disabled:opacity-40"><Minus size={14} /></button>
+                        <div className="flex-1 text-center"><span className="text-xl font-bold text-foreground">{effectiveReservedArea}</span><span className="text-sm text-muted-foreground ml-1">m³</span></div>
+                        <button onClick={() => adjustArea(1)} disabled={effectiveReservedArea >= availableArea} className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center disabled:opacity-40"><Plus size={14} /></button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Período (dias)</label>
+                      <div className="flex items-center gap-3 bg-secondary/50 rounded-lg p-2.5">
+                        <button onClick={() => setDays(Math.max(1, days - 1))} className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center"><Minus size={14} /></button>
+                        <div className="flex-1 text-center"><span className="text-xl font-bold text-foreground">{days}</span><span className="text-sm text-muted-foreground ml-1">{days === 1 ? "dia" : "dias"}</span></div>
+                        <button onClick={() => setDays(days + 1)} className="w-8 h-8 rounded-full bg-background border border-border flex items-center justify-center"><Plus size={14} /></button>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t border-border/40">
+                      <span className="text-xs text-muted-foreground">Total estimado</span>
+                      <span className="text-lg font-extrabold text-primary">{formatBRL(totalPrice)}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
             {/* RIGHT COLUMN — Reservation Summary */}
             <div className="hidden lg:block mt-0">
               <div className="lg:sticky lg:top-20 space-y-4">
@@ -565,7 +598,7 @@ const SpaceDetails = () => {
       </div>
 
       {/* Mobile sticky CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden safe-area-bottom">
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
         <div className="container max-w-6xl flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-lg sm:text-xl font-extrabold text-foreground leading-none">R$ {totalPrice.toFixed(0)}</p>
