@@ -1,5 +1,5 @@
-import { useState } from "react"; // hero-v2
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { Package, Search, ArrowRight } from "lucide-react";
@@ -10,6 +10,55 @@ import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import DateRangePicker from "@/components/guardaai/DateRangePicker";
 import ItemAutocomplete from "@/components/guardaai/ItemAutocomplete";
 import type { ItemDimension } from "@/data/itemDimensions";
+
+// Animated counter hook
+const useCounter = (target: number, duration = 1800) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+
+  useEffect(() => {
+    if (!inView) return;
+    const startTime = performance.now();
+    const step = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [inView, target, duration]);
+
+  return { count, ref };
+};
+
+const SOCIAL_PROOF = [
+  { target: 150, suffix: "+", label: "Espaços disponíveis" },
+  { target: 2400, suffix: "+", label: "Objetos guardados" },
+  { target: 12, suffix: "", label: "Cidades atendidas" },
+];
+
+const CounterItem = ({ target, suffix, label }: { target: number; suffix: string; label: string }) => {
+  const { count, ref } = useCounter(target);
+  return (
+    <div className="flex flex-col items-center">
+      <span ref={ref} className="text-lg md:text-xl font-extrabold text-primary tabular-nums">
+        {count.toLocaleString("pt-BR")}{suffix}
+      </span>
+      <span className="text-[10px] md:text-[11px] text-muted-foreground/70 font-medium whitespace-nowrap">
+        {label}
+      </span>
+    </div>
+  );
+};
+
+const SocialProofBar = ({ className = "" }: { className?: string }) => (
+  <div className={`flex items-center justify-center gap-6 md:gap-8 ${className}`}>
+    {SOCIAL_PROOF.map((item, i) => (
+      <CounterItem key={i} {...item} />
+    ))}
+  </div>
+);
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -171,6 +220,16 @@ const Hero = () => {
                   Precisa calcular em detalhe? Use o simulador →
                 </Link>
               </div>
+
+              {/* Social proof */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45, duration: 0.5 }}
+                className="mt-7 pt-5 border-t border-border/40"
+              >
+                <SocialProofBar className="justify-start" />
+              </motion.div>
             </div>
           </motion.div>
         </div>
@@ -276,6 +335,16 @@ const Hero = () => {
               Simulador detalhado
               <ArrowRight size={12} className="opacity-50" />
             </Link>
+          </motion.div>
+
+          {/* Social proof — mobile */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-5 pt-4 border-t border-border/30"
+          >
+            <SocialProofBar />
           </motion.div>
         </motion.div>
       </div>
