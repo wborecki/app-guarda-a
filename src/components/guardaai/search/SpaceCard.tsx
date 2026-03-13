@@ -103,6 +103,15 @@ const SpaceCard = ({
                     <Shield size={10} className="text-primary/70" />
                     {space.owner}
                   </span>
+                  {(rentalType === "hourly" || rentalType === "both") && (
+                    <>
+                      <span className="w-px h-3 bg-border" />
+                      <span className="flex items-center gap-0.5 text-accent font-semibold">
+                        <Clock size={9} />
+                        Aceita por hora
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap gap-x-3 gap-y-0.5">
