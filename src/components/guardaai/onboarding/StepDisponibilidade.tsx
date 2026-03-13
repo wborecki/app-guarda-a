@@ -54,7 +54,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
             <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">
               Preço por m³/dia (R$)
             </label>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
               <Input
                 type="number"
                 step="0.10"
@@ -67,8 +67,9 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
                 placeholder="Ex: 5.00"
                 className="w-32 h-10 text-sm"
               />
-              <span className="text-[10px] text-muted-foreground">
-                Sugestão: R$ 5,00/m³/dia (1 dia) · R$ 2,71 (7 dias) · R$ 1,50 (30 dias)
+              <span className="text-[10px] text-muted-foreground leading-relaxed">
+                Sugestão: R$ 5,00 (1 dia)<br className="sm:hidden" />
+                <span className="hidden sm:inline"> · </span>R$ 2,71 (7 dias) · R$ 1,50 (30 dias)
               </span>
             </div>
             {(space as any).price_per_day > 0 && (space as any).price_per_day < 1.5 && (
