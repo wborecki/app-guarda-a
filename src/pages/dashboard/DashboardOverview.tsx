@@ -31,7 +31,7 @@ const StatCard = ({
   subtitle?: string;
   color: string;
 }) => (
-  <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+  <div className="rounded-2xl border border-border/60 bg-card p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
     <div className="flex items-center justify-between mb-4">
       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
         <Icon size={20} />
