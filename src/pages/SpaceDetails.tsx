@@ -207,7 +207,20 @@ const SpaceDetails = () => {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h2 className="text-lg sm:text-xl font-bold text-foreground">{space.name}</h2>
-                    <p className="text-sm text-muted-foreground mt-0.5">{space.type}</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <p className="text-sm text-muted-foreground">{space.type}</p>
+                      <span className="text-muted-foreground/30">•</span>
+                      {(space.space_use === "objects" || space.space_use === "both") && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 dark:text-blue-300 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-full px-2 py-0.5">
+                          <Package size={11} /> Objetos
+                        </span>
+                      )}
+                      {(space.space_use === "vehicles" || space.space_use === "both") && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-full px-2 py-0.5">
+                          <Car size={11} /> Veículos
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="hidden sm:flex items-center gap-1 bg-accent/10 rounded-lg px-2.5 py-1.5 flex-shrink-0">
                     <Star size={14} className="text-accent fill-accent" />
