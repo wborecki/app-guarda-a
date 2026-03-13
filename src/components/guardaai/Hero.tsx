@@ -101,7 +101,7 @@ const Hero = () => {
                 transition={{ delay: 0.25, duration: 0.45 }}
                 className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-5 overflow-visible"
               >
-                <div className="p-2.5">
+                <div className="p-2.5 overflow-visible">
                   <div className="flex items-stretch gap-0">
                     <div className="flex-[1.4] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                       <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
