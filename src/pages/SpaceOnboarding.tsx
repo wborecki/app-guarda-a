@@ -47,6 +47,9 @@ const PHOTO_TIPS = [
   "Condições do local",
 ];
 
+type AvailabilitySlot = { start: string; end: string };
+type AvailabilitySchedule = Record<string, AvailabilitySlot>;
+
 type SpaceData = {
   id: string;
   location: string;
@@ -74,6 +77,8 @@ type SpaceData = {
   document_number: string;
   status: string;
   onboarding_step: number;
+  rental_type: string;
+  availability_schedule: AvailabilitySchedule;
 };
 
 // Debounced field hook — keeps local state, saves after delay
