@@ -102,7 +102,14 @@ const SpaceCard = ({
                   )}
                 </div>
 
-                <p className="text-xs text-muted-foreground mb-1">{space.type} · {space.neighborhood}, {space.city}</p>
+                <p className="text-xs text-muted-foreground mb-1">
+                  {space.type} · {space.neighborhood}, {space.city}
+                  {(spaceUse === "vehicles" || spaceUse === "both") && (
+                    <span className="ml-1.5 inline-flex items-center gap-0.5 text-[10px] font-semibold text-primary bg-primary/10 rounded px-1.5 py-0.5">
+                      <Car size={9} /> Veículos
+                    </span>
+                  )}
+                </p>
                 <p className="text-[11px] text-muted-foreground/70 italic mb-2 hidden sm:block">{useHint}</p>
 
                 <div className="flex items-center gap-2.5 text-[11px] text-muted-foreground mb-2">
