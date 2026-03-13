@@ -35,18 +35,22 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate">
       {/* Background image — desktop only */}
       <div
-        className="absolute inset-0 z-0 hidden md:block"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center right",
-          backgroundRepeat: "no-repeat",
-        }}
+        className="absolute inset-0 z-0 hidden md:block overflow-hidden"
         aria-hidden="true"
-      />
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${heroBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center right",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+      </div>
       <div
         className="absolute inset-0 z-10 hidden md:block"
         style={{
