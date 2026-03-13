@@ -333,7 +333,7 @@ const HostLanding = () => {
                         {/* === SPACE TYPE === */}
                         <div className="space-y-2.5">
                           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Tipo de espaço</p>
-                          <Select value={form.spaceType} onValueChange={v => setForm({...form, spaceType: v})}>
+                          <Select key={form.spaceUse} value={form.spaceType} onValueChange={v => setForm({...form, spaceType: v})}>
                             <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Selecione o tipo" /></SelectTrigger>
                             <SelectContent>
                               <SelectItem value="garagem">Garagem</SelectItem>
