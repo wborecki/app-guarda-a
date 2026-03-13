@@ -1,9 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, X } from "lucide-react";
+import { Star, X, Package, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   type Filters,
-  spaceTypesList, distanceOptions, ratingOptions, allFeatures,
+  spaceTypesList, distanceOptions, ratingOptions, allFeatures, spaceUseOptions,
 } from "@/data/searchMockData";
 
 interface MobileFilterDrawerProps {
