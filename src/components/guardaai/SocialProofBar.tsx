@@ -40,8 +40,8 @@ const SocialProofBar = ({ className = "" }: { className?: string }) => {
   const stats = usePlatformStats();
 
   const items = [
-    { target: stats.spaces_count, suffix: "+", label: "Espaços disponíveis" },
-    { target: stats.reservations_count, suffix: "+", label: "Objetos guardados" },
+    { target: stats.spaces_count, suffix: "+", label: "Espaços e vagas" },
+    { target: stats.reservations_count, suffix: "+", label: "Itens e veículos guardados" },
     { target: stats.cities_count, suffix: "", label: "Cidades atendidas" },
   ];
 

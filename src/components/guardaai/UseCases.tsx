@@ -1,15 +1,17 @@
 import { motion } from "framer-motion";
-import { Truck, Hammer, Plane, Home, Store, KeyRound, Sofa, CalendarRange } from "lucide-react";
+import { Truck, Hammer, Plane, Home, Store, Car, Sailboat, CalendarRange, Bike, Sofa, Package } from "lucide-react";
 
 const cases = [
   { icon: Truck, title: "Mudança", desc: "Guarde móveis e caixas durante a transição." },
+  { icon: Car, title: "Guardar veículo", desc: "Estacione carros, motos ou SUVs em vagas seguras." },
   { icon: Hammer, title: "Reforma", desc: "Proteja pertences enquanto a obra acontece." },
-  { icon: Plane, title: "Viagem longa", desc: "Armazene o que não vai usar por um tempo." },
-  { icon: Home, title: "Falta de espaço", desc: "Libere espaço sem se desfazer das coisas." },
-  { icon: Store, title: "Estoque do negócio", desc: "Guarde produtos e materiais perto de você." },
-  { icon: KeyRound, title: "Mudança de escritório", desc: "Guarde equipamentos na troca de ponto." },
+  { icon: Sailboat, title: "Barcos e jet skis", desc: "Encontre espaço para embarcações fora de temporada." },
+  { icon: Plane, title: "Viagem longa", desc: "Guarde o que não vai usar — objetos ou veículos." },
+  { icon: Home, title: "Falta de espaço", desc: "Libere espaço em casa sem se desfazer das coisas." },
+  { icon: Store, title: "Estoque do negócio", desc: "Guarde produtos e materiais perto dos clientes." },
+  { icon: Bike, title: "Bikes e motos", desc: "Vagas compactas para duas rodas, perto de casa." },
   { icon: Sofa, title: "Guarda de móveis", desc: "Solução prática por dias ou meses." },
-  { icon: CalendarRange, title: "Objetos sazonais", desc: "Guarde itens que usa só em certas épocas." },
+  { icon: Package, title: "Objetos sazonais", desc: "Itens de temporada guardados com praticidade." },
 ];
 
 const UseCases = () => {
@@ -26,11 +28,11 @@ const UseCases = () => {
             Para quem é o GuardaAí?
           </h2>
           <p className="text-muted-foreground text-[13px] md:text-lg max-w-2xl mx-auto">
-            Soluções para quando falta espaço ou sobra coisa.
+            Soluções para quem precisa guardar objetos, veículos ou estoque.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4">
           {cases.map((c, i) => (
             <motion.div
               key={i}

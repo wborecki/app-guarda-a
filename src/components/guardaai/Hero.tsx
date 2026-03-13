@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Package, ArrowRight } from "lucide-react";
+import { Warehouse, ArrowRight } from "lucide-react";
 import heroBg from "@/assets/hero-bg-new.jpg";
 import HeroSearchForm from "@/components/guardaai/HeroSearchForm";
 import SocialProofBar from "@/components/guardaai/SocialProofBar";
@@ -57,15 +57,16 @@ const Hero = () => {
           >
             <div className="mb-11">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 border border-primary/20">
-                <Package size={14} />
-                Armazenamento descentralizado
+                <Warehouse size={14} />
+                Marketplace de espaços
               </div>
               <h1 className="text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-7 tracking-tight">
-                Guarde perto.<br />
+                Guarde objetos e veículos.<br />
                 <span className="text-primary">Pague menos.</span>
               </h1>
               <p className="text-[17px] text-muted-foreground max-w-lg leading-relaxed">
-                Encontre espaços para guardar objetos ou veículos perto de você, por horas, diárias ou mensalidades.
+                Encontre garagens, vagas, depósitos e espaços perto de você para guardar
+                caixas, estoque, carros, motos, barcos e muito mais.
               </p>
             </div>
 
@@ -79,14 +80,14 @@ const Hero = () => {
                   className="text-sm border-primary/40 text-primary hover:bg-primary/5 bg-card/80 backdrop-blur-sm font-medium px-5"
                   asChild
                 >
-                  <Link to="/anunciar">Quero anunciar meu espaço</Link>
+                  <Link to="/anunciar">Anunciar garagem, vaga ou depósito</Link>
                 </Button>
                 <span className="text-border">|</span>
                 <Link
                   to="/quero-guardar"
                   className="text-sm text-muted-foreground/85 hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
                 >
-                  Precisa calcular em detalhe? Use o simulador →
+                  Simular preço detalhado →
                 </Link>
               </div>
 
@@ -112,15 +113,15 @@ const Hero = () => {
         >
           <div className="mb-6 pt-2">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-semibold mb-4 border border-primary/12">
-              <Package size={12} />
-              Armazenamento descentralizado
+              <Warehouse size={12} />
+              Marketplace de espaços
             </div>
             <h1 className="text-[1.85rem] font-extrabold text-foreground leading-[1.13] tracking-tight mb-3">
-              Guarde perto.{" "}
-              <span className="text-primary">Pague menos.</span>
+              Objetos e veículos.{" "}
+              <span className="text-primary">Guarde por menos.</span>
             </h1>
             <p className="text-[13.5px] text-muted-foreground/80 leading-[1.55] max-w-[310px]">
-              Espaços para guardar objetos ou veículos perto de você, por horas, diárias ou mensalidades.
+              Garagens, vagas e depósitos perto de você — para caixas, carros, motos e mais.
             </p>
           </div>
 
