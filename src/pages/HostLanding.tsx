@@ -241,7 +241,7 @@ const HostLanding = () => {
                     ))}
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
-                    * Estimativas brutas com ocupação total a R$ 45/m³ por 30 dias. Rendimento real varia conforme demanda e comissão da plataforma.
+                    * Estimativas brutas com ocupação total a R$ 1,50/m³/dia por 30 dias. Rendimento real varia conforme o preço definido pelo anfitrião e a demanda.
                   </p>
                 </motion.div>
               </motion.div>
