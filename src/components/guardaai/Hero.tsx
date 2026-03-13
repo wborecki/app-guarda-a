@@ -1,88 +1,12 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { Package, Search, ArrowRight } from "lucide-react";
-import { differenceInDays } from "date-fns";
-import { encodeSearchParams } from "@/lib/searchParams";
+import { Package, ArrowRight } from "lucide-react";
 import heroBg from "@/assets/hero-bg-new.jpg";
-import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
-import DateRangePicker from "@/components/guardaai/DateRangePicker";
-import ItemAutocomplete from "@/components/guardaai/ItemAutocomplete";
-import type { ItemDimension } from "@/data/itemDimensions";
-
-// Animated counter hook
-const useCounter = (target: number, duration = 1800) => {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
-
-  useEffect(() => {
-    if (!inView) return;
-    const startTime = performance.now();
-    const step = (now: number) => {
-      const progress = Math.min((now - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [inView, target, duration]);
-
-  return { count, ref };
-};
-
-const SOCIAL_PROOF = [
-  { target: 150, suffix: "+", label: "Espaços disponíveis" },
-  { target: 2400, suffix: "+", label: "Objetos guardados" },
-  { target: 12, suffix: "", label: "Cidades atendidas" },
-];
-
-const CounterItem = ({ target, suffix, label }: { target: number; suffix: string; label: string }) => {
-  const { count, ref } = useCounter(target);
-  return (
-    <div className="flex flex-col items-center">
-      <span ref={ref} className="text-lg md:text-xl font-extrabold text-primary tabular-nums">
-        {count.toLocaleString("pt-BR")}{suffix}
-      </span>
-      <span className="text-[10px] md:text-[11px] text-muted-foreground/70 font-medium whitespace-nowrap">
-        {label}
-      </span>
-    </div>
-  );
-};
-
-const SocialProofBar = ({ className = "" }: { className?: string }) => (
-  <div className={`flex items-center justify-center gap-6 md:gap-8 ${className}`}>
-    {SOCIAL_PROOF.map((item, i) => (
-      <CounterItem key={i} {...item} />
-    ))}
-  </div>
-);
+import HeroSearchForm from "@/components/guardaai/HeroSearchForm";
+import SocialProofBar from "@/components/guardaai/SocialProofBar";
 
 const Hero = () => {
-  const navigate = useNavigate();
-  const [location, setLocation] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
-  const [pickupDate, setPickupDate] = useState<Date | undefined>();
-  const [selectedItem, setSelectedItem] = useState<ItemDimension | null>(null);
-  const days = deliveryDate && pickupDate ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
-
-  const itemVolume = selectedItem
-    ? (selectedItem.altura * selectedItem.largura * selectedItem.comprimento) / 1_000_000
-    : 0;
-
-  const handleSearch = () => {
-    const qs = encodeSearchParams({
-      location: location || "São Paulo",
-      days: days || 1,
-      totalVol: itemVolume,
-      deliveryDate: deliveryDate?.toISOString(),
-      pickupDate: pickupDate?.toISOString(),
-    });
-    navigate(`/buscar?${qs}`);
-  };
-
   return (
     <section className="relative isolate">
       {/* Background image — desktop only */}
@@ -123,9 +47,7 @@ const Hero = () => {
         aria-hidden="true"
       />
 
-      {/* ═══════════════════════════════════════════════
-          DESKTOP LAYOUT — unchanged
-          ═══════════════════════════════════════════════ */}
+      {/* ═══ DESKTOP LAYOUT ═══ */}
       <div className="hidden md:flex container relative z-20 min-h-[92vh] items-center">
         <div className="max-w-[720px] w-full py-20">
           <motion.div
@@ -148,60 +70,7 @@ const Hero = () => {
             </div>
 
             <div>
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25, duration: 0.45 }}
-                className="rounded-2xl bg-card border border-border shadow-2xl shadow-foreground/[0.08] mb-5 overflow-visible"
-              >
-                <div className="p-2.5 overflow-visible">
-                  <div className="flex items-stretch gap-0">
-                    <div className="flex-[1.4] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                      <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                        Localização
-                      </label>
-                      <LocationAutocomplete
-                        value={location}
-                        onChange={setLocation}
-                        placeholder="Onde quer guardar?"
-                        compactGps
-                        className="border-0 shadow-none bg-transparent h-9 px-0 text-[15px] font-medium placeholder:text-muted-foreground/50 focus-visible:ring-0 focus-visible:ring-offset-0"
-                      />
-                    </div>
-                    <div className="w-px self-stretch my-3 bg-border" />
-                    <div className="flex-[1.1] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                      <DateRangePicker
-                        deliveryDate={deliveryDate}
-                        pickupDate={pickupDate}
-                        onDeliveryChange={setDeliveryDate}
-                        onPickupChange={setPickupDate}
-                        compact
-                      />
-                    </div>
-                    <div className="w-px self-stretch my-3 bg-border" />
-                    <div className="relative flex-[1.2] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
-                      <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                        O que guardar
-                      </label>
-                      <ItemAutocomplete
-                        value={selectedItem}
-                        onChange={setSelectedItem}
-                        compact
-                      />
-                    </div>
-                    <div className="flex items-center pl-3 pr-1">
-                      <Button
-                        onClick={handleSearch}
-                        size="lg"
-                        className="bg-accent hover:bg-accent/90 text-accent-foreground h-[44px] px-7 rounded-xl shadow-lg shadow-accent/25 text-[15px] font-bold gap-2.5 transition-all hover:shadow-xl hover:shadow-accent/30 hover:scale-[1.02]"
-                      >
-                        <Search size={18} />
-                        Buscar
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              <HeroSearchForm variant="desktop" />
 
               <div className="flex flex-row items-center gap-4">
                 <Button
@@ -221,7 +90,6 @@ const Hero = () => {
                 </Link>
               </div>
 
-              {/* Social proof */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -235,16 +103,13 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════════
-          MOBILE LAYOUT — premium mobile-first
-          ═══════════════════════════════════════════════ */}
+      {/* ═══ MOBILE LAYOUT ═══ */}
       <div className="md:hidden relative z-20 px-5 pt-[62px] pb-10">
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          {/* ── Headline block ── */}
           <div className="mb-6 pt-2">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-semibold mb-4 border border-primary/12">
               <Package size={12} />
@@ -259,61 +124,8 @@ const Hero = () => {
             </p>
           </div>
 
-          {/* ── Search card — clean & airy ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12, duration: 0.45 }}
-            className="rounded-2xl bg-card border border-border/60 shadow-xl shadow-foreground/[0.03] mb-5"
-          >
-            <div className="p-4 space-y-3">
-              {/* Location */}
-              <div>
-                <label className="text-[10.5px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-1.5 block">
-                  Localização
-                </label>
-                <LocationAutocomplete
-                  value={location}
-                  onChange={setLocation}
-                  placeholder="Onde quer guardar?"
-                  className="h-11 text-[14px] rounded-xl border-border/70"
-                />
-              </div>
+          <HeroSearchForm variant="mobile" />
 
-              {/* Dates */}
-              <div>
-                <DateRangePicker
-                  deliveryDate={deliveryDate}
-                  pickupDate={pickupDate}
-                  onDeliveryChange={setDeliveryDate}
-                  onPickupChange={setPickupDate}
-                  compact
-                />
-              </div>
-
-              {/* O que guardar */}
-              <div>
-                <label className="text-[10.5px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-1.5 block">
-                  O que guardar
-                </label>
-                <ItemAutocomplete
-                  value={selectedItem}
-                  onChange={setSelectedItem}
-                />
-              </div>
-
-              {/* CTA */}
-              <Button
-                onClick={handleSearch}
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground h-12 text-[15px] rounded-xl font-bold gap-2.5 shadow-lg shadow-accent/20 mt-1"
-              >
-                <Search size={17} />
-                Buscar espaços
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* ── Secondary links — polished row ── */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -337,7 +149,6 @@ const Hero = () => {
             </Link>
           </motion.div>
 
-          {/* Social proof — mobile */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
