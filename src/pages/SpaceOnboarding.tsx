@@ -1,5 +1,5 @@
 import SEO from "@/components/SEO";
-import { PRICE_HIGHLIGHTS, getSuggestedDailyRate } from "@/lib/pricing";
+import SuggestedPricingTable from "@/components/guardaai/SuggestedPricingTable";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";

@@ -123,6 +123,15 @@ const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: {
         </div>
       </div>
 
+      {/* Suggested pricing table per space */}
+      {!isDraft && (
+        <div className="ml-24 mr-4 mb-1">
+          <SuggestedPricingTable
+            onApply={() => onApplySuggestedPrice(space.id)}
+          />
+        </div>
+      )}
+
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
