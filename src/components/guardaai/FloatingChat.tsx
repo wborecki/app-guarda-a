@@ -89,6 +89,16 @@ const FloatingChat = () => {
   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
   useEffect(() => { if (open) inputRef.current?.focus(); }, [open]);
 
+  // Prevent body scroll when chat is open on mobile
+  useEffect(() => {
+    if (open && window.innerWidth < 768) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
   const send = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
@@ -137,7 +147,11 @@ const FloatingChat = () => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setOpen(true)}
-            className="fixed bottom-5 right-5 z-50 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl flex items-center justify-center transition-shadow"
+            className="fixed z-50 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl flex items-center justify-center transition-shadow"
+            style={{
+              bottom: "calc(1.25rem + env(safe-area-inset-bottom, 0px))",
+              right: "1.25rem",
+            }}
             aria-label="Abrir chat"
           >
             <MessageCircle size={24} />
@@ -153,10 +167,14 @@ const FloatingChat = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ type: "spring", damping: 25, stiffness: 350 }}
-            className="fixed bottom-5 right-5 z-50 w-[360px] max-w-[calc(100vw-40px)] h-[520px] max-h-[calc(100vh-100px)] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed z-50 bg-card border shadow-2xl flex flex-col overflow-hidden
+              /* Mobile: full screen */
+              inset-0 rounded-none
+              /* Desktop: floating card */
+              md:inset-auto md:bottom-5 md:right-5 md:w-[360px] md:h-[520px] md:max-h-[calc(100vh-100px)] md:rounded-2xl"
           >
             {/* Header */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b bg-primary text-primary-foreground rounded-t-2xl">
+            <div className="flex items-center gap-3 px-4 py-3 border-b bg-primary text-primary-foreground md:rounded-t-2xl">
               <div className="h-8 w-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
                 <Bot size={18} />
               </div>
@@ -164,7 +182,11 @@ const FloatingChat = () => {
                 <p className="text-sm font-semibold">Assistente GuardaAí</p>
                 <p className="text-[10px] opacity-80">Responde em tempo real</p>
               </div>
-              <button onClick={() => setOpen(false)} className="h-8 w-8 rounded-full hover:bg-primary-foreground/10 flex items-center justify-center transition-colors">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="h-8 w-8 rounded-full hover:bg-primary-foreground/10 flex items-center justify-center transition-colors"
+              >
                 <X size={18} />
               </button>
             </div>
@@ -213,7 +235,10 @@ const FloatingChat = () => {
             </div>
 
             {/* Input */}
-            <div className="border-t px-3 py-2.5">
+            <div
+              className="border-t px-3 py-2.5"
+              style={{ paddingBottom: "calc(0.625rem + env(safe-area-inset-bottom, 0px))" }}
+            >
               <form
                 onSubmit={(e) => { e.preventDefault(); send(); }}
                 className="flex items-center gap-2"
@@ -229,7 +254,7 @@ const FloatingChat = () => {
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 hover:bg-primary/90 transition-colors"
+                  className="h-10 w-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 hover:bg-primary/90 transition-colors shrink-0"
                 >
                   <Send size={16} />
                 </button>

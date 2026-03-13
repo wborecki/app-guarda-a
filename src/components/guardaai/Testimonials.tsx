@@ -82,7 +82,7 @@ const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="min-w-[72vw] sm:min-w-[45vw] md:min-w-0 snap-center p-4 md:p-6 rounded-xl md:rounded-2xl bg-card border border-border/60 shrink-0"
+              className="min-w-[78vw] sm:min-w-[45vw] md:min-w-0 snap-center p-4 md:p-6 rounded-xl md:rounded-2xl bg-card border border-border/60 shrink-0"
             >
               <div className="flex gap-0.5 mb-2 md:mb-3">
                 {[...Array(5)].map((_, j) => (

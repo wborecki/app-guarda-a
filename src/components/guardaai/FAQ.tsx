@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
@@ -80,7 +83,11 @@ const faqs = [
   },
 ];
 
+const MOBILE_INITIAL_COUNT = 6;
+
 const FAQ = () => {
+  const [showAll, setShowAll] = useState(false);
+
   return (
     <section id="faq" className="py-10 md:py-20 bg-secondary/40">
       <div className="container max-w-3xl px-5 md:px-8">
@@ -100,7 +107,13 @@ const FAQ = () => {
 
         <Accordion type="single" collapsible className="space-y-1.5 md:space-y-2">
           {faqs.map((faq, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="bg-card border border-border/60 rounded-xl px-3.5 md:px-6">
+            <AccordionItem
+              key={i}
+              value={`faq-${i}`}
+              className={`bg-card border border-border/60 rounded-xl px-3.5 md:px-6 ${
+                !showAll && i >= MOBILE_INITIAL_COUNT ? "hidden md:block" : ""
+              }`}
+            >
               <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline text-[13px] md:text-base py-3 md:py-4">
                 {faq.q}
               </AccordionTrigger>
@@ -110,6 +123,21 @@ const FAQ = () => {
             </AccordionItem>
           ))}
         </Accordion>
+
+        {/* "Ver mais" button — mobile only */}
+        {!showAll && (
+          <div className="md:hidden flex justify-center mt-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowAll(true)}
+              className="text-primary hover:text-primary/80 text-[13px] font-medium gap-1"
+            >
+              Ver todas as {faqs.length} perguntas
+              <ChevronDown size={14} />
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );
