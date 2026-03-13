@@ -16,8 +16,7 @@ const Hero = () => {
   const [location, setLocation] = useState("");
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
   const [pickupDate, setPickupDate] = useState<Date | undefined>();
-  const [volume, setVolume] = useState("");
-
+  const [selectedItem, setSelectedItem] = useState<ItemDimension | null>(null);
   const days = deliveryDate && pickupDate ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
 
   const handleSearch = () => {
