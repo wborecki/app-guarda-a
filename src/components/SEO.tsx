@@ -12,7 +12,7 @@ interface SEOProps {
 
 const SITE_NAME = "GuardaAí";
 const DEFAULT_DESCRIPTION =
-  "Self storage descentralizado: encontre espaços para guardar seus objetos perto de você, por diárias ou mensalidades. Mais barato que self storage tradicional.";
+  "Marketplace de armazenamento: encontre espaços para guardar seus objetos perto de você, por horas, diárias ou mensalidades. Preços flexíveis definidos por anfitriões.";
 const BASE_URL = "https://guardaai.com.br";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
 

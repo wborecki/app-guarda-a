@@ -14,7 +14,7 @@ const steps = [
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Mais acessível", desc: "Preços definidos por anfitriões, muito abaixo de self storages." },
+  { icon: DollarSign, title: "Mais acessível", desc: "Preços flexíveis definidos por anfitriões, com valores competitivos." },
   { icon: Shield, title: "Seguro e registrado", desc: "Itens fotografados, cadastrados e protegidos por termos." },
   { icon: TrendingDown, title: "Preço flexível", desc: "Cada anfitrião define seu valor. Sem taxa de serviço." },
 ];
@@ -43,7 +43,7 @@ const pricingTiers = [
 const QueroGuardar = () => {
   return (
     <div className="min-h-screen bg-background">
-      <SEO title="Quero guardar" description="Simule o custo de armazenamento, encontre espaços disponíveis e reserve online. Mais barato que self storage tradicional." canonical="/quero-guardar" />
+      <SEO title="Quero guardar" description="Simule o custo de armazenamento, encontre espaços disponíveis e reserve online. Preços flexíveis definidos por anfitriões." canonical="/quero-guardar" />
       <Header />
       <main>
         {/* ========== HERO + SIMULATOR ========== */}

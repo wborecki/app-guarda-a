@@ -87,7 +87,7 @@ const Hero = () => {
             <div className="mb-11">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 border border-primary/20">
                 <Package size={14} />
-                Self storage descentralizado
+                Armazenamento descentralizado
               </div>
               <h1 className="text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-7 tracking-tight">
                 Guarde perto.<br />
@@ -189,7 +189,7 @@ const Hero = () => {
           <div className="mb-6 pt-2">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-semibold mb-4 border border-primary/12">
               <Package size={12} />
-              Self storage descentralizado
+              Armazenamento descentralizado
             </div>
             <h1 className="text-[1.85rem] font-extrabold text-foreground leading-[1.13] tracking-tight mb-3">
               Guarde perto.{" "}

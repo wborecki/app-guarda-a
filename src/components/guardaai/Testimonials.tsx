@@ -5,7 +5,7 @@ const testimonials = [
   {
     name: "Carla M.",
     role: "Guardou durante reforma",
-    text: "Encontrei um espaço a 3 quadras de casa. Simples e muito mais barato que um self storage.",
+    text: "Encontrei um espaço a 3 quadras de casa. Simples, prático e com preço justo.",
   },
   {
     name: "Lucas P.",
