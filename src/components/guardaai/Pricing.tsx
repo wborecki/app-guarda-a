@@ -74,6 +74,9 @@ const Pricing = () => {
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px] md:text-sm">
                   <Check size={13} className="text-accent shrink-0" /> Espaços perto de você
                 </div>
+                <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px] md:text-sm">
+                  <Check size={13} className="text-accent shrink-0" /> Aceita por hora ou dia
+                </div>
               </div>
             </div>
           </div>
