@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"; // hero-v2
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
