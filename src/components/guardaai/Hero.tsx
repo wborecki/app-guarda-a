@@ -228,23 +228,15 @@ const Hero = () => {
                 />
               </div>
 
-              {/* Volume */}
+              {/* O que guardar */}
               <div>
                 <label className="text-[10.5px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-1.5 block">
-                  Volume estimado
+                  O que guardar
                 </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    value={volume}
-                    onChange={(e) => setVolume(e.target.value)}
-                    placeholder="Ex: 2.5"
-                    className="flex h-11 w-full rounded-xl border border-input bg-background px-3 py-2 text-[14px] ring-offset-background placeholder:text-muted-foreground/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 pr-10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-muted-foreground/50 font-medium">m³</span>
-                </div>
+                <ItemAutocomplete
+                  value={selectedItem}
+                  onChange={setSelectedItem}
+                />
               </div>
 
               {/* CTA */}
