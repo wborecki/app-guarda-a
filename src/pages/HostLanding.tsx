@@ -231,12 +231,12 @@ const HostLanding = () => {
                   transition={{ delay: 0.5 }}
                 >
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Estimativa de renda bruta mensal</p>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5">
                     {earningsExamples.map((e, i) => (
-                      <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-accent/30 transition-colors">
-                        <p className="text-[10px] font-medium text-muted-foreground">{e.label} · {e.size}</p>
-                        <p className="text-lg font-bold text-accent leading-none mt-1">{e.value}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">/mês</p>
+                      <div key={i} className="relative p-2.5 sm:p-3.5 rounded-xl bg-card border border-border/80 hover:border-accent/30 transition-colors">
+                        <p className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">{e.label} · {e.size}</p>
+                        <p className="text-base sm:text-lg font-bold text-accent leading-none mt-1">{e.value}</p>
+                        <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5">/mês</p>
                       </div>
                     ))}
                   </div>
