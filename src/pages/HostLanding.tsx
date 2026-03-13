@@ -523,8 +523,8 @@ const HostLanding = () => {
         <section className="py-12 md:py-16 bg-secondary/40">
           <div className="container max-w-4xl">
             <div className="text-center mb-8">
-              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Espaços aceitos</h2>
-              <p className="text-sm text-muted-foreground">Qualquer espaço ocioso pode virar renda.</p>
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Espaços que você pode anunciar</h2>
+              <p className="text-sm text-muted-foreground">Garagens, vagas, depósitos e mais — para objetos ou veículos.</p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               {spaceTypes.map((s, i) => (
