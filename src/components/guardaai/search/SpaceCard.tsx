@@ -11,6 +11,7 @@ interface SpaceCardProps {
   allSpaces: any[];
   totalVol: number;
   days: number;
+  hours?: number;
   index: number;
   isHighlighted: boolean;
   onMouseEnter: () => void;
