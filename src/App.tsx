@@ -116,6 +116,7 @@ const App = () => (
         <FloatingChat />
       </BrowserRouter>
     </TooltipProvider>
+    </StorageModeProvider>
     </AuthProvider>
   </QueryClientProvider>
   </HelmetProvider>
