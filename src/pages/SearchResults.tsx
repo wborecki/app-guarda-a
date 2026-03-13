@@ -155,6 +155,12 @@ const SearchResults = () => {
   const filteredSortedSpaces = useMemo(() => {
     let result = [...allSpaces];
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
+    if (filters.spaceUse !== "all") {
+      result = result.filter(s => {
+        const use = s.space_use || "objects";
+        return use === filters.spaceUse || use === "both";
+      });
+    }
     if (filters.maxPrice !== null) {
       result = result.filter(s => {
         const rate = s.pricePerDay || s.price_per_day || MIN_DAILY_RATE;
