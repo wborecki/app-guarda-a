@@ -4,6 +4,7 @@ import Footer from "@/components/guardaai/Footer";
 import Simulator from "@/components/guardaai/Simulator";
 import { motion } from "framer-motion";
 import { Shield, Clock, DollarSign, MapPin, CheckCircle2, Lock, Camera, FileText, Warehouse, ArrowRight, TrendingDown, Car } from "lucide-react";
+import storageSupportImg from "@/assets/storage-vehicles-support.jpg";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 
