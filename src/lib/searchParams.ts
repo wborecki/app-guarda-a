@@ -6,6 +6,7 @@
 export interface SearchParams {
   location: string;
   days: number;
+  hours?: number;
   totalVol: number;
   deliveryDate?: string;
   deliveryTime?: string;
@@ -18,6 +19,7 @@ export function encodeSearchParams(params: SearchParams): string {
   const sp = new URLSearchParams();
   if (params.location) sp.set("loc", params.location);
   if (params.days) sp.set("days", String(params.days));
+  if (params.hours) sp.set("hours", String(params.hours));
   if (params.totalVol) sp.set("vol", String(params.totalVol));
   if (params.deliveryDate) sp.set("from", params.deliveryDate);
   if (params.deliveryTime) sp.set("fromT", params.deliveryTime);
@@ -33,14 +35,14 @@ export function decodeSearchParams(
 ): SearchParams {
   const sp = new URLSearchParams(searchString);
 
-  // Prefer URL params, fallback to location.state
   const location = sp.get("loc") || locationState?.location || "Não informado";
   const days = Number(sp.get("days")) || locationState?.days || 1;
+  const hours = Number(sp.get("hours")) || locationState?.hours || 0;
   const totalVol = Number(sp.get("vol")) || locationState?.totalVol || 0;
   const deliveryDate = sp.get("from") || locationState?.deliveryDate || undefined;
   const deliveryTime = sp.get("fromT") || locationState?.deliveryTime || undefined;
   const pickupDate = sp.get("to") || locationState?.pickupDate || undefined;
   const pickupTime = sp.get("toT") || locationState?.pickupTime || undefined;
 
-  return { location, days, totalVol, deliveryDate, deliveryTime, pickupDate, pickupTime };
+  return { location, days, hours, totalVol, deliveryDate, deliveryTime, pickupDate, pickupTime };
 }
