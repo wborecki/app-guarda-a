@@ -251,6 +251,54 @@ export type Database = {
           },
         ]
       }
+      reviews: {
+        Row: {
+          comment: string
+          created_at: string
+          host_id: string
+          id: string
+          rating: number
+          reservation_id: string
+          reviewer_id: string
+          space_id: string | null
+        }
+        Insert: {
+          comment?: string
+          created_at?: string
+          host_id: string
+          id?: string
+          rating: number
+          reservation_id: string
+          reviewer_id: string
+          space_id?: string | null
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          host_id?: string
+          id?: string
+          rating?: number
+          reservation_id?: string
+          reviewer_id?: string
+          space_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       risk_analyses: {
         Row: {
           created_at: string
