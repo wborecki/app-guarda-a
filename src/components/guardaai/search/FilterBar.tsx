@@ -27,7 +27,7 @@ const FilterBar = ({
   return (
     <div className="bg-background border-b">
       <div className="container py-2.5 space-y-2">
-        <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-hide">
+        <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-hide overscroll-x-contain">
           {(Object.keys(sortLabels) as SortOption[]).map(key => (
             <button
               key={key}
