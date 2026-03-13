@@ -87,7 +87,7 @@ const Hero = () => {
             <div className="mb-11">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm text-primary text-xs font-semibold mb-6 border border-primary/20">
                 <Package size={14} />
-                Self storage descentralizado
+                Armazenamento descentralizado
               </div>
               <h1 className="text-5xl lg:text-[3.6rem] font-extrabold text-foreground leading-[1.12] mb-7 tracking-tight">
                 Guarde perto.<br />
