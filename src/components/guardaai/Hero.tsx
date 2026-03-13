@@ -35,7 +35,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-x-hidden overflow-y-visible">
       {/* Background image — desktop only */}
       <div
         className="absolute inset-0 z-0 hidden md:block"
