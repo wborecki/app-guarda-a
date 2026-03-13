@@ -347,7 +347,7 @@ const Checkout = () => {
                         )}
 
                         {photoPreviews.length > 0 && (
-                          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-4">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
                             {photoPreviews.map((preview, i) => (
                               <div key={i} className="relative group rounded-lg overflow-hidden border bg-muted aspect-square">
                                 <img src={preview} alt={`Item ${i + 1}`} className="w-full h-full object-cover" />
