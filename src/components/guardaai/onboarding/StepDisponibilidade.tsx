@@ -54,7 +54,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
             <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">
               Preço por m³/dia (R$)
             </label>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
               <Input
                 type="number"
                 step="0.10"
@@ -67,8 +67,9 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
                 placeholder="Ex: 5.00"
                 className="w-32 h-10 text-sm"
               />
-              <span className="text-[10px] text-muted-foreground">
-                Sugestão: R$ 5,00/m³/dia (1 dia) · R$ 2,71 (7 dias) · R$ 1,50 (30 dias)
+              <span className="text-[10px] text-muted-foreground leading-relaxed">
+                Sugestão: R$ 5,00 (1 dia)<br className="sm:hidden" />
+                <span className="hidden sm:inline"> · </span>R$ 2,71 (7 dias) · R$ 1,50 (30 dias)
               </span>
             </div>
             {(space as any).price_per_day > 0 && (space as any).price_per_day < 1.5 && (
@@ -194,25 +195,27 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
               const slot = schedule[d.value] || { start: "", end: "" };
               const isEnabled = !!slot.start && !!slot.end;
               return (
-                <div key={d.value} className="flex items-center gap-2">
-                  <Switch
-                    checked={isEnabled}
-                    onCheckedChange={checked => {
-                      const newSchedule = { ...schedule };
-                      if (checked) {
-                        newSchedule[d.value] = { start: "08:00", end: "18:00" };
-                      } else {
-                        delete newSchedule[d.value];
-                      }
-                      updateSpace({ availability_schedule: newSchedule } as any);
-                    }}
-                    className="scale-[0.75]"
-                  />
-                  <span className={`w-8 text-xs font-medium ${isEnabled ? "text-foreground" : "text-muted-foreground/50"}`}>
-                    {d.label}
-                  </span>
+              <div key={d.value} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 p-2 sm:p-0 rounded-lg sm:rounded-none bg-secondary/30 sm:bg-transparent border border-border/40 sm:border-0">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={isEnabled}
+                      onCheckedChange={checked => {
+                        const newSchedule = { ...schedule };
+                        if (checked) {
+                          newSchedule[d.value] = { start: "08:00", end: "18:00" };
+                        } else {
+                          delete newSchedule[d.value];
+                        }
+                        updateSpace({ availability_schedule: newSchedule } as any);
+                      }}
+                      className="scale-[0.75]"
+                    />
+                    <span className={`text-xs font-medium ${isEnabled ? "text-foreground" : "text-muted-foreground/50"}`}>
+                      {d.label}
+                    </span>
+                  </div>
                   {isEnabled && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 pl-8 sm:pl-0">
                       <Input
                         type="time"
                         value={slot.start}
@@ -220,7 +223,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
                           const newSchedule = { ...schedule, [d.value]: { ...slot, start: e.target.value } };
                           updateSpace({ availability_schedule: newSchedule } as any);
                         }}
-                        className="w-24 h-8 text-xs"
+                        className="w-[calc(50%-12px)] sm:w-24 h-8 text-xs"
                       />
                       <span className="text-[10px] text-muted-foreground">às</span>
                       <Input
@@ -230,7 +233,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
                           const newSchedule = { ...schedule, [d.value]: { ...slot, end: e.target.value } };
                           updateSpace({ availability_schedule: newSchedule } as any);
                         }}
-                        className="w-24 h-8 text-xs"
+                        className="w-[calc(50%-12px)] sm:w-24 h-8 text-xs"
                       />
                     </div>
                   )}
@@ -252,7 +255,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Horário de acesso geral</label>
             <Select value={space.access_hours} onValueChange={v => updateSpace({ access_hours: v })}>

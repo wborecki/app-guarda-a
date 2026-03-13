@@ -231,12 +231,12 @@ const HostLanding = () => {
                   transition={{ delay: 0.5 }}
                 >
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Estimativa de renda bruta mensal</p>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5">
                     {earningsExamples.map((e, i) => (
-                      <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-accent/30 transition-colors">
-                        <p className="text-[10px] font-medium text-muted-foreground">{e.label} · {e.size}</p>
-                        <p className="text-lg font-bold text-accent leading-none mt-1">{e.value}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">/mês</p>
+                      <div key={i} className="relative p-2.5 sm:p-3.5 rounded-xl bg-card border border-border/80 hover:border-accent/30 transition-colors">
+                        <p className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">{e.label} · {e.size}</p>
+                        <p className="text-base sm:text-lg font-bold text-accent leading-none mt-1">{e.value}</p>
+                        <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5">/mês</p>
                       </div>
                     ))}
                   </div>
@@ -407,7 +407,7 @@ const HostLanding = () => {
                               <SelectItem value="custom">Personalizada (informar nas obs.)</SelectItem>
                             </SelectContent>
                           </Select>
-                          <div className="grid grid-cols-2 gap-2.5">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                             <Select value={form.accessHours} onValueChange={v => setForm({...form, accessHours: v})}>
                               <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Horário de acesso" /></SelectTrigger>
                               <SelectContent>
@@ -456,7 +456,7 @@ const HostLanding = () => {
                                   <button
                                     type="button"
                                     onClick={() => removePhoto(i)}
-                                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                                   >
                                     <X size={12} />
                                   </button>

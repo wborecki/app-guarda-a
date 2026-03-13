@@ -44,7 +44,7 @@ const StepRevisao = ({ space, completionItems, isReadyToPublish, onPublish, onSa
         {/* Summary */}
         <div className="border-t border-border pt-4 space-y-2">
           <h3 className="text-sm font-semibold text-foreground">Resumo do anúncio</h3>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 text-xs">
             <div><span className="text-muted-foreground">Local:</span> <span className="font-medium text-foreground">{space.location || "—"}</span></div>
             <div><span className="text-muted-foreground">Tipo:</span> <span className="font-medium text-foreground">{SPACE_TYPE_LABELS[space.space_type] || "—"}</span></div>
             <div><span className="text-muted-foreground">Volume:</span> <span className="font-medium text-foreground">{space.volume ? `${Number(space.volume).toFixed(1)} m³` : "—"}</span></div>

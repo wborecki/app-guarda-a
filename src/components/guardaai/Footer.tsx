@@ -1,8 +1,8 @@
+import React, { useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/guardaai-logo-negative.png";
-import { useCallback } from "react";
 
-const Footer = () => {
+const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>((props, ref) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
@@ -17,7 +17,7 @@ const Footer = () => {
   }, [isHomePage, navigate]);
 
   return (
-    <footer className="bg-foreground text-background py-10 md:py-20">
+    <footer ref={ref} {...props} className="bg-foreground text-background py-10 md:py-20">
       <div className="container px-5 md:px-8">
         {/* ── Mobile: stacked layout ── */}
         <div className="md:hidden space-y-8 mb-8">
@@ -115,6 +115,8 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = "Footer";
 
 export default Footer;

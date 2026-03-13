@@ -158,7 +158,7 @@ const SpaceOnboarding = () => {
             </div>
 
             {/* Step navigation */}
-            <div className="mt-4 flex gap-1 overflow-x-auto pb-1">
+            <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1 snap-x snap-mandatory scrollbar-none">
               {STEPS.map(s => {
                 const isActive = currentStep === s.id;
                 const isDone = completionItems[s.id - 1]?.done;
@@ -166,7 +166,7 @@ const SpaceOnboarding = () => {
                   <button
                     key={s.id}
                     onClick={() => setCurrentStep(s.id)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors snap-start min-w-[auto] shrink-0 ${
                       isActive
                         ? "bg-accent text-accent-foreground"
                         : isDone
@@ -175,7 +175,8 @@ const SpaceOnboarding = () => {
                     }`}
                   >
                     {isDone && !isActive ? <Check size={12} /> : <s.icon size={12} />}
-                    {s.label}
+                    <span className="hidden sm:inline">{s.label}</span>
+                    <span className="sm:hidden">{s.label.split(' ')[0]}</span>
                   </button>
                 );
               })}
@@ -203,7 +204,7 @@ const SpaceOnboarding = () => {
 
           {/* Bottom navigation */}
           {currentStep < 6 && (
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between mt-6" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
               <Button
                 type="button"
                 variant="outline"
