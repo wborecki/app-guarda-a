@@ -13,7 +13,7 @@ interface SEOProps {
 const SITE_NAME = "GuardaAí";
 const DEFAULT_DESCRIPTION =
   "Marketplace de armazenamento: encontre espaços para guardar seus objetos perto de você, por horas, diárias ou mensalidades. Preços flexíveis definidos por anfitriões.";
-const BASE_URL = "https://guardaai.com.br";
+const BASE_URL = "https://edf168aa-2fb3-4062-b9c8-a67553b7f149.lovable.app";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
 
 export default function SEO({
