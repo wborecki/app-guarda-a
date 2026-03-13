@@ -267,7 +267,7 @@ const DashboardEspacos = () => {
                 <EmptyState icon={EyeOff} title="Nenhum espaço inativo" description="Espaços desativados aparecerão aqui. Você pode reativá-los a qualquer momento." />
               </div>
             ) : (
-              <div className="space-y-3">{inactive.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{inactive.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
         </Tabs>
