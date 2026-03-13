@@ -19,12 +19,15 @@ const Hero = () => {
   const [selectedItem, setSelectedItem] = useState<ItemDimension | null>(null);
   const days = deliveryDate && pickupDate ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
 
+  const itemVolume = selectedItem
+    ? (selectedItem.altura * selectedItem.largura * selectedItem.comprimento) / 1_000_000
+    : 0;
+
   const handleSearch = () => {
-    const totalVol = parseFloat(volume) || 0;
     const qs = encodeSearchParams({
       location: location || "São Paulo",
       days: days || 1,
-      totalVol,
+      totalVol: itemVolume,
       deliveryDate: deliveryDate?.toISOString(),
       pickupDate: pickupDate?.toISOString(),
     });
