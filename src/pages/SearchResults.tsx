@@ -40,7 +40,7 @@ const MapSkeleton = () => (
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const params = useMemo(
     () => decodeSearchParams(searchParams.toString(), location.state),
@@ -151,11 +151,32 @@ const SearchResults = () => {
   );
 
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
-  const [filters, setFilters] = useState<Filters>(emptyFilters);
+
+  // Initialise spaceUse filter from URL mode param
+  const initialSpaceUse = useMemo(() => {
+    const m = params.mode;
+    if (m === "objects") return "objects" as const;
+    if (m === "vehicles") return "vehicles" as const;
+    return "all" as const;
+  }, []); // only on mount
+
+  const [filters, setFilters] = useState<Filters>({ ...emptyFilters, spaceUse: initialSpaceUse });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | string | null>(null);
   const [mobileView, setMobileView] = useState<"list" | "map">("list");
   const cardRefs = useRef<Record<number | string, HTMLDivElement | null>>({});
+
+  // Sync spaceUse filter change back to URL
+  useEffect(() => {
+    const current = searchParams.get("mode") || "";
+    const desired = filters.spaceUse === "all" ? "" : filters.spaceUse;
+    if (current !== desired) {
+      const next = new URLSearchParams(searchParams);
+      if (desired) next.set("mode", desired);
+      else next.delete("mode");
+      setSearchParams(next, { replace: true });
+    }
+  }, [filters.spaceUse]);
 
   const filteredSortedSpaces = useMemo(() => {
     let result = [...allSpaces];
