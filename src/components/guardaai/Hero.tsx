@@ -103,7 +103,7 @@ const Hero = () => {
               >
                 <div className="p-2.5">
                   <div className="flex items-stretch gap-0">
-                    <div className="flex-[1.5] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                    <div className="flex-[1.4] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                       <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                         Localização
                       </label>
@@ -116,7 +116,7 @@ const Hero = () => {
                       />
                     </div>
                     <div className="w-px self-stretch my-3 bg-border" />
-                    <div className="flex-[1.2] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                    <div className="flex-[1.1] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                       <DateRangePicker
                         deliveryDate={deliveryDate}
                         pickupDate={pickupDate}
@@ -126,7 +126,7 @@ const Hero = () => {
                       />
                     </div>
                     <div className="w-px self-stretch my-3 bg-border" />
-                    <div className="flex-[1] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                    <div className="relative flex-[1.2] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                       <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
                         O que guardar
                       </label>
