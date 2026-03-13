@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
+import SuggestedPricingTable from "@/components/guardaai/SuggestedPricingTable";
 
 type Space = {
   id: string;
@@ -23,6 +24,7 @@ type Space = {
   status: string;
   onboarding_step: number;
   created_at: string;
+  price_per_day: number | null;
 };
 
 const typeLabels: Record<string, string> = {
@@ -34,7 +36,7 @@ const typeLabels: Record<string, string> = {
   comercial: "Espaço comercial",
 };
 
-const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete: (id: string) => void; onToggleStatus: (id: string, newStatus: string) => void }) => {
+const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: { space: Space; onDelete: (id: string) => void; onToggleStatus: (id: string, newStatus: string) => void; onApplySuggestedPrice: (id: string) => void }) => {
   const isDraft = space.status === "draft";
   const isInactive = space.status === "inactive";
   const thumb = space.photos?.[0];
@@ -121,6 +123,15 @@ const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete
         </div>
       </div>
 
+      {/* Suggested pricing table per space */}
+      {!isDraft && (
+        <div className="ml-24 mr-4 mb-1">
+          <SuggestedPricingTable
+            onApply={() => onApplySuggestedPrice(space.id)}
+          />
+        </div>
+      )}
+
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -159,7 +170,7 @@ const DashboardEspacos = () => {
     setLoading(true);
     const { data } = await supabase
       .from("spaces")
-      .select("id, location, space_type, width, length, height, volume, photos, status, onboarding_step, created_at")
+      .select("id, location, space_type, width, length, height, volume, photos, status, onboarding_step, created_at, price_per_day")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
     setSpaces((data as Space[]) || []);
@@ -183,6 +194,16 @@ const DashboardEspacos = () => {
     } else {
       setSpaces(prev => prev.map(s => s.id === id ? { ...s, status: newStatus } : s));
       toast({ title: newStatus === "inactive" ? "Espaço desativado" : "Espaço reativado" });
+    }
+  };
+
+  const handleApplySuggestedPrice = async (id: string) => {
+    const { error } = await supabase.from("spaces").update({ price_per_day: 5.0, updated_at: new Date().toISOString() }).eq("id", id);
+    if (error) {
+      toast({ title: "Erro ao aplicar", description: error.message, variant: "destructive" });
+    } else {
+      setSpaces(prev => prev.map(s => s.id === id ? { ...s, price_per_day: 5.0 } : s));
+      toast({ title: "Tabela sugerida aplicada", description: "Preço base definido como R$ 5,00/m³/dia." });
     }
   };
 
@@ -226,7 +247,7 @@ const DashboardEspacos = () => {
                 <EmptyState icon={Eye} title="Nenhum espaço publicado" description="Seus espaços publicados aparecerão aqui." actionLabel="Anunciar espaço" actionHref="/anunciar" />
               </div>
             ) : (
-              <div className="space-y-3">{published.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{published.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
 
@@ -236,7 +257,7 @@ const DashboardEspacos = () => {
                 <EmptyState icon={FileEdit} title="Nenhum rascunho" description="Rascunhos de espaços não finalizados aparecerão aqui." />
               </div>
             ) : (
-              <div className="space-y-3">{drafts.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{drafts.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
 
@@ -246,7 +267,7 @@ const DashboardEspacos = () => {
                 <EmptyState icon={EyeOff} title="Nenhum espaço inativo" description="Espaços desativados aparecerão aqui. Você pode reativá-los a qualquer momento." />
               </div>
             ) : (
-              <div className="space-y-3">{inactive.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{inactive.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
         </Tabs>
