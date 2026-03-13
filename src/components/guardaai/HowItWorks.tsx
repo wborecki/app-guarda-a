@@ -11,7 +11,7 @@ const stepsGuardar = [
 ];
 
 const stepsEspaco = [
-  { icon: Home, title: "Cadastre seu espaço", desc: "Garagem, quarto, depósito ou área coberta" },
+  { icon: Home, title: "Cadastre seu espaço", desc: "Garagem, quarto, depósito, vaga ou área coberta" },
   { icon: Calculator, title: "Informe as dimensões", desc: "Altura, largura e comprimento disponíveis" },
   { icon: Camera, title: "Publique fotos", desc: "Fotos atraem mais clientes" },
   { icon: Send, title: "Receba solicitações", desc: "Aceite as reservas que fizerem sentido" },
