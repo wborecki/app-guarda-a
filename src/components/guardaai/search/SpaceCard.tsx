@@ -138,6 +138,16 @@ const SpaceCard = ({
                     <span key={f} className="text-[10px] text-muted-foreground/60 font-medium">{f}</span>
                   ))}
                 </div>
+                {vehicleNames.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {vehicleNames.map((name: string) => (
+                      <span key={name} className="text-[10px] text-muted-foreground/70 bg-secondary rounded px-1.5 py-0.5">{name}</span>
+                    ))}
+                    {vehicleCompat.length > 3 && (
+                      <span className="text-[10px] text-muted-foreground/50">+{vehicleCompat.length - 3}</span>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Price + CTA */}

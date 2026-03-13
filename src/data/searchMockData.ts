@@ -218,6 +218,8 @@ export function generateSpacesForCity(locationStr: string) {
       reviewsList: reviewsPool.slice(0, 2 + (i % 2)),
       lat: neighborhood.lat,
       lng: neighborhood.lng,
+      space_use: template.space_use,
+      vehicle_compatible: template.vehicle_compatible,
     };
   });
 }
