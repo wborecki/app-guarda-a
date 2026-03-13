@@ -8,7 +8,7 @@ import {
   MapPin, Ruler, Calendar, Navigation, Info, Map as MapIcon, List, Pencil,
 } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
-import { useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback, lazy, Suspense } from "react";
 import { calculatePrice, PRICING_HINT_SHORT } from "@/lib/pricing";
 import { getDailyRate } from "@/lib/pricing";
 import { supabase } from "@/integrations/supabase/client";
