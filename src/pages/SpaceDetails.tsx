@@ -80,17 +80,32 @@ const SpaceDetails = () => {
     });
   };
 
-  const allReviews = [
+  // Real reviews from database
+  const { reviews: realReviews, avgRating: realAvgRating, totalReviews: realTotalReviews, canReview, submitting, submitReview } = useReviews(
+    space.dbId || null,
+    space.hostId || null
+  );
+
+  // Fallback: show mock reviews if no real ones exist yet
+  const mockReviews = [
     { name: "Pedro A.", rating: 5, date: "2024-01-15", text: "Espaço exatamente como descrito, fácil acesso e muito perto de casa. Super recomendo." },
     { name: "Lucia R.", rating: 5, date: "2024-02-20", text: "Usei durante uma reforma e foi tudo muito tranquilo. Proprietário muito atencioso." },
     { name: "Fernando G.", rating: 4, date: "2023-12-10", text: "Bom espaço, proprietário pontual e comunicativo. Voltarei a usar." },
     { name: "Sandra L.", rating: 5, date: "2024-02-05", text: "Ótimo local, exatamente como descrito no anúncio. Me senti segura." },
     { name: "Diego C.", rating: 4, date: "2023-11-20", text: "Muito prático e bem localizado. Bom atendimento e local seguro." },
-    ...(space.reviewsList || []),
-  ].slice(0, 5);
+  ];
 
-  const avgRating = space.rating;
-  const totalReviews = space.reviews;
+  const hasRealReviews = realReviews.length > 0;
+  const displayReviews = hasRealReviews
+    ? realReviews.map((r) => ({ name: r.reviewer_name, rating: r.rating, date: r.created_at, text: r.comment }))
+    : mockReviews;
+  const avgRating = hasRealReviews ? realAvgRating : space.rating;
+  const totalReviews = hasRealReviews ? realTotalReviews : space.reviews;
+
+  // Review form state
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const allFeatures = [
     ...space.features,
