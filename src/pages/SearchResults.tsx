@@ -137,6 +137,8 @@ const SearchResults = () => {
           lat: 0,
           lng: 0,
           isReal: true,
+          rental_type: (s as any).rental_type || "daily",
+          availability_schedule: (s as any).availability_schedule || {},
         };
       });
       setDbSpaces(mapped);
