@@ -17,11 +17,19 @@ const anchorLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
   const { user, displayName, loading } = useAuth();
   const { isAdmin } = useAdminCheck();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 1);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const initials = displayName
     ? displayName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
