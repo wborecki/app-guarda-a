@@ -547,6 +547,7 @@ const SpaceOnboarding = () => {
                       )}
                     </div>
 
+                    <div>
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Tipo de disponibilidade</label>
                       <Select value={space.availability} onValueChange={v => updateSpace({ availability: v })}>
                         <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
