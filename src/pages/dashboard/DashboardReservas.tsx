@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Package, MapPin, Calendar, ArrowRight } from "lucide-react";
+import { Package, MapPin, Calendar, ArrowRight, Car } from "lucide-react";
 import { EmptyState } from "@/components/guardaai/dashboard/EmptyState";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,6 +19,7 @@ interface Reservation {
   status: string;
   notes: string | null;
   created_at: string;
+  space_use?: string;
 }
 
 const statusLabels: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
@@ -33,13 +34,25 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
   const status = statusLabels[reservation.status] || { label: reservation.status, variant: "outline" as const };
   const spaceName = reservation.notes?.split("|")[0]?.replace("Espaço:", "").trim() || "Espaço";
   const location = reservation.notes?.split("|")[1]?.trim() || "";
+  const isVehicle = reservation.space_use === "vehicles" || reservation.space_use === "both";
 
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4 sm:p-5">
         <div className="flex items-start justify-between mb-3">
           <div className="min-w-0 flex-1">
-            <h4 className="text-sm font-semibold text-foreground truncate">{spaceName}</h4>
+            <div className="flex items-center gap-1.5">
+              <h4 className="text-sm font-semibold text-foreground truncate">{spaceName}</h4>
+              {isVehicle ? (
+                <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-primary bg-primary/10 rounded px-1.5 py-0.5 flex-shrink-0">
+                  <Car size={9} /> Veículo
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-accent bg-accent/10 rounded px-1.5 py-0.5 flex-shrink-0">
+                  <Package size={9} /> Objetos
+                </span>
+              )}
+            </div>
             {location && (
               <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                 <MapPin size={11} className="flex-shrink-0" />
@@ -83,16 +96,20 @@ const DashboardReservas = () => {
 
   useEffect(() => {
     if (!user) return;
-    const fetch = async () => {
+    const fetchData = async () => {
       const { data } = await supabase
         .from("reservations")
-        .select("id, start_date, end_date, volume, total_price, status, notes, created_at")
+        .select("id, start_date, end_date, volume, total_price, status, notes, created_at, space_id, spaces(space_use)")
         .or(`renter_id.eq.${user.id},host_id.eq.${user.id}`)
         .order("created_at", { ascending: false });
-      setReservations(data || []);
+      const mapped = (data || []).map((r: any) => ({
+        ...r,
+        space_use: r.spaces?.space_use || "objects",
+      }));
+      setReservations(mapped);
       setLoading(false);
     };
-    fetch();
+    fetchData();
   }, [user]);
 
   const today = new Date().toISOString().split("T")[0];

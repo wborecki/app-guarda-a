@@ -11,7 +11,7 @@ import {
   MapPin, Shield, Lock, CreditCard,
   CheckCircle2, Info, ChevronRight,
   Camera, Upload, ImagePlus, X, AlertTriangle, FileText, Ban,
-  ShieldAlert, Loader2
+  ShieldAlert, Loader2, Package, Car
 } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
 import { useToast } from "@/hooks/use-toast";
@@ -273,12 +273,19 @@ const Checkout = () => {
 
       <div className="container max-w-5xl py-4 sm:py-6">
         {/* Mobile price summary — always visible on top */}
-        <div className="lg:hidden mb-4">
+          <div className="lg:hidden mb-4">
           <div className="flex items-center justify-between bg-card border border-border/60 rounded-xl p-3 shadow-sm">
             <div className="flex items-center gap-3 min-w-0">
               <img src={space.photos?.[0]} alt={space.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0 bg-muted" />
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-foreground truncate">{space.name}</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm font-semibold text-foreground truncate">{space.name}</p>
+                  {(space.space_use === "vehicles" || space.space_use === "both") ? (
+                    <Car size={12} className="text-primary flex-shrink-0" />
+                  ) : (
+                    <Package size={12} className="text-accent flex-shrink-0" />
+                  )}
+                </div>
                 <p className="text-[11px] text-muted-foreground">{reservedArea} m³ · {days} {days === 1 ? "dia" : "dias"}</p>
               </div>
             </div>
@@ -549,7 +556,18 @@ const Checkout = () => {
                       <img src={space.photos?.[0]} alt={space.name} className="w-20 h-16 rounded-lg object-cover flex-shrink-0 bg-muted" />
                       <div className="min-w-0 flex-1">
                         <p className="font-semibold text-foreground text-sm truncate">{space.name}</p>
-                        <p className="text-xs text-muted-foreground">{space.type}</p>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <p className="text-xs text-muted-foreground">{space.type}</p>
+                          {(space.space_use === "vehicles" || space.space_use === "both") ? (
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-primary bg-primary/10 rounded px-1.5 py-0.5">
+                              <Car size={9} /> Veículos
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-accent bg-accent/10 rounded px-1.5 py-0.5">
+                              <Package size={9} /> Objetos
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
                           <MapPin size={10} className="text-primary" />
                           <span className="truncate">{space.neighborhood}, {space.city}</span>
