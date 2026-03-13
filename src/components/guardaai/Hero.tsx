@@ -126,24 +126,15 @@ const Hero = () => {
                       />
                     </div>
                     <div className="w-px self-stretch my-3 bg-border" />
-                    <div className="flex-[0.8] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                    <div className="flex-[1] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                       <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                        Volume
+                        O que guardar
                       </label>
-                      <div className="relative">
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.5"
-                          value={volume}
-                          onChange={(e) => setVolume(e.target.value)}
-                          placeholder="Quanto? (m³)"
-                          className="h-9 w-full bg-transparent text-[15px] font-medium placeholder:text-muted-foreground/50 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                        {volume && (
-                          <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">m³</span>
-                        )}
-                      </div>
+                      <ItemAutocomplete
+                        value={selectedItem}
+                        onChange={setSelectedItem}
+                        compact
+                      />
                     </div>
                     <div className="flex items-center pl-3 pr-1">
                       <Button
