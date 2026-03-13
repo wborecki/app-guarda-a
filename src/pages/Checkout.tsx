@@ -273,12 +273,19 @@ const Checkout = () => {
 
       <div className="container max-w-5xl py-4 sm:py-6">
         {/* Mobile price summary — always visible on top */}
-        <div className="lg:hidden mb-4">
+          <div className="lg:hidden mb-4">
           <div className="flex items-center justify-between bg-card border border-border/60 rounded-xl p-3 shadow-sm">
             <div className="flex items-center gap-3 min-w-0">
               <img src={space.photos?.[0]} alt={space.name} className="w-12 h-12 rounded-lg object-cover flex-shrink-0 bg-muted" />
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-foreground truncate">{space.name}</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm font-semibold text-foreground truncate">{space.name}</p>
+                  {(space.space_use === "vehicles" || space.space_use === "both") ? (
+                    <Car size={12} className="text-primary flex-shrink-0" />
+                  ) : (
+                    <Package size={12} className="text-accent flex-shrink-0" />
+                  )}
+                </div>
                 <p className="text-[11px] text-muted-foreground">{reservedArea} m³ · {days} {days === 1 ? "dia" : "dias"}</p>
               </div>
             </div>

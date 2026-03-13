@@ -96,16 +96,20 @@ const DashboardReservas = () => {
 
   useEffect(() => {
     if (!user) return;
-    const fetch = async () => {
+    const fetchData = async () => {
       const { data } = await supabase
         .from("reservations")
-        .select("id, start_date, end_date, volume, total_price, status, notes, created_at")
+        .select("id, start_date, end_date, volume, total_price, status, notes, created_at, space_id, spaces(space_use)")
         .or(`renter_id.eq.${user.id},host_id.eq.${user.id}`)
         .order("created_at", { ascending: false });
-      setReservations(data || []);
+      const mapped = (data || []).map((r: any) => ({
+        ...r,
+        space_use: r.spaces?.space_use || "objects",
+      }));
+      setReservations(mapped);
       setLoading(false);
     };
-    fetch();
+    fetchData();
   }, [user]);
 
   const today = new Date().toISOString().split("T")[0];
