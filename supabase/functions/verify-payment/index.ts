@@ -19,7 +19,6 @@ serve(async (req) => {
   );
 
   try {
-    // Authenticate user
     const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
     const { data: authData } = await supabaseClient.auth.getUser(token);
@@ -27,12 +26,8 @@ serve(async (req) => {
     if (!user) throw new Error("Usuário não autenticado");
 
     const { sessionId, reservationId } = await req.json();
+    if (!sessionId || !reservationId) throw new Error("Parâmetros faltando");
 
-    if (!sessionId || !reservationId) {
-      throw new Error("Parâmetros faltando");
-    }
-
-    // Verify payment with Stripe
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
@@ -42,40 +37,27 @@ serve(async (req) => {
     if (session.payment_status !== "paid") {
       return new Response(
         JSON.stringify({ verified: false, status: session.payment_status }),
-        {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 200,
-        }
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
       );
     }
 
-    // Use service role to update across tables
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    // Update reservation to confirmed
-    await supabaseAdmin
-      .from("reservations")
-      .update({ status: "confirmed" })
-      .eq("id", reservationId);
+    await supabaseAdmin.from("reservations").update({ status: "confirmed" }).eq("id", reservationId);
 
-    // Get reservation details for payment record
     const { data: reservation } = await supabaseAdmin
-      .from("reservations")
-      .select("*")
-      .eq("id", reservationId)
-      .single();
+      .from("reservations").select("*").eq("id", reservationId).single();
 
     if (reservation) {
-      // Create payment record
       await supabaseAdmin.from("payments").insert({
         reservation_id: reservationId,
         payer_id: reservation.renter_id,
         recipient_id: reservation.host_id,
         amount: reservation.total_price,
-        platform_fee: 28, // SERVICE_FEE
+        platform_fee: 0,
         status: "paid",
         payment_method: session.payment_method_types?.[0] || "card",
         paid_at: new Date().toISOString(),
@@ -84,19 +66,13 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ verified: true, status: "paid" }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
     );
   } catch (error) {
     console.error("verify-payment error:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }
 });

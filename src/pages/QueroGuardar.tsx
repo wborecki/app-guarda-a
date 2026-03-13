@@ -106,7 +106,7 @@ const QueroGuardar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço por m³</p>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço</p>
                   <div className="grid grid-cols-4 gap-2.5">
                     {pricingTiers.map((t, i) => (
                       <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-primary/30 transition-colors">
@@ -117,7 +117,7 @@ const QueroGuardar = () => {
                     ))}
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
-                    Tabela progressiva por m³. Quanto maior o período, menor o custo diário. Taxa de serviço de R$ 28,00 adicionada no checkout.
+                    Preço definido pelo anfitrião. Mínimo R$ 1,50/m³/dia. Sem taxa de serviço. Reservas por hora com cobrança mínima de 1 diária.
                   </p>
                 </motion.div>
               </motion.div>

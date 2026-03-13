@@ -19,52 +19,27 @@ serve(async (req) => {
   );
 
   try {
-    // Authenticate user
     const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
     const { data: authData } = await supabaseClient.auth.getUser(token);
     const user = authData.user;
     if (!user?.email) throw new Error("Usuário não autenticado");
 
-    // Parse request body
     const {
-      spaceName,
-      spaceLocation,
-      volume,
-      days,
-      startDate,
-      endDate,
-      totalPrice,
-      subtotal,
-      serviceFee,
-      hostId,
-      spaceId,
+      spaceName, spaceLocation, volume, days,
+      startDate, endDate, totalPrice, subtotal,
+      cleaningFee, hostId, spaceId,
     } = await req.json();
 
-    if (!totalPrice || totalPrice <= 0) {
-      throw new Error("Valor total inválido");
-    }
+    if (!totalPrice || totalPrice <= 0) throw new Error("Valor total inválido");
 
-    // Initialize Stripe
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
     });
 
-    // Find or reference Stripe customer
-    const customers = await stripe.customers.list({
-      email: user.email,
-      limit: 1,
-    });
+    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId: string | undefined;
-    if (customers.data.length > 0) {
-      customerId = customers.data[0].id;
-    }
-
-    // Create reservation as pending first (using service role to bypass RLS for host_id)
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    if (customers.data.length > 0) customerId = customers.data[0].id;
 
     const { data: reservation, error: resError } = await supabaseClient
       .from("reservations")
@@ -82,37 +57,38 @@ serve(async (req) => {
       .select("id")
       .single();
 
-    if (resError) {
-      throw new Error(`Erro ao criar reserva: ${resError.message}`);
+    if (resError) throw new Error(`Erro ao criar reserva: ${resError.message}`);
+
+    const lineItems: any[] = [
+      {
+        price_data: {
+          currency: "brl",
+          product_data: {
+            name: `Reserva de espaço – ${spaceName}`,
+            description: `${volume} m³ por ${days} dia${days !== 1 ? "s" : ""} · ${spaceLocation}`,
+          },
+          unit_amount: Math.round(subtotal * 100),
+        },
+        quantity: 1,
+      },
+    ];
+
+    // Add cleaning fee line item if applicable
+    if (cleaningFee && cleaningFee > 0) {
+      lineItems.push({
+        price_data: {
+          currency: "brl",
+          product_data: { name: "Taxa de limpeza" },
+          unit_amount: Math.round(cleaningFee * 100),
+        },
+        quantity: 1,
+      });
     }
 
-    // Create Stripe Checkout session with dynamic pricing
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      line_items: [
-        {
-          price_data: {
-            currency: "brl",
-            product_data: {
-              name: `Reserva de espaço – ${spaceName}`,
-              description: `${volume} m³ por ${days} dia${days !== 1 ? "s" : ""} · ${spaceLocation}`,
-            },
-            unit_amount: Math.round(subtotal * 100), // Stripe uses cents
-          },
-          quantity: 1,
-        },
-        {
-          price_data: {
-            currency: "brl",
-            product_data: {
-              name: "Taxa de serviço GuardaAí",
-            },
-            unit_amount: Math.round(serviceFee * 100),
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: lineItems,
       mode: "payment",
       payment_method_types: ["card", "boleto"],
       metadata: {
@@ -126,19 +102,13 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ url: session.url, reservationId: reservation.id }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
     );
   } catch (error) {
     console.error("create-checkout error:", error);
     return new Response(
       JSON.stringify({ error: error.message }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }
 });
