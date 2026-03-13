@@ -34,9 +34,9 @@ const faqs = [
 ];
 
 const pricingTiers = [
-  { period: "1 dia", price: "R$ 1,50", daily: "mínimo/m³/dia" },
-  { period: "7 dias", price: "a partir de", daily: "R$ 1,50/m³/dia" },
-  { period: "30 dias", price: "a partir de", daily: "R$ 1,50/m³/dia" },
+  { period: "1 dia", price: "R$ 5,00", daily: "sugestão/m³" },
+  { period: "7 dias", price: "R$ 2,71", daily: "sugestão/m³/dia" },
+  { period: "30 dias", price: "R$ 1,50", daily: "mínimo/m³/dia" },
   { period: "Por hora", price: "aceito", daily: "mín. 1 diária" },
 ];
 
