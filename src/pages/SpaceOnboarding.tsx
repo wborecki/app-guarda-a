@@ -507,7 +507,7 @@ const SpaceOnboarding = () => {
                         </summary>
                         <div className="mt-2 rounded-lg border border-border/50 bg-card p-3">
                           <p className="text-[10px] text-muted-foreground mb-2">
-                            Valores sugeridos por m³/dia — você define o preço final.
+                            A GuardaAí sugere uma tabela progressiva: quanto maior a duração da reserva, menor o valor diário por m³. Se você aplicar, o preço base será definido como <strong>R$ 5,00/m³/dia</strong> e descontos progressivos serão aplicados automaticamente conforme a duração.
                           </p>
                           <div className="grid grid-cols-4 gap-1.5">
                             {PRICE_HIGHLIGHTS.map((h, i) => (
@@ -540,9 +540,24 @@ const SpaceOnboarding = () => {
                               </tbody>
                             </table>
                           </div>
-                          <p className="text-[9px] text-muted-foreground/70 mt-1.5 italic">
-                            Essa tabela é apenas uma sugestão. Você tem total liberdade para definir seus valores.
-                          </p>
+
+                          <div className="mt-3 flex items-center gap-3">
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="bg-accent hover:bg-accent/90 text-accent-foreground text-[11px] font-semibold h-8 px-4"
+                              onClick={() => {
+                                updateSpace({ price_per_day: 5.0 } as any);
+                                toast({ title: "Tabela sugerida aplicada", description: "Preço base definido como R$ 5,00/m³/dia. Descontos progressivos serão aplicados conforme a duração da reserva." });
+                              }}
+                            >
+                              <Check size={12} className="mr-1" />
+                              Aplicar tabela sugerida
+                            </Button>
+                            <p className="text-[9px] text-muted-foreground/70 italic flex-1">
+                              Ao aplicar, seu preço base será R$ 5,00/m³/dia. Você pode alterar a qualquer momento.
+                            </p>
+                          </div>
                         </div>
                       </details>
                     </div>
