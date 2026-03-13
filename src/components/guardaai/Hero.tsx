@@ -8,6 +8,8 @@ import { encodeSearchParams } from "@/lib/searchParams";
 import heroBg from "@/assets/hero-bg-new.jpg";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import DateRangePicker from "@/components/guardaai/DateRangePicker";
+import ItemAutocomplete from "@/components/guardaai/ItemAutocomplete";
+import type { ItemDimension } from "@/data/itemDimensions";
 
 const Hero = () => {
   const navigate = useNavigate();
