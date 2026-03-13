@@ -147,15 +147,24 @@ export const sortLabels: Record<SortOption, string> = {
   relevance: "Mais relevantes",
 };
 
+export type SpaceUseFilter = "all" | "objects" | "vehicles";
+
+export const spaceUseOptions: { label: string; value: SpaceUseFilter }[] = [
+  { label: "Todos", value: "all" },
+  { label: "Objetos", value: "objects" },
+  { label: "Veículos", value: "vehicles" },
+];
+
 export type Filters = {
   types: string[];
   maxPrice: number | null;
   maxDistance: number | null;
   minRating: number | null;
   features: string[];
+  spaceUse: SpaceUseFilter;
 };
 
-export const emptyFilters: Filters = { types: [], maxPrice: null, maxDistance: null, minRating: null, features: [] };
+export const emptyFilters: Filters = { types: [], maxPrice: null, maxDistance: null, minRating: null, features: [], spaceUse: "all" };
 
 // ─── Helpers ───────────────────────────────────────────────────────
 export function detectCity(locationStr: string): CityData {
