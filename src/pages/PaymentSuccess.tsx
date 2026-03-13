@@ -95,7 +95,7 @@ const PaymentSuccess = () => {
                 Enviamos os detalhes para <strong>{user?.email}</strong>.<br />
                 Acompanhe sua reserva na sua conta.
               </p>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button className="flex-1" onClick={() => navigate("/minha-conta/reservas")}>
                   Minhas reservas
                 </Button>
