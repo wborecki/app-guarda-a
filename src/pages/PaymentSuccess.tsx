@@ -124,7 +124,7 @@ const PaymentSuccess = () => {
               <p className="text-xs text-muted-foreground text-center leading-relaxed">
                 Se o valor foi cobrado, entre em contato conosco. Seu pagamento será verificado manualmente.
               </p>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button className="flex-1" onClick={() => navigate("/contato")}>
                   Falar com suporte
                 </Button>

@@ -598,7 +598,7 @@ const SpaceDetails = () => {
       </div>
 
       {/* Mobile sticky CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden safe-area-bottom">
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
         <div className="container max-w-6xl flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-lg sm:text-xl font-extrabold text-foreground leading-none">R$ {totalPrice.toFixed(0)}</p>

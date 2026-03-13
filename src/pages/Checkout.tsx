@@ -644,19 +644,29 @@ const Checkout = () => {
       </div>
 
       {/* Mobile sticky CTA */}
-      {user && verificationComplete && (
-        <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden safe-area-bottom">
-          <div className="container max-w-5xl">
-            <Button size="default" disabled={processing} onClick={handlePay} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm sm:text-base h-12 sm:h-13 shadow-lg">
-              {processing ? (
-                <span className="flex items-center gap-2">
-                  <span className="w-4 h-4 border-2 border-accent-foreground/40 border-t-accent-foreground rounded-full animate-spin" />
-                  Processando...
-                </span>
-              ) : (
-                `Confirmar e pagar · ${formatBRL(bp.total)}`
-              )}
-            </Button>
+      {user && (
+        <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+          <div className="container max-w-5xl flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-lg font-extrabold text-foreground leading-none">{formatBRL(bp.total)}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{reservedArea} m³ · {days}d</p>
+            </div>
+            {verificationComplete ? (
+              <Button size="default" disabled={processing} onClick={handlePay} className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm px-5 shadow-lg">
+                {processing ? (
+                  <span className="flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-accent-foreground/40 border-t-accent-foreground rounded-full animate-spin" />
+                    Processando...
+                  </span>
+                ) : (
+                  "Confirmar e pagar"
+                )}
+              </Button>
+            ) : (
+              <Button size="default" disabled className="font-semibold text-sm px-5">
+                Complete a verificação
+              </Button>
+            )}
           </div>
         </div>
       )}

@@ -32,10 +32,10 @@ const CardCarousel = ({ photos, name }: CardCarouselProps) => {
           ))}
         </div>
       </div>
-      <button onClick={scrollPrev} className="absolute left-1.5 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm" aria-label="Foto anterior">
+      <button onClick={scrollPrev} className="absolute left-1.5 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shadow-sm" aria-label="Foto anterior">
         <ChevronLeft size={14} className="text-foreground" />
       </button>
-      <button onClick={scrollNext} className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm" aria-label="Próxima foto">
+      <button onClick={scrollNext} className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-background/90 hover:bg-background rounded-full p-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shadow-sm" aria-label="Próxima foto">
         <ChevronRight size={14} className="text-foreground" />
       </button>
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
