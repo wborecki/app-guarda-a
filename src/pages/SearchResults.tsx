@@ -151,7 +151,16 @@ const SearchResults = () => {
   );
 
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
-  const [filters, setFilters] = useState<Filters>(emptyFilters);
+
+  // Initialise spaceUse filter from URL mode param
+  const initialSpaceUse = useMemo(() => {
+    const m = params.mode;
+    if (m === "objects") return "objects" as const;
+    if (m === "vehicles") return "vehicles" as const;
+    return "all" as const;
+  }, []); // only on mount
+
+  const [filters, setFilters] = useState<Filters>({ ...emptyFilters, spaceUse: initialSpaceUse });
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | string | null>(null);
   const [mobileView, setMobileView] = useState<"list" | "map">("list");
