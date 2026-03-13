@@ -13,6 +13,7 @@ import SearchResults from "./pages/SearchResults";
 import SpaceDetails from "./pages/SpaceDetails";
 import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import TermsRenter from "./pages/TermsRenter";
 import TermsHost from "./pages/TermsHost";
 import ProhibitedItems from "./pages/ProhibitedItems";
