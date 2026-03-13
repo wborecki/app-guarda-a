@@ -147,11 +147,7 @@ const FloatingChat = () => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             onClick={() => setOpen(true)}
-            className="fixed z-50 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl flex items-center justify-center transition-shadow"
-            style={{
-              bottom: "calc(1.25rem + env(safe-area-inset-bottom, 0px))",
-              right: "1.25rem",
-            }}
+            className="fixed z-50 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl flex items-center justify-center transition-shadow bottom-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-5"
             aria-label="Abrir chat"
           >
             <MessageCircle size={24} />
