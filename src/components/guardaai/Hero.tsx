@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Warehouse, ArrowRight } from "lucide-react";
-import heroBg from "@/assets/hero-bg-new.jpg";
+import heroBg from "@/assets/hero-bg-vehicles.jpg";
 import HeroSearchForm from "@/components/guardaai/HeroSearchForm";
 import SocialProofBar from "@/components/guardaai/SocialProofBar";
 

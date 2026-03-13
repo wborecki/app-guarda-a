@@ -139,6 +139,20 @@ const QueroGuardar = () => {
           </div>
         </section>
 
+        {/* ========== IMAGEM DE APOIO ========== */}
+        <section className="py-8 md:py-12">
+          <div className="container max-w-4xl">
+            <div className="rounded-2xl overflow-hidden border border-border/60 shadow-lg">
+              <img
+                src={storageSupportImg}
+                alt="Espaço de armazenamento organizado com moto, bicicleta e caixas"
+                className="w-full h-48 md:h-64 object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </section>
+
         {/* ========== COMO FUNCIONA ========== */}
         <section className="py-12 md:py-16 bg-secondary/40">
           <div className="container max-w-4xl">
