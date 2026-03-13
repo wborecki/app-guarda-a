@@ -24,10 +24,26 @@ import SpaceCard from "@/components/guardaai/search/SpaceCard";
 import FilterBar from "@/components/guardaai/search/FilterBar";
 import MobileFilterDrawer from "@/components/guardaai/search/MobileFilterDrawer";
 import { SearchCardSkeletonList } from "@/components/guardaai/skeletons/SearchCardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy-load map for performance
 const SpaceMap = lazy(() => import("@/components/guardaai/SpaceMap"));
 import type { MapSpace } from "@/components/guardaai/SpaceMap";
+
+// Map skeleton for loading state
+const MapSkeleton = () => (
+  <div className="w-full h-full min-h-[400px] bg-muted relative overflow-hidden rounded-xl">
+    <Skeleton className="absolute inset-0 rounded-xl" />
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10">
+      <div className="w-10 h-10 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+      <p className="text-xs font-medium text-muted-foreground">Carregando mapa…</p>
+    </div>
+    {/* Fake pin placeholders */}
+    <div className="absolute top-1/3 left-1/4 w-5 h-6 rounded-full bg-muted-foreground/10" />
+    <div className="absolute top-1/2 right-1/3 w-5 h-6 rounded-full bg-muted-foreground/10" />
+    <div className="absolute bottom-1/3 left-1/2 w-5 h-6 rounded-full bg-muted-foreground/10" />
+  </div>
+);
 
 // ─── Main component ────────────────────────────────────────────────
 const SearchResults = () => {
