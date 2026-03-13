@@ -131,6 +131,11 @@ const SearchResults = () => {
           availability_schedule: (s as any).availability_schedule || {},
           cleaning_fee_enabled: (s as any).cleaning_fee_enabled || false,
           cleaning_fee_amount: (s as any).cleaning_fee_amount || 0,
+          space_use: s.space_use || "objects",
+          vehicle_compatible: (s.vehicle_compatible as string[]) || [],
+          gate_width: s.gate_width,
+          gate_height: s.gate_height,
+          covered: s.covered,
         };
       });
       setDbSpaces(mapped);

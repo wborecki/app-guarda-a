@@ -22,6 +22,20 @@ const FilterContent = ({ filters, setFilters }: { filters: Filters; setFilters: 
   return (
     <div className="space-y-5">
       <div>
+        <h4 className="text-xs font-semibold text-foreground mb-2">Uso do espaço</h4>
+        <div className="flex flex-wrap gap-1.5">
+          {spaceUseOptions.map(opt => (
+            <button key={opt.value} onClick={() => setFilters(f => ({ ...f, spaceUse: opt.value }))}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-colors flex items-center gap-1 ${filters.spaceUse === opt.value ? "bg-primary/10 border-primary/30 text-primary font-semibold" : "border-border/60 text-muted-foreground hover:border-primary/20"}`}
+            >
+              {opt.value === "objects" && <Package size={10} />}
+              {opt.value === "vehicles" && <Car size={10} />}
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
         <h4 className="text-xs font-semibold text-foreground mb-2">Tipo de espaço</h4>
         <div className="flex flex-wrap gap-1.5">
           {spaceTypesList.map(t => (
