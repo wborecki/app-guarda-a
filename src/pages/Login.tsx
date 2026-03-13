@@ -157,9 +157,9 @@ const Login = () => {
             >
               <div className="p-4 rounded-2xl bg-primary/5 border border-primary/15 text-center">
                 <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-2">
-                  <Package size={18} className="text-primary" />
+                  <Warehouse size={18} className="text-primary" />
                 </div>
-                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar itens</h3>
+                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar objetos e veículos</h3>
                 <p className="text-xs text-muted-foreground">Reservas, pagamentos e status.</p>
               </div>
               <div className="p-4 rounded-2xl bg-accent/5 border border-accent/15 text-center">

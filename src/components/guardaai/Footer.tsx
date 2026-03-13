@@ -72,7 +72,7 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
               <img src={logo} alt="GuardaAí" className="h-16 mb-3" />
             </Link>
             <p className="text-sm text-background/60 leading-relaxed">
-              O jeito mais barato de guardar suas coisas.
+              Guarde objetos e veículos por menos.
             </p>
           </div>
 
