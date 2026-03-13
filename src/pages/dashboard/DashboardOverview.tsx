@@ -209,7 +209,7 @@ const DashboardOverview = () => {
           label="Saldo disponível"
           value={balance !== null ? `R$ ${balance.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}` : "—"}
           subtitle={balance === null ? "Carregando..." : "Balanço atualizado"}
-          color="bg-emerald-100/80 text-emerald-600"
+          color="bg-primary/10 text-primary"
         />
       </div>
 
