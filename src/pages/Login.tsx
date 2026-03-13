@@ -159,8 +159,15 @@ const Login = () => {
                 <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-2">
                   <Warehouse size={18} className="text-primary" />
                 </div>
-                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar objetos e veículos</h3>
-                <p className="text-xs text-muted-foreground">Reservas, pagamentos e status.</p>
+                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar objetos</h3>
+                <p className="text-xs text-muted-foreground">Caixas, móveis, estoque e mais.</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-accent/5 border border-accent/15 text-center">
+                <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-2">
+                  <Car size={18} className="text-accent" />
+                </div>
+                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar veículos</h3>
+                <p className="text-xs text-muted-foreground">Carros, motos, barcos e mais.</p>
               </div>
               <div className="p-4 rounded-2xl bg-accent/5 border border-accent/15 text-center">
                 <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-2">
