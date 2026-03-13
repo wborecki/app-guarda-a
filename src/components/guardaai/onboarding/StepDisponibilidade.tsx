@@ -210,7 +210,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
                       }}
                       className="scale-[0.75]"
                     />
-                    <span className={`text-xs font-medium ${isEnabled ? "text-foreground" : "text-muted-foreground/50"}`}>
+                    <span className={`text-xs font-medium ${isEnabled ? "text-foreground" : "text-muted-foreground"}`}>
                       {d.label}
                     </span>
                   </div>
