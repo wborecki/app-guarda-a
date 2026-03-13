@@ -63,7 +63,7 @@ const Pricing = () => {
                 <span className="text-[11px] md:text-sm text-primary-foreground/45">/m³ mês</span>
               </div>
               <p className="text-[10px] md:text-xs text-primary-foreground/35 mb-0.5">ou a partir de R$ 40,00/m³ em planos anuais</p>
-              <p className="text-[10px] md:text-xs text-primary-foreground/35 mb-3">Diária a partir de R$ 5,00 / m³</p>
+              <p className="text-[10px] md:text-xs text-primary-foreground/35 mb-3">Diária a partir de R$ 5,00/m³ · Por hora a partir de R$ {HOURLY_RATE.toFixed(2).replace(".", ",")}/m³</p>
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px] md:text-sm">
                   <Check size={13} className="text-accent shrink-0" /> Tabela progressiva
