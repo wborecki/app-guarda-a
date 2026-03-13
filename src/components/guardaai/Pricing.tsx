@@ -95,7 +95,7 @@ const Pricing = () => {
                 <p className="text-[11px] text-muted-foreground">Valores sugeridos por m³/dia — o anfitrião define o preço final</p>
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
                 { label: "1 dia", rate: "5,00" },
                 { label: "7 dias", rate: "2,71" },
