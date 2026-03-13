@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Info, DollarSign } from "lucide-react";
-import { PRICING_EXPLANATION, MIN_VOLUME, SERVICE_FEE, PRICE_HIGHLIGHTS } from "@/lib/pricing";
+import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Info, DollarSign, Timer } from "lucide-react";
+import { PRICING_EXPLANATION, MIN_VOLUME, SERVICE_FEE, PRICE_HIGHLIGHTS, HOURLY_RATE } from "@/lib/pricing";
 
 const Pricing = () => {
   return (
