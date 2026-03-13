@@ -8,31 +8,43 @@ const faqs = [
   },
   {
     q: "Como o preço é calculado?",
-    a: "O preço é baseado no volume que seus objetos vão ocupar (mínimo de 1 m³). Usamos uma tabela progressiva: quanto mais tempo você guardar, menor o valor proporcional por dia. Reservas por hora são proporcionais à diária. Uma taxa de serviço fixa de R$ 28,00 é adicionada no checkout.",
+    a: "O preço é definido pelo anfitrião, com base no volume que seus objetos vão ocupar (mínimo de 1 m³) e na duração da reserva. A GuardaAí sugere valores de referência, mas o anfitrião tem liberdade para definir seu próprio preço, respeitando o mínimo da plataforma.",
   },
   {
-    q: "Quanto custa guardar no GuardaAí?",
-    a: "Diárias a partir de R$ 5,00/m³. Para 30 dias, o valor é R$ 45,00/m³. Reservas por hora a partir de R$ 0,21/m³/hora. Quanto maior o período, menor o custo por dia.",
+    q: "Quem define o preço?",
+    a: "O anfitrião define o preço do seu espaço. A GuardaAí oferece uma sugestão baseada em volume e duração, mas a decisão final é do anfitrião.",
   },
   {
-    q: "Posso guardar por poucas horas?",
-    a: "Sim! Espaços que aceitam locação por hora permitem reservas de poucas horas. O valor é proporcional à diária (diária ÷ 24). Basta selecionar o mesmo dia de entrada e saída e ajustar os horários.",
+    q: "Existe taxa de serviço?",
+    a: "Não. A GuardaAí não cobra taxa de serviço nas reservas.",
+  },
+  {
+    q: "Existe taxa de limpeza?",
+    a: "Para reservas acima de 7 dias, o anfitrião pode optar por cobrar uma taxa de limpeza. Essa taxa é opcional, informada antes do checkout e varia conforme o anfitrião.",
+  },
+  {
+    q: "Posso reservar por poucas horas?",
+    a: "Sim! Espaços que aceitam locação por hora permitem reservas de poucas horas. A cobrança mínima é equivalente a 1 diária. Basta selecionar o mesmo dia de entrada e saída.",
+  },
+  {
+    q: "Como funciona a cobrança em reserva curta?",
+    a: "Reservas por horas são permitidas, mas a cobrança mínima é sempre equivalente a 1 diária completa, conforme o preço definido pelo anfitrião.",
+  },
+  {
+    q: "Existe valor mínimo?",
+    a: "Sim. O valor mínimo é de R$ 1,50 por m³ por diária. O volume mínimo de cobrança é 1 m³.",
+  },
+  {
+    q: "Como a GuardaAí sugere preço ao anfitrião?",
+    a: "A plataforma utiliza uma tabela progressiva de referência baseada no volume e na duração da reserva. Essa tabela serve como sugestão para ajudar o anfitrião a precificar seu espaço de forma competitiva, mas não é obrigatória.",
   },
   {
     q: "Posso guardar por poucos dias?",
-    a: "Sim! Você pode guardar a partir de 1 dia. A cobrança segue a tabela progressiva — mesmo períodos curtos têm preço justo.",
+    a: "Sim! Você pode guardar a partir de 1 dia. O preço varia conforme o anfitrião.",
   },
   {
     q: "Posso guardar por meses ou mais?",
-    a: "Claro. Temos planos de 30 dias e anuais. Quanto mais longo o período, menor o valor proporcional por dia.",
-  },
-  {
-    q: "Existe cobrança mínima?",
-    a: "Sim. A cobrança mínima equivale a 1 m³. Objetos que ocupem menos de 1 m³ são cobrados como 1 m³.",
-  },
-  {
-    q: "O que é a taxa de serviço?",
-    a: "É uma taxa fixa de R$ 28,00 por reserva, cobrada no checkout. Ela cobre os custos operacionais da plataforma.",
+    a: "Claro. Reservas longas são aceitas e geralmente têm valores mais vantajosos por dia.",
   },
   {
     q: "Eu pago pelo volume total do espaço?",
@@ -51,12 +63,8 @@ const faqs = [
     a: "Todos os objetos são cadastrados com foto. Ambas as partes aceitam termos de responsabilidade. Toda a intermediação é feita pela plataforma, com regras claras para proteger quem guarda e quem oferece espaço.",
   },
   {
-    q: "O que acontece se o objeto não for retirado?",
-    a: "Objetos não retirados após o prazo contratual e o período adicional previsto nos termos poderão ser considerados abandonados, conforme as regras da plataforma.",
-  },
-  {
     q: "Como faço para anunciar meu espaço?",
-    a: "Cadastre seu espaço com dimensões, tipo e fotos. Defina seus horários de atendimento e se aceita reservas por hora, por dia ou ambos. Depois é só aguardar solicitações e aceitar as reservas.",
+    a: "Cadastre seu espaço com dimensões, tipo e fotos. Defina seu preço, seus horários de atendimento e se aceita reservas por hora, por dia ou ambos. A plataforma sugere valores, mas você decide.",
   },
   {
     q: "Preciso medir meu objeto?",

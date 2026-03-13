@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Star, Ruler, Shield, Clock } from "lucide-react";
 import CardCarousel from "./CardCarousel";
-import { calculatePrice, calculateHourlyPrice } from "@/lib/pricing";
+import { calculatePrice, MIN_DAILY_RATE } from "@/lib/pricing";
 import { computePrimaryBadge, getUseCaseHint } from "@/data/searchMockData";
 
 interface SpaceCardProps {
@@ -26,8 +26,13 @@ const SpaceCard = ({
   isHighlighted, onMouseEnter, onMouseLeave, onClick, onSelect, cardRef,
 }: SpaceCardProps) => {
   const reservedVol = Math.max(totalVol, 1);
-  const isHourly = days === 0 && hours > 0;
-  const bp = isHourly ? calculateHourlyPrice(reservedVol, hours) : calculatePrice(reservedVol, days);
+  const effectiveDays = Math.max(days, 1);
+  const hostRate = space.pricePerDay || space.price_per_day || MIN_DAILY_RATE;
+  const bp = calculatePrice(reservedVol, effectiveDays, hostRate, {
+    hours: days === 0 ? hours : undefined,
+    cleaningFeeEnabled: space.cleaning_fee_enabled,
+    cleaningFeeAmount: space.cleaning_fee_amount,
+  });
   const primaryBadge = computePrimaryBadge(space, allSpaces);
   const useHint = getUseCaseHint(space.type);
   const rentalType = space.rental_type || "daily";
@@ -51,7 +56,7 @@ const SpaceCard = ({
       >
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
-            {/* Photo — taller on mobile for visual impact */}
+            {/* Photo */}
             <div className="sm:w-52 lg:w-48 xl:w-52 h-52 sm:h-auto bg-muted flex-shrink-0 relative">
               <CardCarousel photos={space.photos} name={space.name} />
               <div className="absolute top-2.5 left-2.5 bg-background/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1">
@@ -65,7 +70,6 @@ const SpaceCard = ({
                   </span>
                 </div>
               )}
-              {/* Mobile: rating badge on photo */}
               {space.reviews > 0 && (
                 <div className="absolute top-2.5 right-2.5 sm:hidden bg-background/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-0.5">
                   <Star size={10} className="text-accent fill-accent" />
@@ -129,17 +133,12 @@ const SpaceCard = ({
                     <span className="text-[10px] font-normal text-muted-foreground ml-1">total</span>
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">
-                    {reservedVol} m³ × {isHourly ? `${hours}h` : `${days}d`} + taxa
+                    {reservedVol} m³ × {effectiveDays}d
+                    {bp.cleaningFee > 0 && " + limpeza"}
                   </p>
-                  {isHourly && bp.hourlyRate ? (
-                    <p className="text-[10px] text-accent font-medium">
-                      ≈ R$ {bp.hourlyRate.toFixed(2).replace(".", ",")}/m³/hora
-                    </p>
-                  ) : days > 1 ? (
-                    <p className="text-[10px] text-primary/70 font-medium">
-                      ≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m³/dia
-                    </p>
-                  ) : null}
+                  <p className="text-[10px] text-primary/70 font-medium">
+                    R$ {hostRate.toFixed(2).replace(".", ",")}/m³/dia
+                  </p>
                 </div>
                 <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-4 sm:px-5 shadow-sm text-xs" onClick={onSelect}>
                   Ver detalhes

@@ -10,7 +10,7 @@ import ItemDimensionInput, { type AddedItem } from "@/components/guardaai/ItemDi
 import DateRangePicker from "@/components/guardaai/DateRangePicker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Package, Search, DollarSign, Zap, MapPin, Info, Clock } from "lucide-react";
-import { calculatePrice, calculateHourlyPrice, PRICING_HINT_SHORT, SERVICE_FEE, HOURLY_RATE } from "@/lib/pricing";
+import { calculatePrice, getSuggestedDailyRate, PRICING_HINT_SHORT, MIN_DAILY_RATE } from "@/lib/pricing";
 
 interface SimulatorProps {
   embedded?: boolean;
@@ -53,9 +53,10 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
 
   const hours = calcHours();
 
-  const price = isSameDayReservation && hours > 0
-    ? calculateHourlyPrice(totalVol, hours)
-    : calculatePrice(totalVol, days);
+  // Use suggested daily rate for simulation (since we don't know the host's price yet)
+  const effectiveDays = Math.max(isSameDayReservation ? 1 : days, 1);
+  const suggestedRate = getSuggestedDailyRate(effectiveDays);
+  const price = calculatePrice(totalVol, effectiveDays, suggestedRate, { hours: isSameDayReservation ? hours : undefined });
 
   const handleSimulate = () => {
     if (items.length > 0 && deliveryDate && pickupDate) {
@@ -71,7 +72,7 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
   const handleFindSpace = () => {
     const qs = encodeSearchParams({
       location,
-      days,
+      days: effectiveDays,
       hours: isSameDayReservation ? hours : undefined,
       totalVol,
       deliveryDate: deliveryDate?.toISOString(),
@@ -132,7 +133,7 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
           <Clock size={14} className="text-accent shrink-0" />
           <span className="text-foreground">
             <span className="font-semibold">Reserva por hora.</span>{" "}
-            {hours > 0 && <>Duração estimada: <span className="font-bold text-accent">{hours}h</span>. Valor: R$ {HOURLY_RATE.toFixed(2).replace(".", ",")}/m³/hora.</>}
+            {hours > 0 && <>Duração estimada: <span className="font-bold text-accent">{hours}h</span>. Cobrança mínima de 1 diária.</>}
           </span>
         </div>
       )}
@@ -197,41 +198,28 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
                 <DollarSign size={18} className="text-accent" />
               </div>
               <p className="text-[10px] md:text-xs text-muted-foreground">
-                Estimativa ({price.isHourly ? `${hours}h` : `${days} dias`})
+                Estimativa ({isSameDayReservation ? `${hours}h` : `${effectiveDays} dias`})
               </p>
               <p className="text-base md:text-lg font-bold text-foreground">R${price.subtotal.toFixed(2)}</p>
             </div>
           </div>
 
-          {/* Rate tier info */}
+          {/* Rate info */}
           <div className="mt-4 p-3 rounded-lg bg-background/60 border border-border/40">
-            {price.isHourly ? (
-              <>
-                <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-muted-foreground">Valor por hora/m³</span>
-                  <span className="font-semibold text-foreground">R$ {HOURLY_RATE.toFixed(2).replace(".", ",")}</span>
-                </div>
-                <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-muted-foreground">Duração</span>
-                  <span className="font-semibold text-accent">{hours} hora{hours > 1 ? "s" : ""}</span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-muted-foreground">Valor por m³ ({days} {days === 1 ? "dia" : "dias"})</span>
-                  <span className="font-semibold text-foreground">R$ {price.pricePerM3.toFixed(2).replace(".", ",")}</span>
-                </div>
-                <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-muted-foreground">Valor efetivo por dia</span>
-                  <span className="font-semibold text-foreground">R$ {price.dailyRate.toFixed(2).replace(".", ",")}/m³</span>
-                </div>
-              </>
-            )}
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">+ Taxa de serviço fixa</span>
-              <span className="font-semibold text-muted-foreground">R$ {SERVICE_FEE.toFixed(2).replace(".", ",")} no checkout</span>
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-muted-foreground">Valor sugerido por m³/dia</span>
+              <span className="font-semibold text-foreground">R$ {suggestedRate.toFixed(2).replace(".", ",")}</span>
             </div>
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-muted-foreground">Período cobrado</span>
+              <span className="font-semibold text-accent">{effectiveDays} {effectiveDays === 1 ? "dia" : "dias"} (mínimo)</span>
+            </div>
+            {isSameDayReservation && (
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">Horários</span>
+                <span className="font-semibold text-foreground">{hours}h (cobrança mín. 1 diária)</span>
+              </div>
+            )}
           </div>
 
           <Button
@@ -245,14 +233,14 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
           <div className="flex items-start gap-1.5 mt-3 md:mt-4 justify-center">
             <Info size={11} className="text-muted-foreground/50 shrink-0 mt-0.5" />
             <p className="text-[10px] md:text-xs text-muted-foreground text-center">
-              {PRICING_HINT_SHORT} Taxa de serviço fixa de R$ {SERVICE_FEE.toFixed(2).replace(".", ",")} adicionada no checkout.
+              {PRICING_HINT_SHORT} O preço final depende do valor definido pelo anfitrião.
             </p>
           </div>
         </motion.div>
       )}
 
       <p className="text-[10px] md:text-xs text-muted-foreground mt-3 md:mt-4 text-center">
-        O sistema calcula automaticamente o volume e encontra o melhor espaço. Aceita reservas por hora ou por dia.
+        O sistema calcula automaticamente o volume e encontra o melhor espaço. Preço final definido pelo anfitrião.
       </p>
     </div>
   );
@@ -278,7 +266,7 @@ const Simulator = ({ embedded = false }: SimulatorProps) => {
             Simulador de armazenamento
           </h2>
           <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto">
-            Descubra quanto espaço você precisa e quanto vai pagar — por hora ou por dia.
+            Descubra quanto espaço você precisa e veja uma estimativa de valor.
           </p>
         </motion.div>
 
