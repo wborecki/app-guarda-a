@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const DashboardFinanceiro = () => (
   <div className="w-full max-w-7xl mx-auto">
     <div className="mb-6">
-      <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">Financeiro</h1>
+      <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight mb-1">Financeiro</h1>
       <p className="text-muted-foreground text-sm">Acompanhe pagamentos, recebimentos e repasses.</p>
     </div>
 
