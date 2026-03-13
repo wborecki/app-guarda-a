@@ -5,6 +5,7 @@ import {
   type SortOption, type Filters, type SpaceUseFilter,
   sortLabels, spaceTypesList, distanceOptions, ratingOptions, allFeatures, spaceUseOptions,
 } from "@/data/searchMockData";
+import { vehicleCategories, vehicleGroups } from "@/data/vehicleCategories";
 
 interface FilterBarProps {
   sortBy: SortOption;
