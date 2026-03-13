@@ -549,7 +549,18 @@ const Checkout = () => {
                       <img src={space.photos?.[0]} alt={space.name} className="w-20 h-16 rounded-lg object-cover flex-shrink-0 bg-muted" />
                       <div className="min-w-0 flex-1">
                         <p className="font-semibold text-foreground text-sm truncate">{space.name}</p>
-                        <p className="text-xs text-muted-foreground">{space.type}</p>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <p className="text-xs text-muted-foreground">{space.type}</p>
+                          {(space.space_use === "vehicles" || space.space_use === "both") ? (
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-primary bg-primary/10 rounded px-1.5 py-0.5">
+                              <Car size={9} /> Veículos
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-accent bg-accent/10 rounded px-1.5 py-0.5">
+                              <Package size={9} /> Objetos
+                            </span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
                           <MapPin size={10} className="text-primary" />
                           <span className="truncate">{space.neighborhood}, {space.city}</span>
