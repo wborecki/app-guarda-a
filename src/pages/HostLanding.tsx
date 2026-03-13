@@ -508,8 +508,7 @@ const HostLanding = () => {
                              {!submitting && <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />}
                            </Button>
                         </div>
-                      </>
-                    )}
+                    </div>
                     </>
                     )}
                   </div>
