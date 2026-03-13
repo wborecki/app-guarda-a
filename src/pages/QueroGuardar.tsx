@@ -27,7 +27,8 @@ const trustItems = [
 
 const faqs = [
   { q: "O que posso guardar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce e itens pessoais. Itens ilegais, perigosos ou perecíveis são proibidos." },
-  { q: "Como o preço é calculado?", a: "O preço é baseado no volume ocupado (m³) e no período. Usamos uma tabela progressiva de R$ 5/m³ (1 dia) a R$ 45/m³ (30 dias). Mínimo de 1 m³. Uma taxa de serviço de R$ 28,00 é adicionada no checkout." },
+  { q: "Como o preço é calculado?", a: "O preço é baseado no volume ocupado (m³) e no período. Usamos uma tabela progressiva de R$ 5/m³ (1 dia) a R$ 45/m³ (30 dias). Reservas por hora são proporcionais à diária. Mínimo de 1 m³. Uma taxa de serviço de R$ 28,00 é adicionada no checkout." },
+  { q: "Posso guardar por poucas horas?", a: "Sim! Espaços que aceitam por hora permitem reservas curtas. Basta selecionar o mesmo dia e ajustar os horários no simulador." },
   { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. A tabela progressiva garante preço justo para qualquer período." },
   { q: "Como funciona a segurança?", a: "Objetos são cadastrados com foto, ambas as partes aceitam termos de responsabilidade, e toda intermediação é feita digitalmente pela plataforma." },
 ];
