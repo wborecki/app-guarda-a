@@ -320,6 +320,7 @@ const SpaceDetails = () => {
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <MessageSquare size={16} className="text-primary" />
                   Avaliações ({totalReviews})
+                  {!hasRealReviews && <span className="text-[10px] text-muted-foreground/50 font-normal">(exemplo)</span>}
                 </h3>
                 <div className="flex items-center gap-1">
                   <Star size={14} className="text-accent fill-accent" />
@@ -327,8 +328,62 @@ const SpaceDetails = () => {
                   <span className="text-xs text-muted-foreground">média</span>
                 </div>
               </div>
+
+              {/* Review form */}
+              {canReview && (
+                <Card className="mb-4 border-primary/20">
+                  <CardContent className="p-4">
+                    {!showReviewForm ? (
+                      <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => setShowReviewForm(true)}>
+                        <Pencil size={14} />
+                        Avaliar este espaço
+                      </Button>
+                    ) : (
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-foreground">Como foi sua experiência?</p>
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <button key={i} onClick={() => setReviewRating(i + 1)} className="p-0.5">
+                              <Star size={22} className={i < reviewRating ? "text-accent fill-accent" : "text-muted-foreground/30"} />
+                            </button>
+                          ))}
+                          <span className="text-sm text-muted-foreground ml-2">{reviewRating}/5</span>
+                        </div>
+                        <Textarea
+                          value={reviewComment}
+                          onChange={(e) => setReviewComment(e.target.value)}
+                          placeholder="Conte como foi guardar seus itens neste espaço..."
+                          className="min-h-[80px] text-sm"
+                        />
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            disabled={submitting || !reviewComment.trim()}
+                            className="gap-1.5"
+                            onClick={async () => {
+                              const ok = await submitReview(reviewRating, reviewComment.trim());
+                              if (ok) {
+                                toast({ title: "Avaliação enviada!", description: "Obrigado pelo feedback." });
+                                setShowReviewForm(false);
+                                setReviewComment("");
+                              } else {
+                                toast({ title: "Erro ao enviar", description: "Tente novamente.", variant: "destructive" });
+                              }
+                            }}
+                          >
+                            <Send size={13} />
+                            {submitting ? "Enviando..." : "Enviar avaliação"}
+                          </Button>
+                          <Button variant="ghost" size="sm" onClick={() => setShowReviewForm(false)}>Cancelar</Button>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
               <div className="space-y-2.5 sm:space-y-3">
-                {allReviews.map((review, i) => (
+                {displayReviews.map((review, i) => (
                   <Card key={i}>
                     <CardContent className="p-3.5 sm:p-4">
                       <div className="flex items-center justify-between mb-1.5">
