@@ -34,6 +34,11 @@ const SpaceDetails = () => {
   const [reservedArea, setReservedArea] = useState(initialReservedArea);
   const [editingReservation, setEditingReservation] = useState(false);
 
+  // Review form state — must be before any early returns
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [showReviewForm, setShowReviewForm] = useState(false);
+
   // Gallery carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -52,6 +57,12 @@ const SpaceDetails = () => {
   const scrollToIndex = useCallback((index: number) => {
     emblaApi?.scrollTo(index);
   }, [emblaApi]);
+
+  // Real reviews from database
+  const { reviews: realReviews, avgRating: realAvgRating, totalReviews: realTotalReviews, canReview, submitting, submitReview } = useReviews(
+    space?.dbId || null,
+    space?.hostId || null
+  );
 
   if (!space) {
     return <SpaceDetailsSkeleton />;
@@ -80,12 +91,6 @@ const SpaceDetails = () => {
     });
   };
 
-  // Real reviews from database
-  const { reviews: realReviews, avgRating: realAvgRating, totalReviews: realTotalReviews, canReview, submitting, submitReview } = useReviews(
-    space.dbId || null,
-    space.hostId || null
-  );
-
   // Fallback: show mock reviews if no real ones exist yet
   const mockReviews = [
     { name: "Pedro A.", rating: 5, date: "2024-01-15", text: "Espaço exatamente como descrito, fácil acesso e muito perto de casa. Super recomendo." },
@@ -101,11 +106,6 @@ const SpaceDetails = () => {
     : mockReviews;
   const avgRating = hasRealReviews ? realAvgRating : space.rating;
   const totalReviews = hasRealReviews ? realTotalReviews : space.reviews;
-
-  // Review form state
-  const [reviewRating, setReviewRating] = useState(5);
-  const [reviewComment, setReviewComment] = useState("");
-  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const allFeatures = [
     ...space.features,
