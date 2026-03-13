@@ -241,7 +241,7 @@ const SearchResults = () => {
 
   // ─── RENDER ────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <SEO title={`Espaços em ${shortLocation}`} description={`Encontre espaços para guardar ${totalVol.toFixed(1)} m³ em ${shortLocation}. Compare preços e reserve online.`} canonical="/buscar" />
 
       {/* ═══ STICKY HEADER ═══ */}
@@ -260,7 +260,7 @@ const SearchResults = () => {
       {/* ═══ SEARCH SUMMARY BAR — compact on mobile ═══ */}
       <div className="bg-card/80 backdrop-blur-sm border-b">
         <div className="container py-2 sm:py-2.5">
-          <div className="flex items-center gap-2 sm:gap-x-4 text-xs sm:text-sm overflow-x-auto scrollbar-hide">
+          <div className="flex items-center gap-2 sm:gap-x-4 text-xs sm:text-sm overflow-x-auto scrollbar-hide overscroll-x-contain">
             <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
               <MapPin size={12} className="text-primary flex-shrink-0" />
               <span className="font-semibold text-foreground truncate max-w-[120px] sm:max-w-none">{shortLocation}</span>
