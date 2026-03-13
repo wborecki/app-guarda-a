@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
-import { CheckCircle, Info, DollarSign, Clock, Shield, Users, Sparkles } from "lucide-react";
+import { CheckCircle, Info, DollarSign, Clock, Shield, Users, Sparkles, ArrowRight, Home } from "lucide-react";
 import { MIN_VOLUME, MIN_DAILY_RATE, CLEANING_FEE_RATE, CLEANING_FEE_MIN, CLEANING_FEE_MAX, CLEANING_FEE_THRESHOLD_DAYS } from "@/lib/pricing";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Pricing = () => {
   return (
