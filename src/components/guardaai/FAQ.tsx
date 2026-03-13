@@ -39,7 +39,7 @@ const faqs: FaqItem[] = [
   { category: "seguranca", q: "Quais itens são proibidos?", a: "Drogas, armas, explosivos, produtos perigosos, perecíveis, animais vivos e qualquer item ilegal." },
 
   // Anfitrião
-  { category: "anfitriao", q: "Como faço para anunciar meu espaço?", a: "Cadastre seu espaço com dimensões, tipo e fotos. Defina seu preço, seus horários de atendimento e se aceita reservas por hora, por dia ou ambos. A plataforma sugere valores, mas você decide." },
+  { category: "anfitriao", q: "Como faço para anunciar meu espaço?", a: "Cadastre seu espaço com dimensões, tipo e fotos. Informe se aceita objetos, veículos ou ambos. Defina seu preço, seus horários de atendimento e se aceita reservas por hora, por dia ou ambos. A plataforma sugere valores, mas você decide." },
 ];
 
 const categories: { key: FaqCategory; label: string; icon: typeof HelpCircle }[] = [
