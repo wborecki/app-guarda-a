@@ -421,6 +421,8 @@ export type Database = {
           description: string | null
           document_number: string | null
           easy_access: boolean | null
+          gate_height: number | null
+          gate_width: number | null
           height: number | null
           id: string
           length: number | null
@@ -436,9 +438,11 @@ export type Database = {
           security_features: string | null
           space_category: string | null
           space_type: string
+          space_use: string
           status: string
           updated_at: string
           user_id: string
+          vehicle_compatible: Json | null
           volume: number | null
           width: number | null
         }
@@ -457,6 +461,8 @@ export type Database = {
           description?: string | null
           document_number?: string | null
           easy_access?: boolean | null
+          gate_height?: number | null
+          gate_width?: number | null
           height?: number | null
           id?: string
           length?: number | null
@@ -472,9 +478,11 @@ export type Database = {
           security_features?: string | null
           space_category?: string | null
           space_type?: string
+          space_use?: string
           status?: string
           updated_at?: string
           user_id: string
+          vehicle_compatible?: Json | null
           volume?: number | null
           width?: number | null
         }
@@ -493,6 +501,8 @@ export type Database = {
           description?: string | null
           document_number?: string | null
           easy_access?: boolean | null
+          gate_height?: number | null
+          gate_width?: number | null
           height?: number | null
           id?: string
           length?: number | null
@@ -508,9 +518,11 @@ export type Database = {
           security_features?: string | null
           space_category?: string | null
           space_type?: string
+          space_use?: string
           status?: string
           updated_at?: string
           user_id?: string
+          vehicle_compatible?: Json | null
           volume?: number | null
           width?: number | null
         }
