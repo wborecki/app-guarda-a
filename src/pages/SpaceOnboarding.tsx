@@ -79,6 +79,9 @@ type SpaceData = {
   onboarding_step: number;
   rental_type: string;
   availability_schedule: AvailabilitySchedule;
+  price_per_day: number;
+  cleaning_fee_enabled: boolean;
+  cleaning_fee_amount: number;
 };
 
 // Debounced field hook — keeps local state, saves after delay
