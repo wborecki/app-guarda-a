@@ -8,8 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  MapPin, Shield, Lock, CreditCard, QrCode,
-  CheckCircle2, Info, ChevronRight, Smartphone,
+  MapPin, Shield, Lock, CreditCard,
+  CheckCircle2, Info, ChevronRight,
   Camera, Upload, ImagePlus, X, AlertTriangle, FileText, Ban,
   ShieldAlert, Loader2
 } from "lucide-react";
@@ -23,7 +23,6 @@ import { ptBR } from "date-fns/locale";
 
 import { supabase } from "@/integrations/supabase/client";
 
-type PaymentMethod = "credit" | "debit" | "pix";
 type AnalysisStatus = "pending" | "analyzing" | "approved" | "review" | "blocked";
 
 const STEPS = [
@@ -64,14 +63,7 @@ const Checkout = () => {
   const simulation = state?.simulation;
 
   // Payment state
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("credit");
-  const [confirmed, setConfirmed] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvv, setCardCvv] = useState("");
-  const [installments, setInstallments] = useState("1");
 
   // Photo upload state
   const [photos, setPhotos] = useState<File[]>([]);
@@ -229,13 +221,16 @@ const Checkout = () => {
       toast({ title: "Complete a verificação", description: "Envie fotos dos itens e aceite os termos.", variant: "destructive" });
       return;
     }
-    if (paymentMethod !== "pix" && (!cardNumber.trim() || !cardName.trim() || !cardExpiry.trim() || !cardCvv.trim())) {
-      toast({ title: "Preencha os dados do cartão", variant: "destructive" });
-      return;
-    }
     setProcessing(true);
 
     try {
+      // Save terms acceptances first
+      const termsToInsert = [
+        { user_id: user.id, term_type: "renter", term_version: "1.0", context: "checkout" },
+        { user_id: user.id, term_type: "prohibited_items", term_version: "1.0", context: "checkout" },
+      ];
+      await supabase.from("terms_acceptances").insert(termsToInsert);
+
       // Calculate dates
       const startDate = simulation?.deliveryDate
         ? new Date(simulation.deliveryDate).toISOString().split("T")[0]
@@ -244,59 +239,32 @@ const Checkout = () => {
         ? new Date(simulation.pickupDate).toISOString().split("T")[0]
         : new Date(Date.now() + days * 86400000).toISOString().split("T")[0];
 
-      // Create reservation
-      const { data: reservation, error: resError } = await supabase
-        .from("reservations")
-        .insert({
-          renter_id: user.id,
-          host_id: user.id, // placeholder — will be the space owner in production
-          space_id: null, // mock spaces don't have real UUIDs yet
-          start_date: startDate,
-          end_date: endDate,
+      // Create Stripe Checkout session via edge function
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: {
+          spaceName: space.name,
+          spaceLocation: `${space.neighborhood}, ${space.city}`,
           volume: reservedArea,
-          total_price: bp.total,
-          status: "confirmed",
-          notes: `Espaço: ${space.name} | ${space.neighborhood}, ${space.city}`,
-        })
-        .select("id")
-        .single();
+          days,
+          startDate,
+          endDate,
+          totalPrice: bp.total,
+          subtotal: bp.subtotal,
+          serviceFee: bp.serviceFee,
+          hostId: space.userId || user.id,
+          spaceId: null,
+        },
+      });
 
-      if (resError) {
-        console.error("Reservation error:", resError);
-        toast({ title: "Erro ao criar reserva", description: resError.message, variant: "destructive" });
+      if (error || !data?.url) {
+        console.error("Checkout error:", error || data);
+        toast({ title: "Erro ao iniciar pagamento", description: error?.message || "Tente novamente.", variant: "destructive" });
         setProcessing(false);
         return;
       }
 
-      // Create payment record
-      const { error: payError } = await supabase
-        .from("payments")
-        .insert({
-          reservation_id: reservation.id,
-          payer_id: user.id,
-          recipient_id: user.id, // placeholder
-          amount: bp.total,
-          platform_fee: bp.serviceFee,
-          status: "paid",
-          payment_method: paymentMethod,
-          paid_at: new Date().toISOString(),
-        });
-
-      if (payError) {
-        console.error("Payment error:", payError);
-        // Reservation was created, payment failed — still show success but warn
-        toast({ title: "Reserva criada", description: "Houve um erro ao registrar o pagamento, mas sua reserva foi criada.", variant: "destructive" });
-      }
-
-      // Save terms acceptances
-      const termsToInsert = [
-        { user_id: user.id, term_type: "renter", term_version: "1.0", context: "checkout" },
-        { user_id: user.id, term_type: "prohibited_items", term_version: "1.0", context: "checkout" },
-      ];
-      await supabase.from("terms_acceptances").insert(termsToInsert);
-
-      setProcessing(false);
-      setConfirmed(true);
+      // Redirect to Stripe Checkout
+      window.location.href = data.url;
     } catch (err) {
       console.error("Checkout error:", err);
       toast({ title: "Erro inesperado", description: "Tente novamente.", variant: "destructive" });
@@ -304,79 +272,10 @@ const Checkout = () => {
     }
   };
 
-  // ─── SUCCESS STATE ────────────────────────────────────────────
-  if (confirmed) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 22 }}
-          className="w-full max-w-lg"
-        >
-          <Card className="border-primary/20 shadow-xl overflow-hidden">
-            <div className="bg-primary/10 py-8 flex flex-col items-center">
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring", stiffness: 300 }}>
-                <CheckCircle2 size={56} className="text-primary" />
-              </motion.div>
-              <h1 className="text-xl font-bold text-foreground mt-4">Reserva confirmada!</h1>
-              <p className="text-sm text-muted-foreground mt-1">Seu espaço foi reservado com sucesso.</p>
-            </div>
-            <CardContent className="p-6 space-y-4">
-              <div className="rounded-lg bg-secondary/50 p-4 space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Nº da reserva</span>
-                  <span className="font-bold text-foreground">{reservationId}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Espaço</span>
-                  <span className="font-medium text-foreground truncate max-w-[180px]">{space.name}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Volume reservado</span>
-                  <span className="font-medium text-foreground">{reservedArea} m³</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Período</span>
-                  <span className="font-medium text-foreground">
-                    {simulation?.deliveryDate && simulation?.pickupDate
-                      ? `${format(new Date(simulation.deliveryDate), "dd/MM", { locale: ptBR })} → ${format(new Date(simulation.pickupDate), "dd/MM", { locale: ptBR })} · `
-                      : ""
-                    }{days} {days === 1 ? "dia" : "dias"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Fotos verificadas</span>
-                  <span className="font-medium text-primary">{photos.length} foto{photos.length !== 1 ? "s" : ""} ✓</span>
-                </div>
-                <div className="flex justify-between text-sm pt-2 border-t border-border/50">
-                  <span className="font-bold text-foreground">Total pago</span>
-                  <span className="font-extrabold text-primary text-lg">{formatBRL(bp.total)}</span>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                Enviamos os detalhes para <strong>{user?.email}</strong>.<br />
-                Você também pode acompanhar na sua conta.
-              </p>
-              <div className="flex gap-3">
-                <Button className="flex-1" onClick={() => navigate("/minha-conta/reservas")}>
-                  Minhas reservas
-                </Button>
-                <Button variant="outline" className="flex-1" onClick={() => navigate("/")}>
-                  Ir para o início
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    );
-  }
-
   // ─── CHECKOUT PAGE ────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background pb-24 sm:pb-28 lg:pb-8">
-      <SEO title="Checkout" description="Finalize sua reserva de espaço na GuardaAí. Pagamento seguro via Pix." noIndex />
+      <SEO title="Checkout" description="Finalize sua reserva de espaço na GuardaAí. Pagamento seguro via Stripe." noIndex />
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-30">
         <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 max-w-5xl">
@@ -658,7 +557,7 @@ const Checkout = () => {
               )}
             </AnimatePresence>
 
-            {/* Step 3: Payment — only visible when verification complete */}
+            {/* Step 3: Payment — Stripe redirect */}
             <AnimatePresence>
               {user && verificationComplete && (
                 <motion.div
@@ -671,98 +570,23 @@ const Checkout = () => {
                     <CardContent className="p-5 sm:p-6">
                       <h2 className="font-bold text-foreground mb-4 flex items-center gap-2 text-base">
                         <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">3</span>
-                        Forma de pagamento
+                        Pagamento seguro
                       </h2>
 
-                      {/* Payment method tabs */}
-                      <div className="grid grid-cols-3 gap-2 mb-5">
-                        {([
-                          { key: "credit" as const, label: "Crédito", icon: CreditCard },
-                          { key: "debit" as const, label: "Débito", icon: CreditCard },
-                          { key: "pix" as const, label: "Pix", icon: QrCode },
-                        ]).map((m) => (
-                          <button
-                            key={m.key}
-                            onClick={() => setPaymentMethod(m.key)}
-                            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all text-sm font-medium ${
-                              paymentMethod === m.key
-                                ? "border-primary bg-primary/5 text-primary"
-                                : "border-border bg-card text-muted-foreground hover:border-primary/30"
-                            }`}
-                          >
-                            <m.icon size={20} />
-                            <span>{m.label}</span>
-                          </button>
-                        ))}
+                      <div className="rounded-xl bg-secondary/50 border border-border/60 p-5 text-center space-y-4">
+                        <div className="flex items-center justify-center gap-3">
+                          <Lock size={20} className="text-primary" />
+                          <Shield size={20} className="text-primary" />
+                          <CreditCard size={20} className="text-primary" />
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Ao clicar em <strong>"Confirmar e pagar"</strong>, você será redirecionado para o <strong>Stripe</strong>, nossa plataforma de pagamento segura. Aceita cartão de crédito, débito e boleto.
+                        </p>
+                        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/70">
+                          <Lock size={12} />
+                          <span>Seus dados bancários nunca passam pelo GuardaAí</span>
+                        </div>
                       </div>
-
-                      <AnimatePresence mode="wait">
-                        {(paymentMethod === "credit" || paymentMethod === "debit") && (
-                          <motion.div
-                            key="card"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="space-y-4 overflow-hidden"
-                          >
-                            <div>
-                              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Número do cartão</label>
-                              <Input value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} placeholder="0000 0000 0000 0000" maxLength={19} />
-                            </div>
-                            <div>
-                              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Nome no cartão</label>
-                              <Input value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder="Como está no cartão" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                              <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Validade</label>
-                                <Input value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} placeholder="MM/AA" maxLength={5} />
-                              </div>
-                              <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">CVV</label>
-                                <Input type="password" value={cardCvv} onChange={(e) => setCardCvv(e.target.value)} placeholder="•••" maxLength={4} />
-                              </div>
-                            </div>
-                            {paymentMethod === "credit" && (
-                              <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Parcelas</label>
-                                <select
-                                  value={installments}
-                                  onChange={(e) => setInstallments(e.target.value)}
-                                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                >
-                                  <option value="1">1× de {formatBRL(bp.total)} (à vista)</option>
-                                  {bp.total >= 50 && <option value="2">2× de {formatBRL(bp.total / 2)}</option>}
-                                  {bp.total >= 90 && <option value="3">3× de {formatBRL(bp.total / 3)}</option>}
-                                </select>
-                              </div>
-                            )}
-                          </motion.div>
-                        )}
-
-                        {paymentMethod === "pix" && (
-                          <motion.div
-                            key="pix"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="text-center py-6 space-y-4">
-                              <div className="w-44 h-44 mx-auto bg-secondary rounded-xl flex items-center justify-center border border-border">
-                                <QrCode size={100} className="text-muted-foreground/30" />
-                              </div>
-                              <p className="text-sm text-muted-foreground">
-                                Clique em <strong>"Confirmar e pagar"</strong> para gerar o QR Code Pix.
-                              </p>
-                              <div className="flex items-center gap-2 justify-center">
-                                <Smartphone size={14} className="text-primary" />
-                                <span className="text-xs text-muted-foreground">Escaneie com o app do seu banco</span>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
                     </CardContent>
                   </Card>
                 </motion.div>

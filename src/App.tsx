@@ -13,6 +13,7 @@ import SearchResults from "./pages/SearchResults";
 import SpaceDetails from "./pages/SpaceDetails";
 import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import TermsRenter from "./pages/TermsRenter";
 import TermsHost from "./pages/TermsHost";
 import ProhibitedItems from "./pages/ProhibitedItems";
@@ -55,6 +56,7 @@ const App = () => (
           <Route path="/buscar" element={<SearchResults />} />
           <Route path="/espaco/:id" element={<SpaceDetails />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/pagamento-sucesso" element={<PaymentSuccess />} />
           <Route path="/termos/locatario" element={<TermsRenter />} />
           <Route path="/termos/anfitriao" element={<TermsHost />} />
           <Route path="/itens-proibidos" element={<ProhibitedItems />} />
