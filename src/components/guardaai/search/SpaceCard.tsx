@@ -37,6 +37,13 @@ const SpaceCard = ({
   const primaryBadge = computePrimaryBadge(space, allSpaces);
   const useHint = getUseCaseHint(space.type);
   const rentalType = space.rental_type || "daily";
+  const spaceUse = space.space_use || "objects";
+  const vehicleCompat: string[] = space.vehicle_compatible || [];
+  const vehicleNames = vehicleCompat
+    .map((id: string) => vehicleCategories.find(v => v.id === id))
+    .filter(Boolean)
+    .slice(0, 3)
+    .map(v => v!.icon + " " + v!.nome.split("(")[0].split("/")[0].trim());
 
   return (
     <motion.div
