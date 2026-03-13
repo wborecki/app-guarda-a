@@ -31,7 +31,7 @@ const faqs: FaqItem[] = [
   { category: "reservas", q: "Posso guardar por poucos dias?", a: "Sim! Você pode guardar a partir de 1 dia. O preço varia conforme o anfitrião." },
   { category: "reservas", q: "Posso guardar por meses ou mais?", a: "Claro. Reservas longas são aceitas e geralmente têm valores mais vantajosos por dia." },
   { category: "reservas", q: "Preciso medir meu objeto?", a: "Não necessariamente. O sistema possui uma lista de objetos com medidas estimadas. Basta selecionar o que deseja guardar e o cálculo é automático." },
-  { category: "reservas", q: "Quais objetos posso armazenar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce, ferramentas e itens pessoais em geral. Basta serem objetos permitidos pelos termos de uso." },
+  { category: "reservas", q: "Quais objetos posso armazenar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce, ferramentas e itens pessoais em geral. Também é possível guardar veículos como motos, carros, SUVs, caminhonetes, jet skis e barcos pequenos em espaços compatíveis." },
   { category: "reservas", q: "Como funcionam os horários de atendimento?", a: "Cada anfitrião define os horários em que está disponível para receber e devolver itens, por dia da semana. Ao reservar, você pode verificar os horários disponíveis antes de confirmar." },
 
   // Segurança
