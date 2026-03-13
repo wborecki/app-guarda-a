@@ -1,6 +1,6 @@
+import React, { useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/guardaai-logo-negative.png";
-import { useCallback } from "react";
 
 const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>((props, ref) => {
   const location = useLocation();
