@@ -5,8 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
-import { MapPin, Ruler, Home, Shield, Edit2 } from "lucide-react";
+import { MapPin, Ruler, Home, Shield, Edit2, Car, DoorOpen, Check } from "lucide-react";
 import { type StepProps, SPACE_TYPE_LABELS } from "./types";
+import { vehicleCategories, vehicleGroups } from "@/data/vehicleCategories";
 
 const InfoItem = ({ icon: Icon, label, value }: { icon: any; label: string; value: string }) => (
   <div className="flex items-start gap-2 p-2.5 rounded-lg bg-secondary/40">
@@ -18,8 +19,25 @@ const InfoItem = ({ icon: Icon, label, value }: { icon: any; label: string; valu
   </div>
 );
 
+const SPACE_USE_OPTIONS = [
+  { value: "objects", label: "Apenas objetos" },
+  { value: "vehicles", label: "Apenas veículos" },
+  { value: "both", label: "Objetos e veículos" },
+];
+
 const StepResumo = ({ space, updateSpace }: StepProps) => {
   const [editingBasic, setEditingBasic] = useState(false);
+
+  const spaceUse = (space as any).space_use || "objects";
+  const acceptsVehicles = spaceUse === "vehicles" || spaceUse === "both";
+  const vehicleCompat: string[] = ((space as any).vehicle_compatible as string[]) || [];
+
+  const toggleVehicle = (id: string) => {
+    const next = vehicleCompat.includes(id)
+      ? vehicleCompat.filter(v => v !== id)
+      : [...vehicleCompat, id];
+    updateSpace({ vehicle_compatible: next } as any);
+  };
 
   return (
     <div className="space-y-4">
@@ -41,6 +59,12 @@ const StepResumo = ({ space, updateSpace }: StepProps) => {
             <InfoItem icon={Ruler} label="Volume" value={space.volume ? `${Number(space.volume).toFixed(1)} m³` : "—"} />
             <InfoItem icon={Shield} label="Coberto" value={space.covered ? "Sim" : "Não"} />
             <InfoItem icon={Shield} label="Fechado" value={space.closed ? "Sim" : "Não"} />
+            <InfoItem icon={Car} label="Uso" value={SPACE_USE_OPTIONS.find(o => o.value === spaceUse)?.label || "Objetos"} />
+            {acceptsVehicles && (
+              <InfoItem icon={DoorOpen} label="Portão" value={
+                [(space as any).gate_width && `L: ${(space as any).gate_width}m`, (space as any).gate_height && `A: ${(space as any).gate_height}m`].filter(Boolean).join(" · ") || "—"
+              } />
+            )}
           </div>
         ) : (
           <div className="space-y-3">
@@ -100,6 +124,85 @@ const StepResumo = ({ space, updateSpace }: StepProps) => {
                 </div>
               ))}
             </div>
+
+            {/* Space use selector */}
+            <div className="pt-2 border-t border-border/50">
+              <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Uso do espaço</label>
+              <Select value={spaceUse} onValueChange={v => updateSpace({ space_use: v } as any)}>
+                <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {SPACE_USE_OPTIONS.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Vehicle fields — only when accepts vehicles */}
+            {acceptsVehicles && (
+              <div className="space-y-3 pt-2 border-t border-border/50">
+                <h3 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                  <Car size={13} className="text-accent" /> Veículos compatíveis
+                </h3>
+
+                {/* Gate dimensions */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] text-muted-foreground mb-1 block flex items-center gap-1">
+                      <DoorOpen size={10} /> Largura portão (m)
+                    </label>
+                    <Input
+                      type="number" step="0.1" min="0"
+                      value={(space as any).gate_width || ""}
+                      onChange={e => updateSpace({ gate_width: parseFloat(e.target.value) || null } as any)}
+                      placeholder="Ex: 2.5"
+                      className="h-10 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground mb-1 block flex items-center gap-1">
+                      <DoorOpen size={10} /> Altura portão (m)
+                    </label>
+                    <Input
+                      type="number" step="0.1" min="0"
+                      value={(space as any).gate_height || ""}
+                      onChange={e => updateSpace({ gate_height: parseFloat(e.target.value) || null } as any)}
+                      placeholder="Ex: 2.2"
+                      className="h-10 text-sm"
+                    />
+                  </div>
+                </div>
+
+                {/* Vehicle categories */}
+                <p className="text-[10px] text-muted-foreground">Selecione os tipos de veículo que seu espaço comporta:</p>
+                {vehicleGroups.map(group => (
+                  <div key={group}>
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase mb-1.5">{group}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {vehicleCategories.filter(v => v.grupo === group).map(v => {
+                        const selected = vehicleCompat.includes(v.id);
+                        return (
+                          <button
+                            key={v.id}
+                            type="button"
+                            onClick={() => toggleVehicle(v.id)}
+                            className={`text-[11px] px-2.5 py-1.5 rounded-lg border transition-colors flex items-center gap-1 ${
+                              selected
+                                ? "bg-primary/10 border-primary/30 text-primary font-semibold"
+                                : "border-border/60 text-muted-foreground hover:border-primary/20"
+                            }`}
+                          >
+                            <span>{v.icon}</span>
+                            <span>{v.nome.split("(")[0].trim()}</span>
+                            {selected && <Check size={10} />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
