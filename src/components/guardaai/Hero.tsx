@@ -8,22 +8,26 @@ import { encodeSearchParams } from "@/lib/searchParams";
 import heroBg from "@/assets/hero-bg-new.jpg";
 import LocationAutocomplete from "@/components/guardaai/LocationAutocomplete";
 import DateRangePicker from "@/components/guardaai/DateRangePicker";
+import ItemAutocomplete from "@/components/guardaai/ItemAutocomplete";
+import type { ItemDimension } from "@/data/itemDimensions";
 
 const Hero = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState("");
   const [deliveryDate, setDeliveryDate] = useState<Date | undefined>();
   const [pickupDate, setPickupDate] = useState<Date | undefined>();
-  const [volume, setVolume] = useState("");
-
+  const [selectedItem, setSelectedItem] = useState<ItemDimension | null>(null);
   const days = deliveryDate && pickupDate ? Math.max(differenceInDays(pickupDate, deliveryDate), 1) : 0;
 
+  const itemVolume = selectedItem
+    ? (selectedItem.altura * selectedItem.largura * selectedItem.comprimento) / 1_000_000
+    : 0;
+
   const handleSearch = () => {
-    const totalVol = parseFloat(volume) || 0;
     const qs = encodeSearchParams({
       location: location || "São Paulo",
       days: days || 1,
-      totalVol,
+      totalVol: itemVolume,
       deliveryDate: deliveryDate?.toISOString(),
       pickupDate: pickupDate?.toISOString(),
     });
@@ -122,24 +126,15 @@ const Hero = () => {
                       />
                     </div>
                     <div className="w-px self-stretch my-3 bg-border" />
-                    <div className="flex-[0.8] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
+                    <div className="flex-[1] min-w-0 px-4 py-3 rounded-xl hover:bg-muted/40 transition-colors">
                       <label className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-                        Volume
+                        O que guardar
                       </label>
-                      <div className="relative">
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.5"
-                          value={volume}
-                          onChange={(e) => setVolume(e.target.value)}
-                          placeholder="Quanto? (m³)"
-                          className="h-9 w-full bg-transparent text-[15px] font-medium placeholder:text-muted-foreground/50 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                        {volume && (
-                          <span className="absolute right-0 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">m³</span>
-                        )}
-                      </div>
+                      <ItemAutocomplete
+                        value={selectedItem}
+                        onChange={setSelectedItem}
+                        compact
+                      />
                     </div>
                     <div className="flex items-center pl-3 pr-1">
                       <Button
@@ -233,23 +228,15 @@ const Hero = () => {
                 />
               </div>
 
-              {/* Volume */}
+              {/* O que guardar */}
               <div>
                 <label className="text-[10.5px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-1.5 block">
-                  Volume estimado
+                  O que guardar
                 </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    value={volume}
-                    onChange={(e) => setVolume(e.target.value)}
-                    placeholder="Ex: 2.5"
-                    className="flex h-11 w-full rounded-xl border border-input bg-background px-3 py-2 text-[14px] ring-offset-background placeholder:text-muted-foreground/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 pr-10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-muted-foreground/50 font-medium">m³</span>
-                </div>
+                <ItemAutocomplete
+                  value={selectedItem}
+                  onChange={setSelectedItem}
+                />
               </div>
 
               {/* CTA */}
