@@ -723,7 +723,7 @@ const Checkout = () => {
                         <span className="text-foreground font-medium">{formatBRL(bp.subtotal)}</span>
                       </div>
                       <div className="text-[11px] text-muted-foreground/70 pl-0.5">
-                        {reservedArea} m³ × {days} {days === 1 ? "dia" : "dias"} → {formatBRL(bp.pricePerM3)}/m³
+                        {reservedArea} m³ × {isHourlyReservation ? `${hours}h` : `${days} ${days === 1 ? "dia" : "dias"}`} → {formatBRL(bp.pricePerM3)}/m³
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Taxa de serviço (fixa)</span>

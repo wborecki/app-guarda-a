@@ -273,6 +273,27 @@ const SpaceDetails = () => {
                 </div>
               </div>
 
+              {/* Rental type & availability info */}
+              {(space.rental_type || space.availability_schedule) && (
+                <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
+                  {(space.rental_type === "hourly" || space.rental_type === "both") && (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-accent bg-accent/10 border border-accent/20 rounded-full px-2.5 py-1">
+                      <Clock size={11} /> Aceita por hora
+                    </span>
+                  )}
+                  {(space.rental_type === "daily" || space.rental_type === "both") && (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary bg-primary/10 border border-primary/20 rounded-full px-2.5 py-1">
+                      <Calendar size={11} /> Aceita por dia
+                    </span>
+                  )}
+                  {space.availability_schedule && Object.keys(space.availability_schedule).length > 0 && (
+                    <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground bg-secondary rounded-full px-2.5 py-1">
+                      <Clock size={11} /> Horários definidos
+                    </span>
+                  )}
+                </div>
+              )}
+
               <p className="text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-5">{space.description}</p>
 
               {/* Features grid */}
