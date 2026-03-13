@@ -22,13 +22,15 @@ interface SpaceCardProps {
 }
 
 const SpaceCard = ({
-  space, allSpaces, totalVol, days, index,
+  space, allSpaces, totalVol, days, hours = 0, index,
   isHighlighted, onMouseEnter, onMouseLeave, onClick, onSelect, cardRef,
 }: SpaceCardProps) => {
   const reservedVol = Math.max(totalVol, 1);
-  const bp = calculatePrice(reservedVol, days);
+  const isHourly = days === 0 && hours > 0;
+  const bp = isHourly ? calculateHourlyPrice(reservedVol, hours) : calculatePrice(reservedVol, days);
   const primaryBadge = computePrimaryBadge(space, allSpaces);
   const useHint = getUseCaseHint(space.type);
+  const rentalType = space.rental_type || "daily";
 
   return (
     <motion.div
