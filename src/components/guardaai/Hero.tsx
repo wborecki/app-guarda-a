@@ -345,10 +345,13 @@ const Hero = () => {
               <ArrowRight size={12} className="opacity-50" />
             </Link>
           </motion.div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
 
-export default Hero;
+          {/* Social proof — mobile */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-5 pt-4 border-t border-border/30"
+          >
+            <SocialProofBar />
+          </motion.div>
