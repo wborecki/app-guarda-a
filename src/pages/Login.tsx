@@ -129,7 +129,7 @@ const Login = () => {
   const subtitle = mode === "login"
     ? "Entre para acompanhar suas reservas e espaços anunciados."
     : mode === "signup"
-    ? "Crie uma conta única para guardar itens e anunciar espaço."
+    ? "Crie uma conta única para guardar objetos ou veículos e anunciar espaço."
     : "Informe seu e-mail e enviaremos instruções para redefinir sua senha.";
 
   return (
