@@ -57,7 +57,8 @@ const SearchResults = () => {
     [searchParams, location.state]
   );
 
-  const { days, totalVol, location: userLocation, deliveryDate, deliveryTime, pickupDate, pickupTime } = params;
+  const { days, hours = 0, totalVol, location: userLocation, deliveryDate, deliveryTime, pickupDate, pickupTime } = params;
+  const isHourly = days === 0 && hours > 0;
   const shortLocation = useMemo(() => shortenLocation(userLocation), [userLocation]);
   const templateSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
 
