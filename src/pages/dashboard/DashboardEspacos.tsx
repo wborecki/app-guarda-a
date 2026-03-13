@@ -197,6 +197,16 @@ const DashboardEspacos = () => {
     }
   };
 
+  const handleApplySuggestedPrice = async (id: string) => {
+    const { error } = await supabase.from("spaces").update({ price_per_day: 5.0, updated_at: new Date().toISOString() }).eq("id", id);
+    if (error) {
+      toast({ title: "Erro ao aplicar", description: error.message, variant: "destructive" });
+    } else {
+      setSpaces(prev => prev.map(s => s.id === id ? { ...s, price_per_day: 5.0 } : s));
+      toast({ title: "Tabela sugerida aplicada", description: "Preço base definido como R$ 5,00/m³/dia." });
+    }
+  };
+
   const published = spaces.filter(s => s.status === "published");
   const drafts = spaces.filter(s => s.status === "draft");
   const inactive = spaces.filter(s => s.status === "inactive");
