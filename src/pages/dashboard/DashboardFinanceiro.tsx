@@ -26,7 +26,7 @@ const DashboardFinanceiro = () => (
             <ArrowUpRight size={18} className="text-primary" />
           </div>
         </div>
-        <p className="text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
+        <p className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
         <p className="text-sm text-muted-foreground mt-1">Valores recebidos</p>
       </div>
       <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
