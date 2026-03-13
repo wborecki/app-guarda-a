@@ -130,6 +130,25 @@ const Pricing = () => {
             </div>
           ))}
         </motion.div>
+
+        {/* Host CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mt-8 md:mt-10"
+        >
+          <p className="text-xs text-muted-foreground mb-3">
+            Tem um espaço disponível? Operadores profissionais e anfitriões independentes são bem-vindos.
+          </p>
+          <Button asChild variant="outline" className="group h-10 px-6 text-sm font-semibold border-accent/40 text-accent hover:bg-accent/5 hover:border-accent/60">
+            <Link to="/anunciar">
+              <Home size={15} className="mr-1.5" />
+              Anuncie seu espaço
+              <ArrowRight size={14} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
+        </motion.div>
       </div>
     </section>
   );
