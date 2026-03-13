@@ -27,7 +27,7 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
               <img src={logo} alt="GuardaAí" className="h-10 mb-2 mx-auto" />
             </Link>
             <p className="text-[12px] text-background/50 leading-relaxed max-w-[240px] mx-auto">
-              Guarde objetos e veículos por menos.
+              Guarde objetos e veículos com segurança, perto de você.
             </p>
           </div>
 
@@ -72,7 +72,7 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
               <img src={logo} alt="GuardaAí" className="h-16 mb-3" />
             </Link>
             <p className="text-sm text-background/60 leading-relaxed">
-              Guarde objetos e veículos por menos.
+              Guarde objetos e veículos com segurança, perto de você.
             </p>
           </div>
 

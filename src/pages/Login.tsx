@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Warehouse, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff } from "lucide-react";
+import { Warehouse, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff, Car } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
@@ -153,21 +153,28 @@ const Login = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="grid grid-cols-2 gap-4 mb-8"
+              className="grid grid-cols-3 gap-3 mb-8"
             >
               <div className="p-4 rounded-2xl bg-primary/5 border border-primary/15 text-center">
                 <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-2">
                   <Warehouse size={18} className="text-primary" />
                 </div>
-                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar objetos e veículos</h3>
-                <p className="text-xs text-muted-foreground">Reservas, pagamentos e status.</p>
+                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar objetos</h3>
+                <p className="text-xs text-muted-foreground">Caixas, móveis, estoque e mais.</p>
               </div>
               <div className="p-4 rounded-2xl bg-accent/5 border border-accent/15 text-center">
                 <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-2">
-                  <Home size={18} className="text-accent" />
+                  <Car size={18} className="text-accent" />
+                </div>
+                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar veículos</h3>
+                <p className="text-xs text-muted-foreground">Carros, motos, barcos e mais.</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-secondary border border-border/60 text-center">
+                <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center mx-auto mb-2">
+                  <Home size={18} className="text-foreground" />
                 </div>
                 <h3 className="text-sm font-semibold text-foreground mb-0.5">Anunciar espaço</h3>
-                <p className="text-xs text-muted-foreground">Espaços, solicitações e ganhos.</p>
+                <p className="text-xs text-muted-foreground">Ganhe renda com espaço ocioso.</p>
               </div>
             </motion.div>
           )}
