@@ -93,11 +93,11 @@ const defaultCity: CityData = {
 };
 
 export const spaceTemplates = [
-  { name: "Garagem coberta disponível", type: "Garagem", area: 12, pricePerDay: 8, description: "Garagem residencial coberta com portão automático. Espaço limpo e seco, ideal para caixas, móveis e itens do dia a dia.", photos: [garageA1, garageA2, garageA3], features: ["Portão automático", "Câmeras", "Acesso fácil"] },
-  { name: "Quarto extra em apartamento", type: "Quarto", area: 9, pricePerDay: 6, description: "Quarto vazio em apartamento com portaria e elevador. Ambiente fechado e arejado, perfeito para itens que precisam de cuidado.", photos: [roomA1, roomA2, roomA3], features: ["Portaria 24h", "Elevador", "Climatizado"] },
-  { name: "Depósito organizado", type: "Depósito", area: 20, pricePerDay: 12, description: "Depósito com prateleiras metálicas e piso nivelado. Espaço prático para estoque, equipamentos ou volumes variados.", photos: [depositA1, depositA2, depositA3], features: ["Seguro incluso", "Acesso 24h", "Piso nivelado"] },
-  { name: "Área coberta nos fundos", type: "Área coberta", area: 15, pricePerDay: 7, description: "Área coberta nos fundos de casa em bairro residencial. Ambiente arejado com acesso fácil para carga e descarga.", photos: [coveredA1, coveredA2, coveredA3], features: ["Ambiente seco", "Rua tranquila", "Fácil acesso"] },
-  { name: "Galpão pequeno nos fundos", type: "Galpão", area: 25, pricePerDay: 15, description: "Galpão com pé direito alto e portão largo. Ideal para móveis maiores, equipamentos ou volumes grandes.", photos: [shedA1, shedA2, shedA3], features: ["Portão largo", "Pé direito alto", "Veículos entram"] },
+  { name: "Garagem coberta disponível", type: "Garagem", area: 12, pricePerDay: 8, description: "Garagem residencial coberta com portão automático. Espaço limpo e seco, ideal para caixas, móveis e itens do dia a dia.", photos: [garageA1, garageA2, garageA3], features: ["Portão automático", "Câmeras", "Acesso fácil"], space_use: "both" as const, vehicle_compatible: ["moto-pequena", "moto-grande", "carro-pequeno"] },
+  { name: "Quarto extra em apartamento", type: "Quarto", area: 9, pricePerDay: 6, description: "Quarto vazio em apartamento com portaria e elevador. Ambiente fechado e arejado, perfeito para itens que precisam de cuidado.", photos: [roomA1, roomA2, roomA3], features: ["Portaria 24h", "Elevador", "Climatizado"], space_use: "objects" as const, vehicle_compatible: [] },
+  { name: "Depósito organizado", type: "Depósito", area: 20, pricePerDay: 12, description: "Depósito com prateleiras metálicas e piso nivelado. Espaço prático para estoque, equipamentos ou volumes variados.", photos: [depositA1, depositA2, depositA3], features: ["Seguro incluso", "Acesso 24h", "Piso nivelado"], space_use: "objects" as const, vehicle_compatible: [] },
+  { name: "Área coberta nos fundos", type: "Área coberta", area: 15, pricePerDay: 7, description: "Área coberta nos fundos de casa em bairro residencial. Ambiente arejado com acesso fácil para carga e descarga.", photos: [coveredA1, coveredA2, coveredA3], features: ["Ambiente seco", "Rua tranquila", "Fácil acesso"], space_use: "both" as const, vehicle_compatible: ["moto-pequena", "moto-grande"] },
+  { name: "Galpão pequeno nos fundos", type: "Galpão", area: 25, pricePerDay: 15, description: "Galpão com pé direito alto e portão largo. Ideal para móveis maiores, equipamentos ou volumes grandes.", photos: [shedA1, shedA2, shedA3], features: ["Portão largo", "Pé direito alto", "Veículos entram"], space_use: "both" as const, vehicle_compatible: ["moto-pequena", "moto-grande", "carro-pequeno", "carro-sedan", "suv", "caminhonete"] },
 ];
 
 export const ownerProfiles = [
@@ -147,15 +147,24 @@ export const sortLabels: Record<SortOption, string> = {
   relevance: "Mais relevantes",
 };
 
+export type SpaceUseFilter = "all" | "objects" | "vehicles";
+
+export const spaceUseOptions: { label: string; value: SpaceUseFilter }[] = [
+  { label: "Todos", value: "all" },
+  { label: "Objetos", value: "objects" },
+  { label: "Veículos", value: "vehicles" },
+];
+
 export type Filters = {
   types: string[];
   maxPrice: number | null;
   maxDistance: number | null;
   minRating: number | null;
   features: string[];
+  spaceUse: SpaceUseFilter;
 };
 
-export const emptyFilters: Filters = { types: [], maxPrice: null, maxDistance: null, minRating: null, features: [] };
+export const emptyFilters: Filters = { types: [], maxPrice: null, maxDistance: null, minRating: null, features: [], spaceUse: "all" };
 
 // ─── Helpers ───────────────────────────────────────────────────────
 export function detectCity(locationStr: string): CityData {
@@ -209,6 +218,8 @@ export function generateSpacesForCity(locationStr: string) {
       reviewsList: reviewsPool.slice(0, 2 + (i % 2)),
       lat: neighborhood.lat,
       lng: neighborhood.lng,
+      space_use: template.space_use,
+      vehicle_compatible: template.vehicle_compatible,
     };
   });
 }

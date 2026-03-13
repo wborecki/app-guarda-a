@@ -1,9 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Navigation, SlidersHorizontal, X, Check } from "lucide-react";
+import { Star, Navigation, SlidersHorizontal, X, Check, Package, Car } from "lucide-react";
 import Dropdown from "./Dropdown";
 import {
-  type SortOption, type Filters,
-  sortLabels, spaceTypesList, distanceOptions, ratingOptions, allFeatures,
+  type SortOption, type Filters, type SpaceUseFilter,
+  sortLabels, spaceTypesList, distanceOptions, ratingOptions, allFeatures, spaceUseOptions,
 } from "@/data/searchMockData";
 
 interface FilterBarProps {
@@ -28,6 +28,27 @@ const FilterBar = ({
     <div className="bg-background border-b">
       <div className="container py-2.5 space-y-2">
         <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-hide overscroll-x-contain">
+          {/* Space use toggle */}
+          <div className="flex items-center bg-secondary rounded-full p-0.5 flex-shrink-0">
+            {spaceUseOptions.map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => setFilters(f => ({ ...f, spaceUse: opt.value }))}
+                className={`text-[11px] font-medium px-2.5 py-1 rounded-full whitespace-nowrap transition-colors flex items-center gap-1 ${
+                  filters.spaceUse === opt.value
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {opt.value === "objects" && <Package size={10} />}
+                {opt.value === "vehicles" && <Car size={10} />}
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="w-px h-5 bg-border/60 flex-shrink-0 mx-0.5" />
+
           {(Object.keys(sortLabels) as SortOption[]).map(key => (
             <button
               key={key}

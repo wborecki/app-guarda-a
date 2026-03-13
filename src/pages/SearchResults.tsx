@@ -131,6 +131,11 @@ const SearchResults = () => {
           availability_schedule: (s as any).availability_schedule || {},
           cleaning_fee_enabled: (s as any).cleaning_fee_enabled || false,
           cleaning_fee_amount: (s as any).cleaning_fee_amount || 0,
+          space_use: s.space_use || "objects",
+          vehicle_compatible: (s.vehicle_compatible as string[]) || [],
+          gate_width: s.gate_width,
+          gate_height: s.gate_height,
+          covered: s.covered,
         };
       });
       setDbSpaces(mapped);
@@ -155,6 +160,12 @@ const SearchResults = () => {
   const filteredSortedSpaces = useMemo(() => {
     let result = [...allSpaces];
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
+    if (filters.spaceUse !== "all") {
+      result = result.filter(s => {
+        const use = s.space_use || "objects";
+        return use === filters.spaceUse || use === "both";
+      });
+    }
     if (filters.maxPrice !== null) {
       result = result.filter(s => {
         const rate = s.pricePerDay || s.price_per_day || MIN_DAILY_RATE;
@@ -195,6 +206,7 @@ const SearchResults = () => {
 
   const activeFilterChips = useMemo(() => {
     const chips: { label: string; clear: () => void }[] = [];
+    if (filters.spaceUse !== "all") chips.push({ label: filters.spaceUse === "objects" ? "Objetos" : "Veículos", clear: () => setFilters(f => ({ ...f, spaceUse: "all" })) });
     filters.types.forEach(t => chips.push({ label: t, clear: () => setFilters(f => ({ ...f, types: f.types.filter(x => x !== t) })) }));
     if (filters.maxDistance !== null) chips.push({ label: `Até ${filters.maxDistance} km`, clear: () => setFilters(f => ({ ...f, maxDistance: null })) });
     if (filters.minRating !== null) chips.push({ label: `${filters.minRating}+`, clear: () => setFilters(f => ({ ...f, minRating: null })) });
