@@ -201,6 +201,7 @@ const SearchResults = () => {
 
   const activeFilterChips = useMemo(() => {
     const chips: { label: string; clear: () => void }[] = [];
+    if (filters.spaceUse !== "all") chips.push({ label: filters.spaceUse === "objects" ? "Objetos" : "Veículos", clear: () => setFilters(f => ({ ...f, spaceUse: "all" })) });
     filters.types.forEach(t => chips.push({ label: t, clear: () => setFilters(f => ({ ...f, types: f.types.filter(x => x !== t) })) }));
     if (filters.maxDistance !== null) chips.push({ label: `Até ${filters.maxDistance} km`, clear: () => setFilters(f => ({ ...f, maxDistance: null })) });
     if (filters.minRating !== null) chips.push({ label: `${filters.minRating}+`, clear: () => setFilters(f => ({ ...f, minRating: null })) });
