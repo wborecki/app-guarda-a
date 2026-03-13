@@ -108,7 +108,7 @@ const ItemAutocomplete = ({
       />
 
       {open && filtered.length > 0 && (
-        <div className="absolute left-0 top-full mt-1.5 z-[100] bg-card border border-border rounded-xl shadow-2xl shadow-foreground/[0.14] overflow-hidden max-h-[280px] overflow-y-auto w-[260px] md:w-[280px] max-md:w-full ring-1 ring-foreground/[0.04] backdrop-blur-sm">
+        <div className="absolute left-0 top-full mt-1.5 z-[100] bg-card border border-border rounded-xl shadow-2xl shadow-foreground/[0.14] overflow-hidden max-h-[220px] overflow-y-auto w-[260px] md:w-[280px] max-md:w-full ring-1 ring-foreground/[0.04] backdrop-blur-sm">
           {!query.trim() && (
             <div className="px-3 pt-2.5 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50">
               Itens populares
