@@ -121,6 +121,24 @@ const FilterBar = ({
                 ))}
               </div>
             </Dropdown>
+
+            {showVehicleFilter && (
+              <Dropdown label="Veículo" isActive={filters.vehicleTypes.length > 0}>
+                <div className="space-y-2 max-h-60 overflow-y-auto">
+                  {vehicleGroups.map(group => (
+                    <div key={group}>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-3 py-1">{group}</p>
+                      {vehicleCategories.filter(v => v.grupo === group).map(v => (
+                        <button key={v.id} onClick={() => toggleVehicleType(v.id)} className={`w-full text-left text-xs px-3 py-2 rounded-lg transition-colors flex items-center justify-between ${filters.vehicleTypes.includes(v.id) ? "bg-primary/10 text-primary font-semibold" : "hover:bg-secondary text-foreground"}`}>
+                          <span>{v.icon} {v.nome}</span>
+                          {filters.vehicleTypes.includes(v.id) && <Check size={12} />}
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </Dropdown>
+            )}
           </div>
 
           {/* Mobile filter button */}
