@@ -36,7 +36,7 @@ const typeLabels: Record<string, string> = {
   comercial: "Espaço comercial",
 };
 
-const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete: (id: string) => void; onToggleStatus: (id: string, newStatus: string) => void }) => {
+const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: { space: Space; onDelete: (id: string) => void; onToggleStatus: (id: string, newStatus: string) => void; onApplySuggestedPrice: (id: string) => void }) => {
   const isDraft = space.status === "draft";
   const isInactive = space.status === "inactive";
   const thumb = space.photos?.[0];
