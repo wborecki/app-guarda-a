@@ -410,6 +410,7 @@ export type Database = {
           access_hours: string | null
           access_type: string | null
           availability: string | null
+          availability_schedule: Json | null
           available_days: string[] | null
           beneficiary_name: string | null
           closed: boolean | null
@@ -427,6 +428,7 @@ export type Database = {
           photos: string[] | null
           pix_key: string | null
           pix_key_type: string | null
+          rental_type: string
           rules: string | null
           security_features: string | null
           space_category: string | null
@@ -441,6 +443,7 @@ export type Database = {
           access_hours?: string | null
           access_type?: string | null
           availability?: string | null
+          availability_schedule?: Json | null
           available_days?: string[] | null
           beneficiary_name?: string | null
           closed?: boolean | null
@@ -458,6 +461,7 @@ export type Database = {
           photos?: string[] | null
           pix_key?: string | null
           pix_key_type?: string | null
+          rental_type?: string
           rules?: string | null
           security_features?: string | null
           space_category?: string | null
@@ -472,6 +476,7 @@ export type Database = {
           access_hours?: string | null
           access_type?: string | null
           availability?: string | null
+          availability_schedule?: Json | null
           available_days?: string[] | null
           beneficiary_name?: string | null
           closed?: boolean | null
@@ -489,6 +494,7 @@ export type Database = {
           photos?: string[] | null
           pix_key?: string | null
           pix_key_type?: string | null
+          rental_type?: string
           rules?: string | null
           security_features?: string | null
           space_category?: string | null
