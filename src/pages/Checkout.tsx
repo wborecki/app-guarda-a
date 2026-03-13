@@ -683,7 +683,7 @@ const Checkout = () => {
                       <div className="flex justify-between text-sm items-center">
                         <span className="text-muted-foreground">Período total</span>
                         <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">
-                          {days} {days === 1 ? "dia" : "dias"}
+                          {isHourlyReservation ? `${hours} hora${hours > 1 ? "s" : ""}` : `${days} ${days === 1 ? "dia" : "dias"}`}
                         </span>
                       </div>
                       {space.owner && (
