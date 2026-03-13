@@ -222,13 +222,16 @@ const Checkout = () => {
       toast({ title: "Complete a verificação", description: "Envie fotos dos itens e aceite os termos.", variant: "destructive" });
       return;
     }
-    if (paymentMethod !== "pix" && (!cardNumber.trim() || !cardName.trim() || !cardExpiry.trim() || !cardCvv.trim())) {
-      toast({ title: "Preencha os dados do cartão", variant: "destructive" });
-      return;
-    }
     setProcessing(true);
 
     try {
+      // Save terms acceptances first
+      const termsToInsert = [
+        { user_id: user.id, term_type: "renter", term_version: "1.0", context: "checkout" },
+        { user_id: user.id, term_type: "prohibited_items", term_version: "1.0", context: "checkout" },
+      ];
+      await supabase.from("terms_acceptances").insert(termsToInsert);
+
       // Calculate dates
       const startDate = simulation?.deliveryDate
         ? new Date(simulation.deliveryDate).toISOString().split("T")[0]
@@ -237,59 +240,32 @@ const Checkout = () => {
         ? new Date(simulation.pickupDate).toISOString().split("T")[0]
         : new Date(Date.now() + days * 86400000).toISOString().split("T")[0];
 
-      // Create reservation
-      const { data: reservation, error: resError } = await supabase
-        .from("reservations")
-        .insert({
-          renter_id: user.id,
-          host_id: user.id, // placeholder — will be the space owner in production
-          space_id: null, // mock spaces don't have real UUIDs yet
-          start_date: startDate,
-          end_date: endDate,
+      // Create Stripe Checkout session via edge function
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: {
+          spaceName: space.name,
+          spaceLocation: `${space.neighborhood}, ${space.city}`,
           volume: reservedArea,
-          total_price: bp.total,
-          status: "confirmed",
-          notes: `Espaço: ${space.name} | ${space.neighborhood}, ${space.city}`,
-        })
-        .select("id")
-        .single();
+          days,
+          startDate,
+          endDate,
+          totalPrice: bp.total,
+          subtotal: bp.subtotal,
+          serviceFee: bp.serviceFee,
+          hostId: space.userId || user.id,
+          spaceId: null,
+        },
+      });
 
-      if (resError) {
-        console.error("Reservation error:", resError);
-        toast({ title: "Erro ao criar reserva", description: resError.message, variant: "destructive" });
+      if (error || !data?.url) {
+        console.error("Checkout error:", error || data);
+        toast({ title: "Erro ao iniciar pagamento", description: error?.message || "Tente novamente.", variant: "destructive" });
         setProcessing(false);
         return;
       }
 
-      // Create payment record
-      const { error: payError } = await supabase
-        .from("payments")
-        .insert({
-          reservation_id: reservation.id,
-          payer_id: user.id,
-          recipient_id: user.id, // placeholder
-          amount: bp.total,
-          platform_fee: bp.serviceFee,
-          status: "paid",
-          payment_method: paymentMethod,
-          paid_at: new Date().toISOString(),
-        });
-
-      if (payError) {
-        console.error("Payment error:", payError);
-        // Reservation was created, payment failed — still show success but warn
-        toast({ title: "Reserva criada", description: "Houve um erro ao registrar o pagamento, mas sua reserva foi criada.", variant: "destructive" });
-      }
-
-      // Save terms acceptances
-      const termsToInsert = [
-        { user_id: user.id, term_type: "renter", term_version: "1.0", context: "checkout" },
-        { user_id: user.id, term_type: "prohibited_items", term_version: "1.0", context: "checkout" },
-      ];
-      await supabase.from("terms_acceptances").insert(termsToInsert);
-
-      setProcessing(false);
-      setConfirmed(true);
+      // Redirect to Stripe Checkout
+      window.location.href = data.url;
     } catch (err) {
       console.error("Checkout error:", err);
       toast({ title: "Erro inesperado", description: "Tente novamente.", variant: "destructive" });
