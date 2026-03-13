@@ -255,7 +255,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Horário de acesso geral</label>
             <Select value={space.access_hours} onValueChange={v => updateSpace({ access_hours: v })}>

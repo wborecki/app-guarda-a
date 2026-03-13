@@ -128,7 +128,7 @@ const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: {
 
       {/* Suggested pricing table per space */}
       {!isDraft && (
-        <div className="ml-24 mr-4 mb-1">
+        <div className="sm:ml-24 mr-4 mb-1">
           <SuggestedPricingTable
             onApply={() => onApplySuggestedPrice(space.id)}
           />

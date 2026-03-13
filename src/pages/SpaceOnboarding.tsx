@@ -204,7 +204,7 @@ const SpaceOnboarding = () => {
 
           {/* Bottom navigation */}
           {currentStep < 6 && (
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between mt-6" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
               <Button
                 type="button"
                 variant="outline"
