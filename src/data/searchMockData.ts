@@ -162,9 +162,10 @@ export type Filters = {
   minRating: number | null;
   features: string[];
   spaceUse: SpaceUseFilter;
+  vehicleTypes: string[];
 };
 
-export const emptyFilters: Filters = { types: [], maxPrice: null, maxDistance: null, minRating: null, features: [], spaceUse: "all" };
+export const emptyFilters: Filters = { types: [], maxPrice: null, maxDistance: null, minRating: null, features: [], spaceUse: "all", vehicleTypes: [] };
 
 // ─── Helpers ───────────────────────────────────────────────────────
 export function detectCity(locationStr: string): CityData {

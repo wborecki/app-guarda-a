@@ -5,6 +5,7 @@ import {
   type SortOption, type Filters, type SpaceUseFilter,
   sortLabels, spaceTypesList, distanceOptions, ratingOptions, allFeatures, spaceUseOptions,
 } from "@/data/searchMockData";
+import { vehicleCategories, vehicleGroups } from "@/data/vehicleCategories";
 
 interface FilterBarProps {
   sortBy: SortOption;
@@ -23,6 +24,8 @@ const FilterBar = ({
 }: FilterBarProps) => {
   const toggleType = (t: string) => setFilters(f => ({ ...f, types: f.types.includes(t) ? f.types.filter(x => x !== t) : [...f.types, t] }));
   const toggleFeature = (feat: string) => setFilters(f => ({ ...f, features: f.features.includes(feat) ? f.features.filter(x => x !== feat) : [...f.features, feat] }));
+  const toggleVehicleType = (id: string) => setFilters(f => ({ ...f, vehicleTypes: f.vehicleTypes.includes(id) ? f.vehicleTypes.filter(x => x !== id) : [...f.vehicleTypes, id] }));
+  const showVehicleFilter = filters.spaceUse === "vehicles" || filters.spaceUse === "all";
 
   return (
     <div className="bg-background border-b">
@@ -118,6 +121,24 @@ const FilterBar = ({
                 ))}
               </div>
             </Dropdown>
+
+            {showVehicleFilter && (
+              <Dropdown label="Veículo" isActive={filters.vehicleTypes.length > 0}>
+                <div className="space-y-2 max-h-60 overflow-y-auto">
+                  {vehicleGroups.map(group => (
+                    <div key={group}>
+                      <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-3 py-1">{group}</p>
+                      {vehicleCategories.filter(v => v.grupo === group).map(v => (
+                        <button key={v.id} onClick={() => toggleVehicleType(v.id)} className={`w-full text-left text-xs px-3 py-2 rounded-lg transition-colors flex items-center justify-between ${filters.vehicleTypes.includes(v.id) ? "bg-primary/10 text-primary font-semibold" : "hover:bg-secondary text-foreground"}`}>
+                          <span>{v.icon} {v.nome}</span>
+                          {filters.vehicleTypes.includes(v.id) && <Check size={12} />}
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </Dropdown>
+            )}
           </div>
 
           {/* Mobile filter button */}

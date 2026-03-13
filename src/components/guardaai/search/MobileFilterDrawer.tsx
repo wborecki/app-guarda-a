@@ -5,6 +5,7 @@ import {
   type Filters,
   spaceTypesList, distanceOptions, ratingOptions, allFeatures, spaceUseOptions,
 } from "@/data/searchMockData";
+import { vehicleCategories, vehicleGroups } from "@/data/vehicleCategories";
 
 interface MobileFilterDrawerProps {
   open: boolean;
@@ -18,6 +19,8 @@ interface MobileFilterDrawerProps {
 const FilterContent = ({ filters, setFilters }: { filters: Filters; setFilters: React.Dispatch<React.SetStateAction<Filters>> }) => {
   const toggleType = (t: string) => setFilters(f => ({ ...f, types: f.types.includes(t) ? f.types.filter(x => x !== t) : [...f.types, t] }));
   const toggleFeature = (feat: string) => setFilters(f => ({ ...f, features: f.features.includes(feat) ? f.features.filter(x => x !== feat) : [...f.features, feat] }));
+  const toggleVehicleType = (id: string) => setFilters(f => ({ ...f, vehicleTypes: f.vehicleTypes.includes(id) ? f.vehicleTypes.filter(x => x !== id) : [...f.vehicleTypes, id] }));
+  const showVehicleFilter = filters.spaceUse === "vehicles" || filters.spaceUse === "all";
 
   return (
     <div className="space-y-5">
@@ -85,6 +88,23 @@ const FilterContent = ({ filters, setFilters }: { filters: Filters; setFilters: 
           ))}
         </div>
       </div>
+      {showVehicleFilter && (
+        <div>
+          <h4 className="text-xs font-semibold text-foreground mb-2">Tipo de veículo</h4>
+          {vehicleGroups.map(group => (
+            <div key={group} className="mb-2">
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">{group}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {vehicleCategories.filter(v => v.grupo === group).map(v => (
+                  <button key={v.id} onClick={() => toggleVehicleType(v.id)}
+                    className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${filters.vehicleTypes.includes(v.id) ? "bg-primary/10 border-primary/30 text-primary font-semibold" : "border-border/60 text-muted-foreground hover:border-primary/20"}`}
+                  >{v.icon} {v.nome}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

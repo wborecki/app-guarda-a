@@ -12,6 +12,7 @@ import { useEffect, useState, useMemo, useRef, useCallback, lazy, Suspense } fro
 import { calculatePrice, getSuggestedDailyRate, PRICING_HINT_SHORT, MIN_DAILY_RATE } from "@/lib/pricing";
 import { supabase } from "@/integrations/supabase/client";
 import { decodeSearchParams } from "@/lib/searchParams";
+import { vehicleCategories } from "@/data/vehicleCategories";
 import {
   type SortOption, type Filters,
   sortLabels, emptyFilters,
@@ -152,31 +153,42 @@ const SearchResults = () => {
 
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
 
-  // Initialise spaceUse filter from URL mode param
-  const initialSpaceUse = useMemo(() => {
+  // Initialise filters from URL params
+  const initialFilters = useMemo(() => {
     const m = params.mode;
-    if (m === "objects") return "objects" as const;
-    if (m === "vehicles") return "vehicles" as const;
-    return "all" as const;
+    const spaceUse = m === "objects" ? "objects" as const : m === "vehicles" ? "vehicles" as const : "all" as const;
+    const vtParam = searchParams.get("vt") || "";
+    const vehicleTypes = vtParam ? vtParam.split(",").filter(Boolean) : [];
+    return { ...emptyFilters, spaceUse, vehicleTypes };
   }, []); // only on mount
 
-  const [filters, setFilters] = useState<Filters>({ ...emptyFilters, spaceUse: initialSpaceUse });
+  const [filters, setFilters] = useState<Filters>(initialFilters);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | string | null>(null);
   const [mobileView, setMobileView] = useState<"list" | "map">("list");
   const cardRefs = useRef<Record<number | string, HTMLDivElement | null>>({});
 
-  // Sync spaceUse filter change back to URL
+  // Sync filters back to URL
   useEffect(() => {
-    const current = searchParams.get("mode") || "";
-    const desired = filters.spaceUse === "all" ? "" : filters.spaceUse;
-    if (current !== desired) {
-      const next = new URLSearchParams(searchParams);
-      if (desired) next.set("mode", desired);
-      else next.delete("mode");
-      setSearchParams(next, { replace: true });
+    const next = new URLSearchParams(searchParams);
+    let changed = false;
+
+    const currentMode = next.get("mode") || "";
+    const desiredMode = filters.spaceUse === "all" ? "" : filters.spaceUse;
+    if (currentMode !== desiredMode) {
+      if (desiredMode) next.set("mode", desiredMode); else next.delete("mode");
+      changed = true;
     }
-  }, [filters.spaceUse]);
+
+    const currentVt = next.get("vt") || "";
+    const desiredVt = filters.vehicleTypes.join(",");
+    if (currentVt !== desiredVt) {
+      if (desiredVt) next.set("vt", desiredVt); else next.delete("vt");
+      changed = true;
+    }
+
+    if (changed) setSearchParams(next, { replace: true });
+  }, [filters.spaceUse, filters.vehicleTypes]);
 
   const filteredSortedSpaces = useMemo(() => {
     let result = [...allSpaces];
@@ -185,6 +197,12 @@ const SearchResults = () => {
       result = result.filter(s => {
         const use = s.space_use || "objects";
         return use === filters.spaceUse || use === "both";
+      });
+    }
+    if (filters.vehicleTypes.length > 0) {
+      result = result.filter(s => {
+        const compat: string[] = s.vehicle_compatible || [];
+        return filters.vehicleTypes.some(vt => compat.includes(vt));
       });
     }
     if (filters.maxPrice !== null) {
@@ -233,6 +251,11 @@ const SearchResults = () => {
     if (filters.minRating !== null) chips.push({ label: `${filters.minRating}+`, clear: () => setFilters(f => ({ ...f, minRating: null })) });
     if (filters.maxPrice !== null) chips.push({ label: `Até R$${filters.maxPrice}`, clear: () => setFilters(f => ({ ...f, maxPrice: null })) });
     filters.features.forEach(feat => chips.push({ label: feat, clear: () => setFilters(f => ({ ...f, features: f.features.filter(x => x !== feat) })) }));
+    filters.vehicleTypes.forEach(vt => {
+      const vc = vehicleCategories.find(v => v.id === vt);
+      const label = vc ? `${vc.icon} ${vc.nome}` : vt;
+      chips.push({ label, clear: () => setFilters(f => ({ ...f, vehicleTypes: f.vehicleTypes.filter(x => x !== vt) })) });
+    });
     return chips;
   }, [filters]);
 
