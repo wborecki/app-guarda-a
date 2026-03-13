@@ -31,38 +31,39 @@ const spaceTypes = [
   { icon: BedDouble, label: "Quarto vazio" },
   { icon: Container, label: "Depósito" },
   { icon: Tent, label: "Área coberta" },
-  { icon: Building2, label: "Pequeno galpão" },
-  { icon: Store, label: "Espaço comercial" },
+  { icon: Building2, label: "Galpão / Pátio" },
+  { icon: Store, label: "Estacionamento / Vaga" },
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Renda por reserva", desc: "Receba por cada m³ reservado no seu espaço." },
+  { icon: DollarSign, title: "Renda por reserva", desc: "Receba por cada m³ ou vaga reservada no seu espaço." },
   { icon: Shield, title: "Seguro e intermediado", desc: "Termos, fotos e intermediação digital pela plataforma." },
-  { icon: CheckCircle2, title: "Você no controle", desc: "Aceite ou recuse solicitações, defina suas regras." },
+  { icon: CheckCircle2, title: "Você no controle", desc: "Aceite ou recuse, defina preço e regras — para objetos ou veículos." },
 ];
 
 const securityItems = [
-  { icon: Camera, title: "Foto obrigatória dos itens", desc: "Todos os objetos são registrados antes do armazenamento." },
+  { icon: Camera, title: "Foto obrigatória", desc: "Objetos e veículos são registrados antes do armazenamento." },
   { icon: FileText, title: "Termos de responsabilidade", desc: "Regras claras aceitas por ambas as partes antes de cada reserva." },
   { icon: Ban, title: "Itens proibidos", desc: "Drogas, armas, explosivos, perecíveis e itens ilegais são vetados." },
-  { icon: UserX, title: "Direito de recusa", desc: "Você pode recusar objetos que não se enquadrem nas regras." },
-  { icon: Clock, title: "Política de abandono", desc: "Objetos não retirados no prazo são tratados conforme os termos." },
+  { icon: UserX, title: "Direito de recusa", desc: "Você pode recusar objetos ou veículos fora das regras." },
+  { icon: Clock, title: "Política de abandono", desc: "Itens não retirados no prazo são tratados conforme os termos." },
   { icon: Lock, title: "Intermediação digital", desc: "O GuardaAí atua como intermediador seguro entre as partes." },
 ];
 
 const faqItems = [
-  { q: "Que tipo de espaço posso anunciar?", a: "Garagens, quartos vazios, depósitos, áreas cobertas, galpões pequenos e espaços comerciais ociosos — residenciais ou comerciais." },
+  { q: "Que tipo de espaço posso anunciar?", a: "Garagens, vagas, quartos vazios, depósitos, áreas cobertas, galpões, pátios e estacionamentos — residenciais ou comerciais. Espaços para guardar objetos, veículos ou ambos." },
+  { q: "Posso anunciar vaga para veículos?", a: "Sim! Ao cadastrar, selecione 'Veículos' ou 'Ambos' como tipo de uso. Informe as dimensões do portão e quais veículos o espaço comporta (carros, motos, SUVs, barcos, etc.)." },
   { q: "Quem define o preço?", a: "Você define o preço do seu espaço livremente. A GuardaAí sugere valores de referência, mas a decisão final é sua. O mínimo obrigatório é R$ 1,50/m³/dia." },
-  { q: "Posso recusar objetos?", a: "Sim. O anfitrião tem total direito de recusar objetos inadequados ou fora das regras da plataforma." },
+  { q: "Posso recusar objetos ou veículos?", a: "Sim. O anfitrião tem total direito de recusar itens inadequados ou veículos incompatíveis com o espaço." },
   { q: "Como recebo meu pagamento?", a: "Os pagamentos são processados pela plataforma e repassados para sua conta." },
   { q: "Que itens são proibidos?", a: "Drogas, armas, explosivos, materiais perecíveis, animais vivos e qualquer item ilegal." },
   { q: "Preciso estar em casa para receber itens?", a: "Depende do seu modelo. Você pode combinar horários de acesso ou oferecer acesso independente, conforme sua preferência." },
 ];
 
 const earningsExamples = [
-  { label: "Garagem", size: "3 m³", value: "R$ 135" },
-  { label: "Quarto", size: "5 m³", value: "R$ 225" },
-  { label: "Depósito", size: "10 m³", value: "R$ 450" },
+  { label: "Vaga garagem", size: "1 carro", value: "R$ 250" },
+  { label: "Depósito", size: "5 m³", value: "R$ 225" },
+  { label: "Garagem grande", size: "carro + objetos", value: "R$ 400" },
 ];
 
 const HostLanding = () => {
