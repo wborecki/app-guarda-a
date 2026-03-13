@@ -89,7 +89,7 @@ const Pricing = () => {
           viewport={{ once: true }}
           className="mb-5 md:mb-8"
         >
-          <h3 className="text-[12.5px] md:text-sm font-semibold text-foreground mb-3 text-center">Tabela progressiva (por 1 m³)</h3>
+          <h3 className="text-[12.5px] md:text-sm font-semibold text-foreground mb-3 text-center">Tabela progressiva (por 1 m³) — hora e dia</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
             {PRICE_HIGHLIGHTS.map((h, i) => {
               const isPopular = h.days === 30;
