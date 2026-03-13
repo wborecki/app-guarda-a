@@ -14,9 +14,9 @@ const steps = [
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Mais acessível", desc: "Preços muito abaixo de self storages tradicionais." },
+  { icon: DollarSign, title: "Mais acessível", desc: "Preços definidos por anfitriões, muito abaixo de self storages." },
   { icon: Shield, title: "Seguro e registrado", desc: "Itens fotografados, cadastrados e protegidos por termos." },
-  { icon: TrendingDown, title: "Tabela progressiva", desc: "Quanto mais dias, menor o custo por dia por m³." },
+  { icon: TrendingDown, title: "Preço flexível", desc: "Cada anfitrião define seu valor. Sem taxa de serviço." },
 ];
 
 const trustItems = [
