@@ -36,7 +36,16 @@ import AdminEspacos from "./pages/admin/AdminEspacos";
 import AdminAnalises from "./pages/admin/AdminAnalises";
 import AdminUsuarios from "./pages/admin/AdminUsuarios";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <HelmetProvider>
