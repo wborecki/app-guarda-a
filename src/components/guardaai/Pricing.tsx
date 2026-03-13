@@ -121,7 +121,7 @@ const Pricing = () => {
                     <span className={`text-[10px] md:text-xs font-normal ${isPopular ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/m³</span>
                   </p>
                   <p className={`text-[9px] md:text-[10px] ${isPopular ? "text-primary-foreground/40" : "text-muted-foreground/50"}`}>
-                    ≈ R${(h.price / h.days).toFixed(2).replace(".", ",")}/dia
+                    {isHourlyItem ? "proporcional à diária" : `≈ R$${(h.price / h.days).toFixed(2).replace(".", ",")}/dia`}
                   </p>
                 </div>
               );

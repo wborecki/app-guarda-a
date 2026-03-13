@@ -361,6 +361,7 @@ const SearchResults = () => {
                   allSpaces={filteredSortedSpaces}
                   totalVol={totalVol}
                   days={days}
+                  hours={hours}
                   index={index}
                   isHighlighted={highlightedSpaceId === space.id}
                   onMouseEnter={() => setHighlightedSpaceId(space.id)}

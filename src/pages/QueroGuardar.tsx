@@ -107,7 +107,7 @@ const QueroGuardar = () => {
                   transition={{ delay: 0.5 }}
                 >
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço por m³</p>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-4 gap-2.5">
                     {pricingTiers.map((t, i) => (
                       <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-primary/30 transition-colors">
                         <p className="text-[10px] font-medium text-muted-foreground mb-1">{t.period}</p>
