@@ -17,7 +17,7 @@ import BackButton from "@/components/guardaai/BackButton";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import CheckoutAuth from "@/components/guardaai/CheckoutAuth";
-import { calculatePrice, formatBRL, PRICING_HINT_SHORT, SERVICE_FEE } from "@/lib/pricing";
+import { calculatePrice, formatBRL, PRICING_HINT_SHORT, MIN_DAILY_RATE } from "@/lib/pricing";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -92,7 +92,12 @@ const Checkout = () => {
     return <CheckoutSkeleton />;
   }
 
-  const bp = calculatePrice(reservedArea, days);
+  const hostRate = space.pricePerDay || space.price_per_day || MIN_DAILY_RATE;
+  const bp = calculatePrice(reservedArea, days, hostRate, {
+    hours: isHourlyReservation ? hours : undefined,
+    cleaningFeeEnabled: space.cleaning_fee_enabled,
+    cleaningFeeAmount: space.cleaning_fee_amount,
+  });
   const reservationId = `GA-${Date.now().toString(36).toUpperCase().slice(-6)}`;
   const currentStep = !user ? 0 : !verificationComplete ? 1 : 2;
 
@@ -128,7 +133,6 @@ const Checkout = () => {
     setAnalysisResult(null);
 
     try {
-      // Convert photos to base64
       const imagePromises = photos.map((file) => {
         return new Promise<{ base64: string; mimeType: string }>((resolve, reject) => {
           const reader = new FileReader();
@@ -145,10 +149,7 @@ const Checkout = () => {
       const images = await Promise.all(imagePromises);
 
       const { data, error } = await supabase.functions.invoke("analyze-items", {
-        body: {
-          images,
-          reservationRef: reservationId,
-        },
+        body: { images, reservationRef: reservationId },
       });
 
       if (error) {
@@ -156,26 +157,13 @@ const Checkout = () => {
         setAnalysisStatus("review");
         setAnalysisResult({
           reason: "Não foi possível concluir a análise automática. Seus itens serão avaliados manualmente.",
-          detected_items: [],
-          flagged_items: [],
-          confidence: 0,
+          detected_items: [], flagged_items: [], confidence: 0,
         });
-        toast({
-          title: "Análise inconclusiva",
-          description: "Seus itens foram encaminhados para revisão manual.",
-          variant: "destructive",
-        });
+        toast({ title: "Análise inconclusiva", description: "Seus itens foram encaminhados para revisão manual.", variant: "destructive" });
         return;
       }
 
-      const result = data as {
-        verdict: string;
-        confidence: number;
-        reason: string;
-        detected_items: string[];
-        flagged_items: string[];
-      };
-
+      const result = data as { verdict: string; confidence: number; reason: string; detected_items: string[]; flagged_items: string[] };
       setAnalysisResult(result);
 
       if (result.verdict === "approved") {
@@ -183,34 +171,19 @@ const Checkout = () => {
         toast({ title: "Itens aprovados ✓", description: result.reason });
       } else if (result.verdict === "blocked") {
         setAnalysisStatus("blocked");
-        toast({
-          title: "Itens proibidos detectados",
-          description: result.reason,
-          variant: "destructive",
-        });
+        toast({ title: "Itens proibidos detectados", description: result.reason, variant: "destructive" });
       } else {
-        // review or any other status
         setAnalysisStatus("review");
-        toast({
-          title: "Análise pendente de revisão",
-          description: result.reason,
-          variant: "destructive",
-        });
+        toast({ title: "Análise pendente de revisão", description: result.reason, variant: "destructive" });
       }
     } catch (err) {
       console.error("Analysis failed:", err);
       setAnalysisStatus("review");
       setAnalysisResult({
         reason: "Erro ao analisar as fotos. Encaminhado para revisão manual por segurança.",
-        detected_items: [],
-        flagged_items: [],
-        confidence: 0,
+        detected_items: [], flagged_items: [], confidence: 0,
       });
-      toast({
-        title: "Erro na análise",
-        description: "Seus itens foram encaminhados para revisão manual por segurança.",
-        variant: "destructive",
-      });
+      toast({ title: "Erro na análise", description: "Seus itens foram encaminhados para revisão manual por segurança.", variant: "destructive" });
     }
   };
 
@@ -226,14 +199,12 @@ const Checkout = () => {
     setProcessing(true);
 
     try {
-      // Save terms acceptances first
       const termsToInsert = [
         { user_id: user.id, term_type: "renter", term_version: "1.0", context: "checkout" },
         { user_id: user.id, term_type: "prohibited_items", term_version: "1.0", context: "checkout" },
       ];
       await supabase.from("terms_acceptances").insert(termsToInsert);
 
-      // Calculate dates
       const startDate = simulation?.deliveryDate
         ? new Date(simulation.deliveryDate).toISOString().split("T")[0]
         : new Date().toISOString().split("T")[0];
@@ -241,7 +212,6 @@ const Checkout = () => {
         ? new Date(simulation.pickupDate).toISOString().split("T")[0]
         : new Date(Date.now() + days * 86400000).toISOString().split("T")[0];
 
-      // Create Stripe Checkout session via edge function
       const { data, error } = await supabase.functions.invoke("create-checkout", {
         body: {
           spaceName: space.name,
@@ -252,9 +222,9 @@ const Checkout = () => {
           endDate,
           totalPrice: bp.total,
           subtotal: bp.subtotal,
-          serviceFee: bp.serviceFee,
-          hostId: space.userId || user.id,
-          spaceId: null,
+          cleaningFee: bp.cleaningFee,
+          hostId: space.userId || space.hostId || user.id,
+          spaceId: space.dbId || null,
         },
       });
 
@@ -265,7 +235,6 @@ const Checkout = () => {
         return;
       }
 
-      // Redirect to Stripe Checkout
       window.location.href = data.url;
     } catch (err) {
       console.error("Checkout error:", err);
@@ -274,7 +243,6 @@ const Checkout = () => {
     }
   };
 
-  // ─── CHECKOUT PAGE ────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background pb-24 sm:pb-28 lg:pb-8">
       <SEO title="Checkout" description="Finalize sua reserva de espaço na GuardaAí. Pagamento seguro via Stripe." noIndex />
@@ -307,12 +275,11 @@ const Checkout = () => {
         <div className="lg:grid lg:grid-cols-[1fr_360px] lg:gap-8">
           {/* ═══ LEFT — Forms ═══ */}
           <div className="space-y-4 sm:space-y-6">
-            {/* Step 1: Auth */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
               <CheckoutAuth />
             </motion.div>
 
-            {/* Step 2: Verification — Photos + Terms */}
+            {/* Step 2: Verification */}
             <AnimatePresence>
               {user && (
                 <motion.div
@@ -328,10 +295,10 @@ const Checkout = () => {
                         Verificação dos itens
                       </h2>
                        <p className="text-xs text-muted-foreground mb-5">
-                         Envie fotos dos seus itens para análise automática de conformidade. A aprovação depende da verificação dos itens conforme a política da plataforma.
+                         Envie fotos dos seus itens para análise automática de conformidade.
                        </p>
 
-                      {/* ── Photo Upload ── */}
+                      {/* Photo Upload */}
                       <div className="mb-6">
                         <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1.5">
                           <Camera size={14} className="text-primary" />
@@ -341,7 +308,6 @@ const Checkout = () => {
                           Fotografe os objetos que serão armazenados. As fotos são obrigatórias para análise de conformidade e segurança.
                         </p>
 
-                        {/* Instructions */}
                         <div className="p-3 rounded-lg bg-secondary/50 border border-border/40 mb-4">
                           <ul className="space-y-1.5 text-xs text-muted-foreground">
                             <li className="flex items-start gap-2"><CheckCircle2 size={12} className="text-primary shrink-0 mt-0.5" /> Fotografe cada item de forma clara e legível</li>
@@ -351,15 +317,7 @@ const Checkout = () => {
                           </ul>
                         </div>
 
-                        {/* Upload area */}
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          multiple
-                          accept="image/*"
-                          onChange={(e) => handlePhotoAdd(e.target.files)}
-                          className="hidden"
-                        />
+                        <input ref={fileInputRef} type="file" multiple accept="image/*" onChange={(e) => handlePhotoAdd(e.target.files)} className="hidden" />
 
                         {photos.length < 10 && (
                           <button
@@ -374,7 +332,6 @@ const Checkout = () => {
                           </button>
                         )}
 
-                        {/* Preview grid */}
                         {photoPreviews.length > 0 && (
                           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 mb-4">
                             {photoPreviews.map((preview, i) => (
@@ -391,13 +348,8 @@ const Checkout = () => {
                           </div>
                         )}
 
-                        {/* Analyze button / status */}
                         {photos.length > 0 && analysisStatus === "pending" && (
-                          <Button
-                            onClick={handleAnalyze}
-                            className="w-full bg-primary hover:bg-primary/90"
-                            size="sm"
-                          >
+                          <Button onClick={handleAnalyze} className="w-full bg-primary hover:bg-primary/90" size="sm">
                             <Upload size={14} className="mr-2" />
                             Enviar {photos.length} foto{photos.length > 1 ? "s" : ""} para análise
                           </Button>
@@ -421,11 +373,6 @@ const Checkout = () => {
                               <p className="text-xs text-muted-foreground">
                                 {analysisResult?.reason || `${photos.length} foto${photos.length > 1 ? "s" : ""} verificada${photos.length > 1 ? "s" : ""}`}
                               </p>
-                              {analysisResult?.detected_items && analysisResult.detected_items.length > 0 && (
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  Itens detectados: {analysisResult.detected_items.join(", ")}
-                                </p>
-                              )}
                             </div>
                           </div>
                         )}
@@ -436,26 +383,8 @@ const Checkout = () => {
                               <ShieldAlert size={16} className="text-amber-600" />
                               <p className="text-sm font-semibold text-foreground">Análise pendente de revisão</p>
                             </div>
-                            <p className="text-xs text-muted-foreground mb-2">
-                              {analysisResult?.reason || "Não foi possível aprovar automaticamente. Seus itens serão avaliados manualmente."}
-                            </p>
-                            {analysisResult?.flagged_items && analysisResult.flagged_items.length > 0 && (
-                              <p className="text-xs text-destructive mb-2">
-                                Itens sinalizados: {analysisResult.flagged_items.join(", ")}
-                              </p>
-                            )}
-                            <p className="text-xs text-muted-foreground mb-3">
-                              A reserva não pode ser concluída até a revisão. Você pode reenviar novas fotos ou aguardar a revisão manual.
-                            </p>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="text-xs"
-                              onClick={() => {
-                                setAnalysisStatus("pending");
-                                setAnalysisResult(null);
-                              }}
-                            >
+                            <p className="text-xs text-muted-foreground mb-3">{analysisResult?.reason || "Seus itens serão avaliados manualmente."}</p>
+                            <Button variant="outline" size="sm" className="text-xs" onClick={() => { setAnalysisStatus("pending"); setAnalysisResult(null); }}>
                               Reenviar fotos
                             </Button>
                           </div>
@@ -467,25 +396,13 @@ const Checkout = () => {
                               <Ban size={16} className="text-destructive" />
                               <p className="text-sm font-semibold text-foreground">Reserva bloqueada — itens proibidos detectados</p>
                             </div>
-                            <p className="text-xs text-muted-foreground mb-2">
-                              {analysisResult?.reason || "A análise identificou itens proibidos pela política da plataforma."}
-                            </p>
-                            {analysisResult?.flagged_items && analysisResult.flagged_items.length > 0 && (
-                              <p className="text-xs text-destructive font-medium mb-2">
-                                Itens proibidos detectados: {analysisResult.flagged_items.join(", ")}
-                              </p>
-                            )}
-                            <p className="text-xs text-muted-foreground mb-3">
-                              Não é possível prosseguir com a reserva. Caso acredite ser um erro, solicite revisão manual.
-                            </p>
-                            <Button variant="outline" size="sm" className="text-xs">
-                              Solicitar revisão manual
-                            </Button>
+                            <p className="text-xs text-muted-foreground mb-3">{analysisResult?.reason || "Itens proibidos detectados."}</p>
+                            <Button variant="outline" size="sm" className="text-xs">Solicitar revisão manual</Button>
                           </div>
                         )}
                       </div>
 
-                      {/* ── Prohibited items summary ── */}
+                      {/* Prohibited items summary */}
                       <div className="mb-6 p-3 rounded-lg bg-destructive/[0.03] border border-destructive/10">
                         <h4 className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
                           <Ban size={12} className="text-destructive" />
@@ -499,16 +416,10 @@ const Checkout = () => {
                             </li>
                           ))}
                         </ul>
-                        <Link
-                          to="/itens-proibidos"
-                          target="_blank"
-                          className="text-[11px] text-primary font-medium hover:underline"
-                        >
-                          Ver lista completa →
-                        </Link>
+                        <Link to="/itens-proibidos" target="_blank" className="text-[11px] text-primary font-medium hover:underline">Ver lista completa →</Link>
                       </div>
 
-                      {/* ── Terms acceptance ── */}
+                      {/* Terms */}
                       <div className="space-y-3">
                         <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                           <FileText size={12} className="text-primary" />
@@ -516,37 +427,26 @@ const Checkout = () => {
                         </h4>
 
                         <label className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:border-primary/20 transition-colors cursor-pointer">
-                          <Checkbox
-                            checked={renterTerms}
-                            onCheckedChange={(v) => setRenterTerms(v === true)}
-                            className="mt-0.5"
-                          />
+                          <Checkbox checked={renterTerms} onCheckedChange={(v) => setRenterTerms(v === true)} className="mt-0.5" />
                           <div className="text-xs text-muted-foreground leading-relaxed">
                             Li e aceito o{" "}
                             <Link to="/termos/locatario" target="_blank" className="text-primary font-medium hover:underline">
                               Termo de Responsabilidade do Locatário
-                            </Link>
-                            , incluindo a declaração de que sou responsável pelos itens armazenados.
+                            </Link>.
                           </div>
                         </label>
 
                         <label className="flex items-start gap-3 p-3 rounded-lg border border-border/60 hover:border-primary/20 transition-colors cursor-pointer">
-                          <Checkbox
-                            checked={prohibitedTerms}
-                            onCheckedChange={(v) => setProhibitedTerms(v === true)}
-                            className="mt-0.5"
-                          />
+                          <Checkbox checked={prohibitedTerms} onCheckedChange={(v) => setProhibitedTerms(v === true)} className="mt-0.5" />
                           <div className="text-xs text-muted-foreground leading-relaxed">
                             Declaro que meus itens <strong>não incluem</strong> itens proibidos pela{" "}
                             <Link to="/itens-proibidos" target="_blank" className="text-primary font-medium hover:underline">
                               política da plataforma
-                            </Link>{" "}
-                            e autorizo a análise automatizada das fotos enviadas.
+                            </Link>.
                           </div>
                         </label>
                       </div>
 
-                      {/* Verification status */}
                       {verificationComplete && (
                         <div className="mt-4 flex items-center gap-2 p-2 rounded-lg bg-primary/5">
                           <CheckCircle2 size={14} className="text-primary" />
@@ -559,22 +459,16 @@ const Checkout = () => {
               )}
             </AnimatePresence>
 
-            {/* Step 3: Payment — Stripe redirect */}
+            {/* Step 3: Payment */}
             <AnimatePresence>
               {user && verificationComplete && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ delay: 0.1 }}
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ delay: 0.1 }}>
                   <Card>
                     <CardContent className="p-5 sm:p-6">
                       <h2 className="font-bold text-foreground mb-4 flex items-center gap-2 text-base">
                         <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">3</span>
                         Pagamento seguro
                       </h2>
-
                       <div className="rounded-xl bg-secondary/50 border border-border/60 p-5 text-center space-y-4">
                         <div className="flex items-center justify-center gap-3">
                           <Lock size={20} className="text-primary" />
@@ -582,12 +476,8 @@ const Checkout = () => {
                           <CreditCard size={20} className="text-primary" />
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                          Ao clicar em <strong>"Confirmar e pagar"</strong>, você será redirecionado para o <strong>Stripe</strong>, nossa plataforma de pagamento segura. Aceita cartão de crédito, débito e boleto.
+                          Ao clicar em <strong>"Confirmar e pagar"</strong>, você será redirecionado para o <strong>Stripe</strong>, nossa plataforma de pagamento segura.
                         </p>
-                        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/70">
-                          <Lock size={12} />
-                          <span>Seus dados bancários nunca passam pelo GuardaAí</span>
-                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -615,12 +505,7 @@ const Checkout = () => {
             {/* Desktop CTA */}
             {user && verificationComplete && (
               <div className="hidden lg:block">
-                <Button
-                  size="lg"
-                  disabled={processing}
-                  onClick={handlePay}
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base h-14 shadow-lg"
-                >
+                <Button size="lg" disabled={processing} onClick={handlePay} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-base h-14 shadow-lg">
                   {processing ? (
                     <span className="flex items-center gap-2">
                       <span className="w-4 h-4 border-2 border-accent-foreground/40 border-t-accent-foreground rounded-full animate-spin" />
@@ -647,11 +532,7 @@ const Checkout = () => {
 
                     {/* Space info */}
                     <div className="flex gap-3 mb-4 pb-4 border-b border-border/50">
-                      <img
-                        src={space.photos?.[0]}
-                        alt={space.name}
-                        className="w-20 h-16 rounded-lg object-cover flex-shrink-0 bg-muted"
-                      />
+                      <img src={space.photos?.[0]} alt={space.name} className="w-20 h-16 rounded-lg object-cover flex-shrink-0 bg-muted" />
                       <div className="min-w-0 flex-1">
                         <p className="font-semibold text-foreground text-sm truncate">{space.name}</p>
                         <p className="text-xs text-muted-foreground">{space.type}</p>
@@ -683,15 +564,9 @@ const Checkout = () => {
                       <div className="flex justify-between text-sm items-center">
                         <span className="text-muted-foreground">Período total</span>
                         <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">
-                          {isHourlyReservation ? `${hours} hora${hours > 1 ? "s" : ""}` : `${days} ${days === 1 ? "dia" : "dias"}`}
+                          {isHourlyReservation ? `${hours} hora${hours > 1 ? "s" : ""} (mín. 1 diária)` : `${days} ${days === 1 ? "dia" : "dias"}`}
                         </span>
                       </div>
-                      {space.owner && (
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Anunciante</span>
-                          <span className="text-foreground font-medium">{space.owner}</span>
-                        </div>
-                      )}
                     </div>
 
                     {/* Verification status */}
@@ -723,12 +598,14 @@ const Checkout = () => {
                         <span className="text-foreground font-medium">{formatBRL(bp.subtotal)}</span>
                       </div>
                       <div className="text-[11px] text-muted-foreground/70 pl-0.5">
-                        {reservedArea} m³ × {isHourlyReservation ? `${hours}h` : `${days} ${days === 1 ? "dia" : "dias"}`} → {formatBRL(bp.pricePerM3)}/m³
+                        {reservedArea} m³ × {days} {days === 1 ? "dia" : "dias"} × R$ {bp.hostDailyRate.toFixed(2).replace(".", ",")}/m³/dia
                       </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Taxa de serviço (fixa)</span>
-                        <span className="text-foreground font-medium">{formatBRL(SERVICE_FEE)}</span>
-                      </div>
+                      {bp.cleaningFee > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Taxa de limpeza</span>
+                          <span className="text-foreground font-medium">{formatBRL(bp.cleaningFee)}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Total */}
@@ -740,7 +617,9 @@ const Checkout = () => {
                     {/* Hint */}
                     <div className="flex items-start gap-1.5 p-2.5 rounded-lg bg-secondary/50">
                       <Info size={12} className="text-muted-foreground/50 shrink-0 mt-0.5" />
-                      <p className="text-[11px] text-muted-foreground leading-relaxed">{PRICING_HINT_SHORT}</p>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">
+                        O valor total é definido com base no preço informado pelo anfitrião, no volume reservado e na duração da locação.
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -754,12 +633,7 @@ const Checkout = () => {
       {user && verificationComplete && (
         <div className="fixed bottom-0 left-0 right-0 bg-card border-t p-3 sm:p-4 z-30 lg:hidden safe-area-bottom">
           <div className="container max-w-5xl">
-            <Button
-              size="default"
-              disabled={processing}
-              onClick={handlePay}
-              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm sm:text-base h-12 sm:h-13 shadow-lg"
-            >
+            <Button size="default" disabled={processing} onClick={handlePay} className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-sm sm:text-base h-12 sm:h-13 shadow-lg">
               {processing ? (
                 <span className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-accent-foreground/40 border-t-accent-foreground rounded-full animate-spin" />
