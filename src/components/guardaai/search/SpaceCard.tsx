@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Star, Ruler, Shield } from "lucide-react";
+import { MapPin, Star, Ruler, Shield, Clock } from "lucide-react";
 import CardCarousel from "./CardCarousel";
-import { calculatePrice } from "@/lib/pricing";
+import { calculatePrice, calculateHourlyPrice } from "@/lib/pricing";
 import { computePrimaryBadge, getUseCaseHint } from "@/data/searchMockData";
 
 interface SpaceCardProps {
