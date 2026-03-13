@@ -317,6 +317,19 @@ const HostLanding = () => {
                           />
                         </div>
 
+                        {/* === SPACE USE === */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Para que tipo de uso?</p>
+                          <Select value={form.spaceUse} onValueChange={v => setForm({...form, spaceUse: v as any})}>
+                            <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="objects">Objetos</SelectItem>
+                              <SelectItem value="vehicles">Veículos</SelectItem>
+                              <SelectItem value="both">Ambos (objetos e veículos)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
                         {/* === SPACE TYPE === */}
                         <div className="space-y-2.5">
                           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Tipo de espaço</p>
@@ -329,6 +342,9 @@ const HostLanding = () => {
                               <SelectItem value="area-coberta">Área coberta</SelectItem>
                               <SelectItem value="galpao">Pequeno galpão</SelectItem>
                               <SelectItem value="comercial">Espaço comercial</SelectItem>
+                              {(form.spaceUse === "vehicles" || form.spaceUse === "both") && (
+                                <SelectItem value="estacionamento">Estacionamento / Vaga</SelectItem>
+                              )}
                             </SelectContent>
                           </Select>
                         </div>
