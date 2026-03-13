@@ -93,8 +93,9 @@ const Pricing = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
             {PRICE_HIGHLIGHTS.map((h, i) => {
               const isPopular = h.days === 30;
-              const icons = [Clock, Calculator, TrendingDown, Sparkles];
+              const icons = [Timer, Clock, Calculator, Sparkles];
               const Icon = icons[i];
+              const isHourlyItem = h.days === 0;
               return (
                 <div
                   key={i}
