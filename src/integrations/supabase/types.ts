@@ -413,6 +413,8 @@ export type Database = {
           availability_schedule: Json | null
           available_days: string[] | null
           beneficiary_name: string | null
+          cleaning_fee_amount: number | null
+          cleaning_fee_enabled: boolean | null
           closed: boolean | null
           covered: boolean | null
           created_at: string
@@ -428,6 +430,7 @@ export type Database = {
           photos: string[] | null
           pix_key: string | null
           pix_key_type: string | null
+          price_per_day: number | null
           rental_type: string
           rules: string | null
           security_features: string | null
@@ -446,6 +449,8 @@ export type Database = {
           availability_schedule?: Json | null
           available_days?: string[] | null
           beneficiary_name?: string | null
+          cleaning_fee_amount?: number | null
+          cleaning_fee_enabled?: boolean | null
           closed?: boolean | null
           covered?: boolean | null
           created_at?: string
@@ -461,6 +466,7 @@ export type Database = {
           photos?: string[] | null
           pix_key?: string | null
           pix_key_type?: string | null
+          price_per_day?: number | null
           rental_type?: string
           rules?: string | null
           security_features?: string | null
@@ -479,6 +485,8 @@ export type Database = {
           availability_schedule?: Json | null
           available_days?: string[] | null
           beneficiary_name?: string | null
+          cleaning_fee_amount?: number | null
+          cleaning_fee_enabled?: boolean | null
           closed?: boolean | null
           covered?: boolean | null
           created_at?: string
@@ -494,6 +502,7 @@ export type Database = {
           photos?: string[] | null
           pix_key?: string | null
           pix_key_type?: string | null
+          price_per_day?: number | null
           rental_type?: string
           rules?: string | null
           security_features?: string | null

@@ -14,9 +14,9 @@ const steps = [
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Mais acessível", desc: "Preços muito abaixo de self storages tradicionais." },
+  { icon: DollarSign, title: "Mais acessível", desc: "Preços definidos por anfitriões, muito abaixo de self storages." },
   { icon: Shield, title: "Seguro e registrado", desc: "Itens fotografados, cadastrados e protegidos por termos." },
-  { icon: TrendingDown, title: "Tabela progressiva", desc: "Quanto mais dias, menor o custo por dia por m³." },
+  { icon: TrendingDown, title: "Preço flexível", desc: "Cada anfitrião define seu valor. Sem taxa de serviço." },
 ];
 
 const trustItems = [
@@ -27,17 +27,17 @@ const trustItems = [
 
 const faqs = [
   { q: "O que posso guardar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce e itens pessoais. Itens ilegais, perigosos ou perecíveis são proibidos." },
-  { q: "Como o preço é calculado?", a: "O preço é baseado no volume ocupado (m³) e no período. Usamos uma tabela progressiva de R$ 5/m³ (1 dia) a R$ 45/m³ (30 dias). Reservas por hora são proporcionais à diária. Mínimo de 1 m³. Uma taxa de serviço de R$ 28,00 é adicionada no checkout." },
-  { q: "Posso guardar por poucas horas?", a: "Sim! Espaços que aceitam por hora permitem reservas curtas. Basta selecionar o mesmo dia e ajustar os horários no simulador." },
-  { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. A tabela progressiva garante preço justo para qualquer período." },
+  { q: "Quem define o preço?", a: "O anfitrião define o preço do espaço. A GuardaAí sugere valores de referência, mas não impõe uma tabela fixa. O mínimo é R$ 1,50/m³/dia." },
+  { q: "Posso guardar por poucas horas?", a: "Sim! Espaços que aceitam por hora permitem reservas curtas. A cobrança mínima é de 1 diária." },
+  { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. O preço varia conforme o anfitrião." },
   { q: "Como funciona a segurança?", a: "Objetos são cadastrados com foto, ambas as partes aceitam termos de responsabilidade, e toda intermediação é feita digitalmente pela plataforma." },
 ];
 
 const pricingTiers = [
-  { period: "1 hora", price: "R$ 0,21", daily: "proporcional" },
-  { period: "1 dia", price: "R$ 5", daily: "R$ 5,00/dia" },
-  { period: "7 dias", price: "R$ 19", daily: "R$ 2,71/dia" },
-  { period: "30 dias", price: "R$ 45", daily: "R$ 1,50/dia" },
+  { period: "1 dia", price: "R$ 1,50", daily: "mínimo/m³/dia" },
+  { period: "7 dias", price: "a partir de", daily: "R$ 1,50/m³/dia" },
+  { period: "30 dias", price: "a partir de", daily: "R$ 1,50/m³/dia" },
+  { period: "Por hora", price: "aceito", daily: "mín. 1 diária" },
 ];
 
 const QueroGuardar = () => {
@@ -106,7 +106,7 @@ const QueroGuardar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço por m³</p>
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço</p>
                   <div className="grid grid-cols-4 gap-2.5">
                     {pricingTiers.map((t, i) => (
                       <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-primary/30 transition-colors">
@@ -117,7 +117,7 @@ const QueroGuardar = () => {
                     ))}
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
-                    Tabela progressiva por m³. Quanto maior o período, menor o custo diário. Taxa de serviço de R$ 28,00 adicionada no checkout.
+                    Preço definido pelo anfitrião. Mínimo R$ 1,50/m³/dia. Sem taxa de serviço. Reservas por hora com cobrança mínima de 1 diária.
                   </p>
                 </motion.div>
               </motion.div>
