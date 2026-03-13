@@ -281,14 +281,22 @@ const SearchResults = () => {
                   {" → "}
                   {format(new Date(pickupDate), "dd/MM", { locale: pt })}
                 </span>
-                <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] sm:text-xs font-bold">
-                  {days}d
-                </span>
+                {isHourly ? (
+                  <span className="px-1.5 py-0.5 rounded bg-accent/10 text-accent text-[10px] sm:text-xs font-bold flex items-center gap-0.5">
+                    <Clock size={9} /> {hours}h
+                  </span>
+                ) : (
+                  <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] sm:text-xs font-bold">
+                    {days}d
+                  </span>
+                )}
               </div>
             ) : (
               <div className="flex items-center gap-1 flex-shrink-0">
                 <Calendar size={12} className="text-primary flex-shrink-0" />
-                <span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
+                <span className="text-muted-foreground">
+                  {isHourly ? `${hours} hora${hours > 1 ? "s" : ""}` : `${days} ${days === 1 ? "dia" : "dias"}`}
+                </span>
               </div>
             )}
             <button
