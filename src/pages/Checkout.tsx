@@ -60,6 +60,8 @@ const Checkout = () => {
   const space = state?.space;
   const reservedArea = Math.max(state?.reservedVolume || state?.reservedArea || 1, 1);
   const days = Math.max(state?.days || 1, 1);
+  const hours = state?.simulation?.hours || 0;
+  const isHourlyReservation = days <= 1 && hours > 0;
   const simulation = state?.simulation;
 
   // Payment state
