@@ -230,15 +230,10 @@ const Hero = () => {
               >
                 <SocialProofBar className="justify-start" />
               </motion.div>
-                </Button>
-                <span className="text-border">|</span>
-                <Link
-                  to="/quero-guardar"
-                  className="text-sm text-muted-foreground/85 hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
-                >
-                  Precisa calcular em detalhe? Use o simulador →
-                </Link>
-              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
             </div>
           </motion.div>
         </div>
