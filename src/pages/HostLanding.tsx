@@ -76,6 +76,7 @@ const HostLanding = () => {
   const [form, setForm] = useState({
     location: "",
     spaceType: "", spaceCategory: "",
+    spaceUse: "objects" as "objects" | "vehicles" | "both",
     height: "", width: "", length: "",
     covered: false, closed: false, easyAccess: false,
     availability: "continuous",
