@@ -161,7 +161,7 @@ const DashboardEspacos = () => {
     setLoading(true);
     const { data } = await supabase
       .from("spaces")
-      .select("id, location, space_type, width, length, height, volume, photos, status, onboarding_step, created_at")
+      .select("id, location, space_type, width, length, height, volume, photos, status, onboarding_step, created_at, price_per_day")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
     setSpaces((data as Space[]) || []);
