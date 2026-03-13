@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState, memo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -126,7 +126,24 @@ interface SpaceMapProps {
 const TILE_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
 
-export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick, className }: SpaceMapProps) {
+// Inject global styles once
+let stylesInjected = false;
+function injectStyles() {
+  if (stylesInjected) return;
+  stylesInjected = true;
+  const style = document.createElement("style");
+  style.id = "space-map-styles";
+  style.textContent = `
+    @keyframes userPulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.8); opacity: 0; }
+    }
+    .user-location-pin { background: none !important; border: none !important; }
+  `;
+  document.head.appendChild(style);
+}
+
+function SpaceMapInner({ spaces, highlightedId, onPinHover, onPinClick, className }: SpaceMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Map<number | string, L.Marker>>(new Map());
@@ -135,7 +152,46 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
   const userCircleRef = useRef<L.Circle | null>(null);
   const [geoStatus, setGeoStatus] = useState<"idle" | "loading" | "granted" | "denied">("idle");
 
-  // Request geolocation
+  // Stable callback refs to avoid re-bindng markers
+  const onPinHoverRef = useRef(onPinHover);
+  const onPinClickRef = useRef(onPinClick);
+  useEffect(() => { onPinHoverRef.current = onPinHover; }, [onPinHover]);
+  useEffect(() => { onPinClickRef.current = onPinClick; }, [onPinClick]);
+
+  // Initialize map — runs only once when container is available and spaces exist
+  useEffect(() => {
+    if (!containerRef.current || mapRef.current) return;
+    if (spaces.length === 0) return;
+
+    injectStyles();
+
+    const map = L.map(containerRef.current, {
+      center: [spaces[0].lat, spaces[0].lng],
+      zoom: 13,
+      scrollWheelZoom: true,
+      zoomControl: false,
+    });
+
+    L.tileLayer(TILE_URL, {
+      attribution: TILE_ATTRIBUTION,
+      maxZoom: 19,
+    }).addTo(map);
+
+    L.control.zoom({ position: "topright" }).addTo(map);
+
+    mapRef.current = map;
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+      markersRef.current.clear();
+      spacePricesRef.current.clear();
+      userMarkerRef.current = null;
+      userCircleRef.current = null;
+    };
+  }, [spaces.length > 0 ? "ready" : "empty"]); // only re-run when spaces go from empty→non-empty
+
+  // Request geolocation — independent of spaces, non-blocking
   useEffect(() => {
     if (!navigator.geolocation) {
       setGeoStatus("denied");
@@ -172,9 +228,13 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
           interactive: false,
         }).addTo(map);
 
-        // Extend bounds to include user location
-        if (spaces.length > 0) {
-          const allPoints: L.LatLngExpression[] = spaces.map((s) => [s.lat, s.lng]);
+        // Extend bounds to include user location if markers exist
+        if (markersRef.current.size > 0) {
+          const allPoints: L.LatLngExpression[] = [];
+          markersRef.current.forEach((m) => {
+            const ll = m.getLatLng();
+            allPoints.push([ll.lat, ll.lng]);
+          });
           allPoints.push([latitude, longitude]);
           const bounds = L.latLngBounds(allPoints);
           map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
@@ -183,54 +243,9 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
       () => {
         setGeoStatus("denied");
       },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 120000 }
     );
-  }, [spaces]);
-
-  // Initialize map
-  useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
-    if (spaces.length === 0) return;
-
-    const map = L.map(containerRef.current, {
-      center: [spaces[0].lat, spaces[0].lng],
-      zoom: 13,
-      scrollWheelZoom: true,
-      zoomControl: false,
-    });
-
-    L.tileLayer(TILE_URL, {
-      attribution: TILE_ATTRIBUTION,
-      maxZoom: 19,
-    }).addTo(map);
-
-    L.control.zoom({ position: "topright" }).addTo(map);
-
-    mapRef.current = map;
-
-    // Inject pulse animation CSS
-    if (!document.getElementById("user-pulse-style")) {
-      const style = document.createElement("style");
-      style.id = "user-pulse-style";
-      style.textContent = `
-        @keyframes userPulse {
-          0%, 100% { transform: scale(1); opacity: 0.6; }
-          50% { transform: scale(1.8); opacity: 0; }
-        }
-        .user-location-pin { background: none !important; border: none !important; }
-      `;
-      document.head.appendChild(style);
-    }
-
-    return () => {
-      map.remove();
-      mapRef.current = null;
-      markersRef.current.clear();
-      spacePricesRef.current.clear();
-      userMarkerRef.current = null;
-      userCircleRef.current = null;
-    };
-  }, []);
+  }, []); // Run once on mount — no dependency on spaces
 
   // Update markers when spaces change
   useEffect(() => {
@@ -251,7 +266,7 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
 
       marker.bindPopup(
         `<div class="p-0" style="margin: -14px -20px -14px -20px">
-          <img src="${space.photo}" alt="${space.name}" style="width:100%;height:100px;object-fit:cover;border-radius:10px 10px 0 0;" />
+          <img src="${space.photo}" alt="${space.name}" loading="lazy" style="width:100%;height:100px;object-fit:cover;border-radius:10px 10px 0 0;" />
           <div style="padding:10px 12px 12px">
             <p style="font-weight:700;font-size:13px;margin:0 0 2px 0;color:hsl(210 25% 12%);">${space.name}</p>
             <p style="font-size:11px;color:hsl(210 10% 50%);margin:0 0 6px 0;">${space.type} · ${space.neighborhood}</p>
@@ -264,17 +279,17 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
         { closeButton: false, maxWidth: 220, minWidth: 180, className: "space-popup" }
       );
 
-      marker.on("mouseover", () => onPinHover(space.id));
-      marker.on("mouseout", () => onPinHover(null));
-      marker.on("click", () => onPinClick(space.id));
+      marker.on("mouseover", () => onPinHoverRef.current(space.id));
+      marker.on("mouseout", () => onPinHoverRef.current(null));
+      marker.on("click", () => onPinClickRef.current(space.id));
 
       markersRef.current.set(space.id, marker);
     });
 
-    // Fit bounds (user location handled in geolocation effect)
+    // Fit bounds
     const bounds = L.latLngBounds(spaces.map((s) => [s.lat, s.lng]));
     map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
-  }, [spaces, onPinHover, onPinClick]);
+  }, [spaces]);
 
   // Update highlighted marker icon
   useEffect(() => {
@@ -312,3 +327,6 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
     </div>
   );
 }
+
+const SpaceMap = memo(SpaceMapInner);
+export default SpaceMap;
