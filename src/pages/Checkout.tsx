@@ -272,79 +272,10 @@ const Checkout = () => {
     }
   };
 
-  // ─── SUCCESS STATE ────────────────────────────────────────────
-  if (confirmed) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 22 }}
-          className="w-full max-w-lg"
-        >
-          <Card className="border-primary/20 shadow-xl overflow-hidden">
-            <div className="bg-primary/10 py-8 flex flex-col items-center">
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring", stiffness: 300 }}>
-                <CheckCircle2 size={56} className="text-primary" />
-              </motion.div>
-              <h1 className="text-xl font-bold text-foreground mt-4">Reserva confirmada!</h1>
-              <p className="text-sm text-muted-foreground mt-1">Seu espaço foi reservado com sucesso.</p>
-            </div>
-            <CardContent className="p-6 space-y-4">
-              <div className="rounded-lg bg-secondary/50 p-4 space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Nº da reserva</span>
-                  <span className="font-bold text-foreground">{reservationId}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Espaço</span>
-                  <span className="font-medium text-foreground truncate max-w-[180px]">{space.name}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Volume reservado</span>
-                  <span className="font-medium text-foreground">{reservedArea} m³</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Período</span>
-                  <span className="font-medium text-foreground">
-                    {simulation?.deliveryDate && simulation?.pickupDate
-                      ? `${format(new Date(simulation.deliveryDate), "dd/MM", { locale: ptBR })} → ${format(new Date(simulation.pickupDate), "dd/MM", { locale: ptBR })} · `
-                      : ""
-                    }{days} {days === 1 ? "dia" : "dias"}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Fotos verificadas</span>
-                  <span className="font-medium text-primary">{photos.length} foto{photos.length !== 1 ? "s" : ""} ✓</span>
-                </div>
-                <div className="flex justify-between text-sm pt-2 border-t border-border/50">
-                  <span className="font-bold text-foreground">Total pago</span>
-                  <span className="font-extrabold text-primary text-lg">{formatBRL(bp.total)}</span>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                Enviamos os detalhes para <strong>{user?.email}</strong>.<br />
-                Você também pode acompanhar na sua conta.
-              </p>
-              <div className="flex gap-3">
-                <Button className="flex-1" onClick={() => navigate("/minha-conta/reservas")}>
-                  Minhas reservas
-                </Button>
-                <Button variant="outline" className="flex-1" onClick={() => navigate("/")}>
-                  Ir para o início
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    );
-  }
-
   // ─── CHECKOUT PAGE ────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-background pb-24 sm:pb-28 lg:pb-8">
-      <SEO title="Checkout" description="Finalize sua reserva de espaço na GuardaAí. Pagamento seguro via Pix." noIndex />
+      <SEO title="Checkout" description="Finalize sua reserva de espaço na GuardaAí. Pagamento seguro via Stripe." noIndex />
       {/* Header */}
       <div className="bg-card border-b sticky top-0 z-30">
         <div className="container py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 max-w-5xl">
