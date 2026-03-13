@@ -1,4 +1,5 @@
 import SEO from "@/components/SEO";
+import { PRICE_HIGHLIGHTS, getSuggestedDailyRate } from "@/lib/pricing";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -498,6 +499,52 @@ const SpaceOnboarding = () => {
                       <p className="text-[10px] text-muted-foreground italic">
                         Reservas por horas são permitidas, com cobrança mínima equivalente a 1 diária.
                       </p>
+
+                      {/* Suggested progressive table */}
+                      <details className="mt-2 group">
+                        <summary className="text-[11px] font-semibold text-primary cursor-pointer hover:underline select-none">
+                          Ver tabela de referência sugerida
+                        </summary>
+                        <div className="mt-2 rounded-lg border border-border/50 bg-card p-3">
+                          <p className="text-[10px] text-muted-foreground mb-2">
+                            Valores sugeridos por m³/dia — você define o preço final.
+                          </p>
+                          <div className="grid grid-cols-4 gap-1.5">
+                            {PRICE_HIGHLIGHTS.map((h, i) => (
+                              <div key={i} className="text-center p-2 rounded-lg bg-secondary/60 border border-border/30">
+                                <p className="text-[9px] text-muted-foreground">{h.label}</p>
+                                <p className="text-xs font-bold text-foreground">R$ {h.suggestedRate.toFixed(2).replace(".", ",")}</p>
+                                <p className="text-[8px] text-muted-foreground/60">/m³/dia</p>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-2 overflow-x-auto">
+                            <table className="w-full text-[9px] text-muted-foreground">
+                              <thead>
+                                <tr className="border-b border-border/40">
+                                  <th className="text-left py-1 font-semibold">Dias</th>
+                                  {[1,2,3,5,7,10,14,21,30].map(d => (
+                                    <th key={d} className="text-center py-1 font-semibold">{d}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td className="py-1 font-medium text-foreground">R$/m³/dia</td>
+                                  {[1,2,3,5,7,10,14,21,30].map(d => (
+                                    <td key={d} className="text-center py-1">
+                                      {getSuggestedDailyRate(d).toFixed(2).replace(".", ",")}
+                                    </td>
+                                  ))}
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <p className="text-[9px] text-muted-foreground/70 mt-1.5 italic">
+                            Essa tabela é apenas uma sugestão. Você tem total liberdade para definir seus valores.
+                          </p>
+                        </div>
+                      </details>
                     </div>
 
                     {/* Cleaning fee */}
