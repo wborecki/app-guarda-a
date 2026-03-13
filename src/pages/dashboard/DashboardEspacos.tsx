@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
+import SuggestedPricingTable from "@/components/guardaai/SuggestedPricingTable";
 
 type Space = {
   id: string;
@@ -23,6 +24,7 @@ type Space = {
   status: string;
   onboarding_step: number;
   created_at: string;
+  price_per_day: number | null;
 };
 
 const typeLabels: Record<string, string> = {
