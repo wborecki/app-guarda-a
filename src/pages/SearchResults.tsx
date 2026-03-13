@@ -167,17 +167,27 @@ const SearchResults = () => {
   const [mobileView, setMobileView] = useState<"list" | "map">("list");
   const cardRefs = useRef<Record<number | string, HTMLDivElement | null>>({});
 
-  // Sync spaceUse filter change back to URL
+  // Sync filters back to URL
   useEffect(() => {
-    const current = searchParams.get("mode") || "";
-    const desired = filters.spaceUse === "all" ? "" : filters.spaceUse;
-    if (current !== desired) {
-      const next = new URLSearchParams(searchParams);
-      if (desired) next.set("mode", desired);
-      else next.delete("mode");
-      setSearchParams(next, { replace: true });
+    const next = new URLSearchParams(searchParams);
+    let changed = false;
+
+    const currentMode = next.get("mode") || "";
+    const desiredMode = filters.spaceUse === "all" ? "" : filters.spaceUse;
+    if (currentMode !== desiredMode) {
+      if (desiredMode) next.set("mode", desiredMode); else next.delete("mode");
+      changed = true;
     }
-  }, [filters.spaceUse]);
+
+    const currentVt = next.get("vt") || "";
+    const desiredVt = filters.vehicleTypes.join(",");
+    if (currentVt !== desiredVt) {
+      if (desiredVt) next.set("vt", desiredVt); else next.delete("vt");
+      changed = true;
+    }
+
+    if (changed) setSearchParams(next, { replace: true });
+  }, [filters.spaceUse, filters.vehicleTypes]);
 
   const filteredSortedSpaces = useMemo(() => {
     let result = [...allSpaces];
