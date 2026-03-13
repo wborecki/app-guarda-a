@@ -35,7 +35,7 @@ const DashboardFinanceiro = () => (
             <Wallet size={18} className="text-accent" />
           </div>
         </div>
-        <p className="text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
+        <p className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
         <p className="text-sm text-muted-foreground mt-1">Saldo disponível</p>
       </div>
     </div>
