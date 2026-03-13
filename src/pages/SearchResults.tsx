@@ -178,6 +178,7 @@ const SearchResults = () => {
     }
   }, [filters.spaceUse]);
 
+  const filteredSortedSpaces = useMemo(() => {
     let result = [...allSpaces];
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
     if (filters.spaceUse !== "all") {
