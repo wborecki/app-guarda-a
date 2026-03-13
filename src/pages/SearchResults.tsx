@@ -40,7 +40,7 @@ const MapSkeleton = () => (
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const params = useMemo(
     () => decodeSearchParams(searchParams.toString(), location.state),
