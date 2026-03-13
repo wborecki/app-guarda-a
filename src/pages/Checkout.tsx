@@ -8,8 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  MapPin, Shield, Lock, CreditCard, QrCode,
-  CheckCircle2, Info, ChevronRight, Smartphone,
+  MapPin, Shield, Lock, CreditCard,
+  CheckCircle2, Info, ChevronRight,
   Camera, Upload, ImagePlus, X, AlertTriangle, FileText, Ban,
   ShieldAlert, Loader2
 } from "lucide-react";
