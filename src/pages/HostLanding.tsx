@@ -125,6 +125,7 @@ const HostLanding = () => {
         location: form.location,
         space_type: form.spaceType,
         space_category: form.spaceCategory,
+        space_use: form.spaceUse,
         height: parseFloat(form.height) || 0,
         width: parseFloat(form.width) || 0,
         length: parseFloat(form.length) || 0,
