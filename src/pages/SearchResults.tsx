@@ -240,6 +240,11 @@ const SearchResults = () => {
     if (filters.minRating !== null) chips.push({ label: `${filters.minRating}+`, clear: () => setFilters(f => ({ ...f, minRating: null })) });
     if (filters.maxPrice !== null) chips.push({ label: `Até R$${filters.maxPrice}`, clear: () => setFilters(f => ({ ...f, maxPrice: null })) });
     filters.features.forEach(feat => chips.push({ label: feat, clear: () => setFilters(f => ({ ...f, features: f.features.filter(x => x !== feat) })) }));
+    filters.vehicleTypes.forEach(vt => {
+      const vc = vehicleCategories.find(v => v.id === vt);
+      const label = vc ? `${vc.icon} ${vc.nome}` : vt;
+      chips.push({ label, clear: () => setFilters(f => ({ ...f, vehicleTypes: f.vehicleTypes.filter(x => x !== vt) })) });
+    });
     return chips;
   }, [filters]);
 
