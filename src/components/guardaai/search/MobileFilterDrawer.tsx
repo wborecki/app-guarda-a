@@ -5,6 +5,7 @@ import {
   type Filters,
   spaceTypesList, distanceOptions, ratingOptions, allFeatures, spaceUseOptions,
 } from "@/data/searchMockData";
+import { vehicleCategories, vehicleGroups } from "@/data/vehicleCategories";
 
 interface MobileFilterDrawerProps {
   open: boolean;
@@ -18,6 +19,8 @@ interface MobileFilterDrawerProps {
 const FilterContent = ({ filters, setFilters }: { filters: Filters; setFilters: React.Dispatch<React.SetStateAction<Filters>> }) => {
   const toggleType = (t: string) => setFilters(f => ({ ...f, types: f.types.includes(t) ? f.types.filter(x => x !== t) : [...f.types, t] }));
   const toggleFeature = (feat: string) => setFilters(f => ({ ...f, features: f.features.includes(feat) ? f.features.filter(x => x !== feat) : [...f.features, feat] }));
+  const toggleVehicleType = (id: string) => setFilters(f => ({ ...f, vehicleTypes: f.vehicleTypes.includes(id) ? f.vehicleTypes.filter(x => x !== id) : [...f.vehicleTypes, id] }));
+  const showVehicleFilter = filters.spaceUse === "vehicles" || filters.spaceUse === "all";
 
   return (
     <div className="space-y-5">
