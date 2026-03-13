@@ -52,9 +52,9 @@ const securityItems = [
 
 const faqItems = [
   { q: "Que tipo de espaço posso anunciar?", a: "Garagens, quartos vazios, depósitos, áreas cobertas, galpões pequenos e espaços comerciais ociosos — residenciais ou comerciais." },
-  { q: "Como o valor é calculado?", a: "O preço cobrado do cliente segue uma tabela progressiva de R$ 5 (1 dia) a R$ 45 (30 dias) por m³. Seu ganho é calculado sobre esse valor, descontada a comissão da plataforma." },
+  { q: "Quem define o preço?", a: "Você define o preço do seu espaço livremente. A GuardaAí sugere valores de referência, mas a decisão final é sua. O mínimo obrigatório é R$ 1,50/m³/dia." },
   { q: "Posso recusar objetos?", a: "Sim. O anfitrião tem total direito de recusar objetos inadequados ou fora das regras da plataforma." },
-  { q: "Como recebo meu pagamento?", a: "Os pagamentos são processados pela plataforma e repassados para sua conta, descontada a comissão." },
+  { q: "Como recebo meu pagamento?", a: "Os pagamentos são processados pela plataforma e repassados para sua conta." },
   { q: "Que itens são proibidos?", a: "Drogas, armas, explosivos, materiais perecíveis, animais vivos e qualquer item ilegal." },
   { q: "Preciso estar em casa para receber itens?", a: "Depende do seu modelo. Você pode combinar horários de acesso ou oferecer acesso independente, conforme sua preferência." },
 ];
