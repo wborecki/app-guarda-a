@@ -27,17 +27,17 @@ const trustItems = [
 
 const faqs = [
   { q: "O que posso guardar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce e itens pessoais. Itens ilegais, perigosos ou perecíveis são proibidos." },
-  { q: "Como o preço é calculado?", a: "O preço é baseado no volume ocupado (m³) e no período. Usamos uma tabela progressiva de R$ 5/m³ (1 dia) a R$ 45/m³ (30 dias). Reservas por hora são proporcionais à diária. Mínimo de 1 m³. Uma taxa de serviço de R$ 28,00 é adicionada no checkout." },
-  { q: "Posso guardar por poucas horas?", a: "Sim! Espaços que aceitam por hora permitem reservas curtas. Basta selecionar o mesmo dia e ajustar os horários no simulador." },
-  { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. A tabela progressiva garante preço justo para qualquer período." },
+  { q: "Quem define o preço?", a: "O anfitrião define o preço do espaço. A GuardaAí sugere valores de referência, mas não impõe uma tabela fixa. O mínimo é R$ 1,50/m³/dia." },
+  { q: "Posso guardar por poucas horas?", a: "Sim! Espaços que aceitam por hora permitem reservas curtas. A cobrança mínima é de 1 diária." },
+  { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. O preço varia conforme o anfitrião." },
   { q: "Como funciona a segurança?", a: "Objetos são cadastrados com foto, ambas as partes aceitam termos de responsabilidade, e toda intermediação é feita digitalmente pela plataforma." },
 ];
 
 const pricingTiers = [
-  { period: "1 hora", price: "R$ 0,21", daily: "proporcional" },
-  { period: "1 dia", price: "R$ 5", daily: "R$ 5,00/dia" },
-  { period: "7 dias", price: "R$ 19", daily: "R$ 2,71/dia" },
-  { period: "30 dias", price: "R$ 45", daily: "R$ 1,50/dia" },
+  { period: "1 dia", price: "R$ 1,50", daily: "mínimo/m³/dia" },
+  { period: "7 dias", price: "a partir de", daily: "R$ 1,50/m³/dia" },
+  { period: "30 dias", price: "a partir de", daily: "R$ 1,50/m³/dia" },
+  { period: "Por hora", price: "aceito", daily: "mín. 1 diária" },
 ];
 
 const QueroGuardar = () => {
