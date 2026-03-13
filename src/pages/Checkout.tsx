@@ -63,7 +63,6 @@ const Checkout = () => {
   const simulation = state?.simulation;
 
   // Payment state
-  const [confirmed, setConfirmed] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   // Photo upload state
