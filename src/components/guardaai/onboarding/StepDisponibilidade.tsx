@@ -30,7 +30,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
                 onClick={() => updateSpace({ rental_type: opt.value } as any)}
                 className={`flex flex-col items-start px-4 py-2.5 rounded-xl border text-left transition-colors ${
                   (space as any).rental_type === opt.value
-                    ? "border-accent bg-accent/10 text-accent-foreground"
+                    ? "border-accent bg-accent/10 text-foreground"
                     : "border-border bg-secondary/40 text-muted-foreground hover:border-accent/40"
                 }`}
               >
