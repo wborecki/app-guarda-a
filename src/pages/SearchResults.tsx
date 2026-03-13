@@ -375,15 +375,11 @@ const SearchResults = () => {
 
         {/* ── RIGHT: Map ── */}
         <div className={`lg:flex-1 lg:sticky lg:top-[105px] lg:h-[calc(100vh-105px)] ${mobileView === "list" ? "hidden lg:block" : "flex-1"}`}>
-          <Suspense fallback={
-            <div className="w-full h-full min-h-[400px] bg-muted flex items-center justify-center rounded-xl">
-              <p className="text-sm text-muted-foreground">Carregando mapa...</p>
-            </div>
-          }>
+          <Suspense fallback={<MapSkeleton />}>
             <SpaceMap
               spaces={mapSpaces}
               highlightedId={highlightedSpaceId}
-              onPinHover={setHighlightedSpaceId}
+              onPinHover={handlePinHover}
               onPinClick={handlePinClick}
               className="h-full w-full lg:rounded-none"
             />
