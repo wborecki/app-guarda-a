@@ -90,7 +90,7 @@ serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: lineItems,
       mode: "payment",
-      payment_method_types: ["card", "boleto"],
+      payment_method_types: ["card"],
       metadata: {
         reservation_id: reservation.id,
         renter_id: user.id,
