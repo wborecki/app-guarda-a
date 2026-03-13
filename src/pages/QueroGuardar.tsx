@@ -14,7 +14,7 @@ const steps = [
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Mais acessível", desc: "Preços definidos por anfitriões, muito abaixo de self storages." },
+  { icon: DollarSign, title: "Mais acessível", desc: "Preços flexíveis definidos por anfitriões, com valores competitivos." },
   { icon: Shield, title: "Seguro e registrado", desc: "Itens fotografados, cadastrados e protegidos por termos." },
   { icon: TrendingDown, title: "Preço flexível", desc: "Cada anfitrião define seu valor. Sem taxa de serviço." },
 ];
