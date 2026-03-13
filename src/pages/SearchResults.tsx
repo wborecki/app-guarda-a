@@ -210,16 +210,20 @@ const SearchResults = () => {
   const hasActiveFilters = activeFilterChips.length > 0;
   const clearAll = () => setFilters(emptyFilters);
 
-  const handleSelect = (e: React.MouseEvent, space: any) => {
+  const handleSelect = useCallback((e: React.MouseEvent, space: any) => {
     e.stopPropagation();
     navigate(`/espaco/${space.id}`, { state: { space, simulation: params } });
-  };
+  }, [navigate, params]);
 
-  const handleCardClick = (space: any) => {
+  const handleCardClick = useCallback((space: any) => {
     navigate(`/espaco/${space.id}`, { state: { space, simulation: params } });
-  };
+  }, [navigate, params]);
 
-  const handlePinClick = (id: number | string) => {
+  const handlePinHover = useCallback((id: number | string | null) => {
+    setHighlightedSpaceId(id);
+  }, []);
+
+  const handlePinClick = useCallback((id: number | string) => {
     const space = filteredSortedSpaces.find((s) => s.id === id);
     if (space) {
       if (mobileView === "map") {
@@ -233,7 +237,7 @@ const SearchResults = () => {
         setHighlightedSpaceId(id);
       }
     }
-  };
+  }, [filteredSortedSpaces, mobileView]);
 
   // ─── RENDER ────────────────────────────────────────────────────
   return (
