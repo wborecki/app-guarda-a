@@ -22,7 +22,7 @@ const Index = () => {
           "@context": "https://schema.org",
           "@type": "WebApplication",
           name: "GuardaAí",
-          description: "Marketplace de armazenamento descentralizado. Encontre espaços para guardar seus objetos perto de você. Guarde móveis, estoque e mudanças com preços flexíveis.",
+          description: "Marketplace de armazenamento descentralizado. Encontre espaços para guardar objetos ou veículos perto de você. Guarde móveis, estoque, carros, motos e mais com preços flexíveis.",
           url: "https://guardaai.com.br",
           applicationCategory: "BusinessApplication",
           offers: { "@type": "Offer", price: "1.50", priceCurrency: "BRL", description: "Diárias a partir de R$1,50 por m³" },

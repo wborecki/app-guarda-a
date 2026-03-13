@@ -13,7 +13,7 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   // Geral
-  { category: "todas", q: "O que é o GuardaAí?", a: "O GuardaAí é um marketplace de armazenamento que conecta quem precisa guardar objetos com quem tem espaço disponível — garagens, quartos, depósitos e até espaços profissionais. Encontre opções perto de você, com preços flexíveis." },
+  { category: "todas", q: "O que é o GuardaAí?", a: "O GuardaAí é um marketplace de armazenamento que conecta quem precisa guardar objetos ou veículos com quem tem espaço disponível — garagens, vagas, quartos, depósitos e espaços profissionais. Encontre opções perto de você, com preços flexíveis." },
 
   // Preços
   { category: "precos", q: "Como o preço é calculado?", a: "O preço é definido pelo anfitrião, com base no volume que seus objetos vão ocupar (mínimo de 1 m³) e na duração da reserva. A GuardaAí sugere valores de referência, mas o anfitrião tem liberdade para definir seu próprio preço, respeitando o mínimo da plataforma." },
@@ -31,7 +31,7 @@ const faqs: FaqItem[] = [
   { category: "reservas", q: "Posso guardar por poucos dias?", a: "Sim! Você pode guardar a partir de 1 dia. O preço varia conforme o anfitrião." },
   { category: "reservas", q: "Posso guardar por meses ou mais?", a: "Claro. Reservas longas são aceitas e geralmente têm valores mais vantajosos por dia." },
   { category: "reservas", q: "Preciso medir meu objeto?", a: "Não necessariamente. O sistema possui uma lista de objetos com medidas estimadas. Basta selecionar o que deseja guardar e o cálculo é automático." },
-  { category: "reservas", q: "Quais objetos posso armazenar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce, ferramentas e itens pessoais em geral. Basta serem objetos permitidos pelos termos de uso." },
+  { category: "reservas", q: "Quais objetos posso armazenar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce, ferramentas e itens pessoais em geral. Também é possível guardar veículos como motos, carros, SUVs, caminhonetes, jet skis e barcos pequenos em espaços compatíveis." },
   { category: "reservas", q: "Como funcionam os horários de atendimento?", a: "Cada anfitrião define os horários em que está disponível para receber e devolver itens, por dia da semana. Ao reservar, você pode verificar os horários disponíveis antes de confirmar." },
 
   // Segurança
@@ -39,7 +39,7 @@ const faqs: FaqItem[] = [
   { category: "seguranca", q: "Quais itens são proibidos?", a: "Drogas, armas, explosivos, produtos perigosos, perecíveis, animais vivos e qualquer item ilegal." },
 
   // Anfitrião
-  { category: "anfitriao", q: "Como faço para anunciar meu espaço?", a: "Cadastre seu espaço com dimensões, tipo e fotos. Defina seu preço, seus horários de atendimento e se aceita reservas por hora, por dia ou ambos. A plataforma sugere valores, mas você decide." },
+  { category: "anfitriao", q: "Como faço para anunciar meu espaço?", a: "Cadastre seu espaço com dimensões, tipo e fotos. Informe se aceita objetos, veículos ou ambos. Defina seu preço, seus horários de atendimento e se aceita reservas por hora, por dia ou ambos. A plataforma sugere valores, mas você decide." },
 ];
 
 const categories: { key: FaqCategory; label: string; icon: typeof HelpCircle }[] = [

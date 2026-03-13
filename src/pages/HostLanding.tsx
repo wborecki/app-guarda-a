@@ -76,6 +76,7 @@ const HostLanding = () => {
   const [form, setForm] = useState({
     location: "",
     spaceType: "", spaceCategory: "",
+    spaceUse: "objects" as "objects" | "vehicles" | "both",
     height: "", width: "", length: "",
     covered: false, closed: false, easyAccess: false,
     availability: "continuous",
@@ -124,6 +125,7 @@ const HostLanding = () => {
         location: form.location,
         space_type: form.spaceType,
         space_category: form.spaceCategory,
+        space_use: form.spaceUse,
         height: parseFloat(form.height) || 0,
         width: parseFloat(form.width) || 0,
         length: parseFloat(form.length) || 0,
@@ -200,7 +202,7 @@ const HostLanding = () => {
                 </h1>
 
                 <p className="text-[15px] md:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
-                  Garagens, quartos, depósitos e áreas cobertas podem gerar renda. Cadastre seu espaço e receba por cada reserva realizada.
+                  Garagens, vagas, quartos, depósitos e áreas cobertas podem gerar renda — para guardar objetos ou veículos. Cadastre e comece a ganhar.
                 </p>
 
                 {/* Benefits */}
@@ -315,6 +317,19 @@ const HostLanding = () => {
                           />
                         </div>
 
+                        {/* === SPACE USE === */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Para que tipo de uso?</p>
+                          <Select value={form.spaceUse} onValueChange={v => setForm({...form, spaceUse: v as any})}>
+                            <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="objects">Objetos</SelectItem>
+                              <SelectItem value="vehicles">Veículos</SelectItem>
+                              <SelectItem value="both">Ambos (objetos e veículos)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
                         {/* === SPACE TYPE === */}
                         <div className="space-y-2.5">
                           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Tipo de espaço</p>
@@ -327,6 +342,9 @@ const HostLanding = () => {
                               <SelectItem value="area-coberta">Área coberta</SelectItem>
                               <SelectItem value="galpao">Pequeno galpão</SelectItem>
                               <SelectItem value="comercial">Espaço comercial</SelectItem>
+                              {(form.spaceUse === "vehicles" || form.spaceUse === "both") && (
+                                <SelectItem value="estacionamento">Estacionamento / Vaga</SelectItem>
+                              )}
                             </SelectContent>
                           </Select>
                         </div>

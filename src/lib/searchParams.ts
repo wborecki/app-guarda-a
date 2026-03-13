@@ -3,6 +3,8 @@
  * This replaces the fragile location.state approach so searches survive page reloads.
  */
 
+import type { StorageMode } from "@/data/vehicleCategories";
+
 export interface SearchParams {
   location: string;
   days: number;
@@ -12,6 +14,8 @@ export interface SearchParams {
   deliveryTime?: string;
   pickupDate?: string;
   pickupTime?: string;
+  mode?: StorageMode;
+  vehicleId?: string;
 }
 
 /** Encode search params into a URLSearchParams string */
@@ -25,6 +29,8 @@ export function encodeSearchParams(params: SearchParams): string {
   if (params.deliveryTime) sp.set("fromT", params.deliveryTime);
   if (params.pickupDate) sp.set("to", params.pickupDate);
   if (params.pickupTime) sp.set("toT", params.pickupTime);
+  if (params.mode && params.mode !== "objects") sp.set("mode", params.mode);
+  if (params.vehicleId) sp.set("vid", params.vehicleId);
   return sp.toString();
 }
 
@@ -43,6 +49,8 @@ export function decodeSearchParams(
   const deliveryTime = sp.get("fromT") || locationState?.deliveryTime || undefined;
   const pickupDate = sp.get("to") || locationState?.pickupDate || undefined;
   const pickupTime = sp.get("toT") || locationState?.pickupTime || undefined;
+  const mode = (sp.get("mode") as StorageMode) || locationState?.mode || "objects";
+  const vehicleId = sp.get("vid") || locationState?.vehicleId || undefined;
 
-  return { location, days, hours, totalVol, deliveryDate, deliveryTime, pickupDate, pickupTime };
+  return { location, days, hours, totalVol, deliveryDate, deliveryTime, pickupDate, pickupTime, mode, vehicleId };
 }
