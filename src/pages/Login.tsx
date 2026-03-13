@@ -153,7 +153,7 @@ const Login = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="grid grid-cols-2 gap-4 mb-8"
+              className="grid grid-cols-3 gap-3 mb-8"
             >
               <div className="p-4 rounded-2xl bg-primary/5 border border-primary/15 text-center">
                 <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-2">

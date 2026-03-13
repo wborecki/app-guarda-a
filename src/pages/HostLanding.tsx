@@ -393,7 +393,7 @@ const HostLanding = () => {
                           <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
                         </Button>
                     </div>
-                    <div className={step === 2 ? "" : "hidden"}>
+                    <div className={step === 2 ? "space-y-4" : "hidden"}>
                         {/* === STEP 2: DETAILS === */}
 
                         {/* Category + toggles */}
