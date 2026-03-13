@@ -171,8 +171,8 @@ const HostLanding = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Anuncie seu espaço"
-        description="Ganhe dinheiro com seu espaço ocioso. Anuncie garagem, quarto vazio, depósito ou galpão na GuardaAí e receba pagamentos por diárias."
+        title="Anuncie garagem, vaga ou depósito"
+        description="Transforme espaço ocioso em renda. Anuncie garagem, vaga, depósito ou galpão na GuardaAí para guardar objetos e veículos."
         canonical="/anunciar"
       />
       <Header />
