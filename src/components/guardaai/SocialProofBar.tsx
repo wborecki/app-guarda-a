@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useInView } from "framer-motion";
+import { usePlatformStats } from "@/hooks/usePlatformStats";
 
 const useCounter = (target: number, duration = 1800) => {
   const [count, setCount] = useState(0);
@@ -7,7 +8,7 @@ const useCounter = (target: number, duration = 1800) => {
   const inView = useInView(ref, { once: true, margin: "-50px" });
 
   useEffect(() => {
-    if (!inView) return;
+    if (!inView || target <= 0) return;
     const startTime = performance.now();
     const step = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1);
@@ -20,12 +21,6 @@ const useCounter = (target: number, duration = 1800) => {
 
   return { count, ref };
 };
-
-const SOCIAL_PROOF = [
-  { target: 150, suffix: "+", label: "Espaços disponíveis" },
-  { target: 2400, suffix: "+", label: "Objetos guardados" },
-  { target: 12, suffix: "", label: "Cidades atendidas" },
-];
 
 const CounterItem = ({ target, suffix, label }: { target: number; suffix: string; label: string }) => {
   const { count, ref } = useCounter(target);
@@ -41,12 +36,22 @@ const CounterItem = ({ target, suffix, label }: { target: number; suffix: string
   );
 };
 
-const SocialProofBar = ({ className = "" }: { className?: string }) => (
-  <div className={`flex items-center justify-center gap-6 md:gap-8 ${className}`}>
-    {SOCIAL_PROOF.map((item, i) => (
-      <CounterItem key={i} {...item} />
-    ))}
-  </div>
-);
+const SocialProofBar = ({ className = "" }: { className?: string }) => {
+  const stats = usePlatformStats();
+
+  const items = [
+    { target: stats.spaces_count, suffix: "+", label: "Espaços disponíveis" },
+    { target: stats.reservations_count, suffix: "+", label: "Objetos guardados" },
+    { target: stats.cities_count, suffix: "", label: "Cidades atendidas" },
+  ];
+
+  return (
+    <div className={`flex items-center justify-center gap-6 md:gap-8 ${className}`}>
+      {items.map((item, i) => (
+        <CounterItem key={i} {...item} />
+      ))}
+    </div>
+  );
+};
 
 export default SocialProofBar;
