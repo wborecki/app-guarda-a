@@ -627,7 +627,7 @@ const Checkout = () => {
               )}
             </AnimatePresence>
 
-            {/* Step 3: Payment — only visible when verification complete */}
+            {/* Step 3: Payment — Stripe redirect */}
             <AnimatePresence>
               {user && verificationComplete && (
                 <motion.div
@@ -640,98 +640,23 @@ const Checkout = () => {
                     <CardContent className="p-5 sm:p-6">
                       <h2 className="font-bold text-foreground mb-4 flex items-center gap-2 text-base">
                         <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">3</span>
-                        Forma de pagamento
+                        Pagamento seguro
                       </h2>
 
-                      {/* Payment method tabs */}
-                      <div className="grid grid-cols-3 gap-2 mb-5">
-                        {([
-                          { key: "credit" as const, label: "Crédito", icon: CreditCard },
-                          { key: "debit" as const, label: "Débito", icon: CreditCard },
-                          { key: "pix" as const, label: "Pix", icon: QrCode },
-                        ]).map((m) => (
-                          <button
-                            key={m.key}
-                            onClick={() => setPaymentMethod(m.key)}
-                            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all text-sm font-medium ${
-                              paymentMethod === m.key
-                                ? "border-primary bg-primary/5 text-primary"
-                                : "border-border bg-card text-muted-foreground hover:border-primary/30"
-                            }`}
-                          >
-                            <m.icon size={20} />
-                            <span>{m.label}</span>
-                          </button>
-                        ))}
+                      <div className="rounded-xl bg-secondary/50 border border-border/60 p-5 text-center space-y-4">
+                        <div className="flex items-center justify-center gap-3">
+                          <Lock size={20} className="text-primary" />
+                          <Shield size={20} className="text-primary" />
+                          <CreditCard size={20} className="text-primary" />
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          Ao clicar em <strong>"Confirmar e pagar"</strong>, você será redirecionado para o <strong>Stripe</strong>, nossa plataforma de pagamento segura. Aceita cartão de crédito, débito e boleto.
+                        </p>
+                        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/70">
+                          <Lock size={12} />
+                          <span>Seus dados bancários nunca passam pelo GuardaAí</span>
+                        </div>
                       </div>
-
-                      <AnimatePresence mode="wait">
-                        {(paymentMethod === "credit" || paymentMethod === "debit") && (
-                          <motion.div
-                            key="card"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="space-y-4 overflow-hidden"
-                          >
-                            <div>
-                              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Número do cartão</label>
-                              <Input value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} placeholder="0000 0000 0000 0000" maxLength={19} />
-                            </div>
-                            <div>
-                              <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Nome no cartão</label>
-                              <Input value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder="Como está no cartão" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                              <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Validade</label>
-                                <Input value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} placeholder="MM/AA" maxLength={5} />
-                              </div>
-                              <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">CVV</label>
-                                <Input type="password" value={cardCvv} onChange={(e) => setCardCvv(e.target.value)} placeholder="•••" maxLength={4} />
-                              </div>
-                            </div>
-                            {paymentMethod === "credit" && (
-                              <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Parcelas</label>
-                                <select
-                                  value={installments}
-                                  onChange={(e) => setInstallments(e.target.value)}
-                                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                >
-                                  <option value="1">1× de {formatBRL(bp.total)} (à vista)</option>
-                                  {bp.total >= 50 && <option value="2">2× de {formatBRL(bp.total / 2)}</option>}
-                                  {bp.total >= 90 && <option value="3">3× de {formatBRL(bp.total / 3)}</option>}
-                                </select>
-                              </div>
-                            )}
-                          </motion.div>
-                        )}
-
-                        {paymentMethod === "pix" && (
-                          <motion.div
-                            key="pix"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="text-center py-6 space-y-4">
-                              <div className="w-44 h-44 mx-auto bg-secondary rounded-xl flex items-center justify-center border border-border">
-                                <QrCode size={100} className="text-muted-foreground/30" />
-                              </div>
-                              <p className="text-sm text-muted-foreground">
-                                Clique em <strong>"Confirmar e pagar"</strong> para gerar o QR Code Pix.
-                              </p>
-                              <div className="flex items-center gap-2 justify-center">
-                                <Smartphone size={14} className="text-primary" />
-                                <span className="text-xs text-muted-foreground">Escaneie com o app do seu banco</span>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
                     </CardContent>
                   </Card>
                 </motion.div>
