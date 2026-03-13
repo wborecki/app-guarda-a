@@ -199,11 +199,11 @@ const HostLanding = () => {
                 </div>
 
                 <h1 className="text-[1.75rem] md:text-4xl lg:text-[2.65rem] font-extrabold text-foreground leading-[1.15] mb-3">
-                  Transforme espaço ocioso<br className="hidden md:block" /> em <span className="text-accent">renda extra</span>
+                  Garagem, vaga ou depósito parado?<br className="hidden md:block" /> Transforme em <span className="text-accent">renda extra</span>
                 </h1>
 
                 <p className="text-[15px] md:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
-                  Garagens, vagas, quartos, depósitos e áreas cobertas podem gerar renda — para guardar objetos ou veículos. Cadastre e comece a ganhar.
+                  Anuncie para quem precisa guardar caixas, estoque, carros, motos, barcos e mais. Cadastre em minutos e comece a faturar.
                 </p>
 
                 {/* Benefits */}
