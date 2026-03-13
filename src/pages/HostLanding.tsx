@@ -292,8 +292,7 @@ const HostLanding = () => {
                       </div>
                     ) : (
                     <>
-                    {step === 1 ? (
-                      <>
+                    <div className={step === 1 ? "" : "hidden"}>
                         {/* Connected user badge */}
                         <div className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/60 border border-border/60">
                           <CheckCircle2 size={15} className="text-primary shrink-0" />
