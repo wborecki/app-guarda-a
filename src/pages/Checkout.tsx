@@ -23,7 +23,6 @@ import { ptBR } from "date-fns/locale";
 
 import { supabase } from "@/integrations/supabase/client";
 
-type PaymentMethod = "credit" | "debit" | "pix";
 type AnalysisStatus = "pending" | "analyzing" | "approved" | "review" | "blocked";
 
 const STEPS = [
