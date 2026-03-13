@@ -8,6 +8,9 @@ import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "./hooks/useAuth";
 import ScrollToTop from "./components/ScrollToTop";
 import FloatingChat from "./components/guardaai/FloatingChat";
+import ErrorBoundary from "./components/guardaai/ErrorBoundary";
+import ProtectedRoute from "./components/guardaai/ProtectedRoute";
+import AdminRoute from "./components/guardaai/AdminRoute";
 import { Loader2 } from "lucide-react";
 
 // Lazy-loaded pages
@@ -66,17 +69,18 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <ErrorBoundary>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/anunciar" element={<HostLanding />} />
-            <Route path="/anunciar/finalizar" element={<SpaceOnboarding />} />
+            <Route path="/anunciar/finalizar" element={<ProtectedRoute><SpaceOnboarding /></ProtectedRoute>} />
             <Route path="/entrar" element={<Login />} />
             <Route path="/redefinir-senha" element={<ResetPassword />} />
             <Route path="/buscar" element={<SearchResults />} />
             <Route path="/espaco/:id" element={<SpaceDetails />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/pagamento-sucesso" element={<PaymentSuccess />} />
+            <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+            <Route path="/pagamento-sucesso" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
             <Route path="/termos/locatario" element={<TermsRenter />} />
             <Route path="/termos/anfitriao" element={<TermsHost />} />
             <Route path="/itens-proibidos" element={<ProhibitedItems />} />
@@ -84,8 +88,8 @@ const App = () => (
             <Route path="/quero-guardar" element={<QueroGuardar />} />
             <Route path="/fale-conosco" element={<Contact />} />
             
-            {/* Dashboard - Área do cliente */}
-            <Route path="/minha-conta" element={<DashboardLayout />}>
+            {/* Dashboard - Área do cliente (protegido) */}
+            <Route path="/minha-conta" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route index element={<DashboardOverview />} />
               <Route path="reservas" element={<DashboardReservas />} />
               <Route path="espacos" element={<DashboardEspacos />} />
@@ -95,18 +99,18 @@ const App = () => (
               <Route path="perfil" element={<DashboardPerfil />} />
             </Route>
 
-            {/* Admin */}
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* Admin (protegido + role admin) */}
+            <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
               <Route index element={<AdminOverview />} />
               <Route path="espacos" element={<AdminEspacos />} />
               <Route path="analises" element={<AdminAnalises />} />
               <Route path="usuarios" element={<AdminUsuarios />} />
             </Route>
 
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        </ErrorBoundary>
         <FloatingChat />
       </BrowserRouter>
     </TooltipProvider>
