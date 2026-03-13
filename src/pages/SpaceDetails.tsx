@@ -289,6 +289,69 @@ const SpaceDetails = () => {
 
                 <p className="text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-5">{space.description}</p>
 
+                {/* Vehicle compatibility — prominent section */}
+                {space.space_use === "objects" ? (
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50 border border-border/40 mb-4">
+                    <Package size={14} className="text-muted-foreground shrink-0" />
+                    <p className="text-xs text-muted-foreground">Este espaço é destinado apenas a objetos. Não comporta veículos.</p>
+                  </div>
+                ) : (space.space_use === "vehicles" || space.space_use === "both") ? (
+                  <div className="mb-5 sm:mb-6">
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      <Car size={16} className="text-primary" /> Veículos compatíveis
+                    </h3>
+
+                    {/* Gate dimensions card */}
+                    {(space.gate_width || space.gate_height) && (
+                      <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/15 mb-3">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <DoorOpen size={20} className="text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-foreground">Entrada do espaço</p>
+                          <div className="flex items-center gap-3 mt-0.5">
+                            {space.gate_width && (
+                              <span className="text-xs text-muted-foreground">Largura: <strong className="text-foreground">{space.gate_width}m</strong></span>
+                            )}
+                            {space.gate_height && (
+                              <span className="text-xs text-muted-foreground">Altura: <strong className="text-foreground">{space.gate_height}m</strong></span>
+                            )}
+                            {space.covered !== undefined && (
+                              <span className="text-xs text-muted-foreground">{space.covered ? "Coberto" : "Descoberto"}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Vehicle cards */}
+                    {space.vehicle_compatible && space.vehicle_compatible.length > 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {(space.vehicle_compatible as string[]).map((vid: string) => {
+                          const v = vehicleCategories.find(c => c.id === vid);
+                          if (!v) return null;
+                          const fits = (!space.gate_width || (v.largura / 100) <= space.gate_width) &&
+                                       (!space.gate_height || (v.altura / 100) <= space.gate_height);
+                          return (
+                            <div key={vid} className={`relative flex flex-col items-center gap-1.5 text-center p-3 rounded-xl border transition-colors ${fits ? "bg-primary/5 border-primary/20" : "bg-destructive/5 border-destructive/20"}`}>
+                              <span className="text-2xl">{v.icon}</span>
+                              <span className="text-xs font-semibold text-foreground leading-tight">{v.nome.split("(")[0].trim()}</span>
+                              <span className="text-[10px] text-muted-foreground">
+                                {(v.comprimento / 100).toFixed(1)}m × {(v.largura / 100).toFixed(1)}m
+                              </span>
+                              <span className={`text-[10px] font-semibold ${fits ? "text-primary" : "text-destructive"}`}>
+                                {fits ? "✓ Compatível" : "✗ Não cabe"}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">Compatibilidade não especificada. Consulte o anfitrião.</p>
+                    )}
+                  </div>
+                ) : null}
+
                 {/* Features */}
                 <h3 className="text-sm font-semibold text-foreground mb-2.5 sm:mb-3">Comodidades e diferenciais</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5 mb-2">
@@ -299,53 +362,6 @@ const SpaceDetails = () => {
                     </div>
                   ))}
                 </div>
-
-                {/* Vehicle compatibility */}
-                {(space.space_use === "vehicles" || space.space_use === "both") && (
-                  <div className="mt-4 sm:mt-5">
-                    <h3 className="text-sm font-semibold text-foreground mb-2.5 sm:mb-3 flex items-center gap-2">
-                      <Car size={16} className="text-primary" /> Compatibilidade com veículos
-                    </h3>
-                    {space.vehicle_compatible && space.vehicle_compatible.length > 0 ? (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {(space.vehicle_compatible as string[]).map((vid: string) => {
-                          const v = vehicleCategories.find(c => c.id === vid);
-                          if (!v) return null;
-                          return (
-                            <div key={vid} className="flex items-center gap-2 text-sm text-foreground bg-secondary/50 rounded-lg px-3 py-2 border border-border/30">
-                              <span className="text-base">{v.icon}</span>
-                              <span className="text-xs font-medium truncate">{v.nome.split("(")[0].trim()}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground">Compatibilidade não especificada. Consulte o anfitrião.</p>
-                    )}
-                    {(space.gate_width || space.gate_height) && (
-                      <div className="flex flex-wrap gap-3 mt-3">
-                        {space.gate_width && (
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary/50 rounded-lg px-3 py-2 border border-border/30">
-                            <DoorOpen size={13} className="text-primary" />
-                            <span>Largura portão: <strong className="text-foreground">{space.gate_width}m</strong></span>
-                          </div>
-                        )}
-                        {space.gate_height && (
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary/50 rounded-lg px-3 py-2 border border-border/30">
-                            <DoorOpen size={13} className="text-primary" />
-                            <span>Altura portão: <strong className="text-foreground">{space.gate_height}m</strong></span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                    {space.covered !== undefined && (
-                      <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
-                        <CheckCircle2 size={12} className="text-primary" />
-                        <span>{space.covered ? "Espaço coberto" : "Espaço descoberto"}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
               </motion.div>
 
               {/* Owner */}
