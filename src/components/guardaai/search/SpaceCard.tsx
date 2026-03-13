@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Star, Ruler, Shield, Clock } from "lucide-react";
+import { MapPin, Star, Ruler, Shield, Clock, Car } from "lucide-react";
 import CardCarousel from "./CardCarousel";
 import { calculatePrice, MIN_DAILY_RATE } from "@/lib/pricing";
 import { computePrimaryBadge, getUseCaseHint } from "@/data/searchMockData";
+import { vehicleCategories } from "@/data/vehicleCategories";
 
 interface SpaceCardProps {
   space: any;
