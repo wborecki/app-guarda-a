@@ -8,7 +8,7 @@ import {
   MapPin, Ruler, Calendar, Navigation, Info, Map as MapIcon, List, Pencil,
 } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
-import { useEffect, useState, useMemo, useRef, lazy, Suspense } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback, lazy, Suspense } from "react";
 import { calculatePrice, PRICING_HINT_SHORT } from "@/lib/pricing";
 import { getDailyRate } from "@/lib/pricing";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,10 +24,26 @@ import SpaceCard from "@/components/guardaai/search/SpaceCard";
 import FilterBar from "@/components/guardaai/search/FilterBar";
 import MobileFilterDrawer from "@/components/guardaai/search/MobileFilterDrawer";
 import { SearchCardSkeletonList } from "@/components/guardaai/skeletons/SearchCardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy-load map for performance
 const SpaceMap = lazy(() => import("@/components/guardaai/SpaceMap"));
 import type { MapSpace } from "@/components/guardaai/SpaceMap";
+
+// Map skeleton for loading state
+const MapSkeleton = () => (
+  <div className="w-full h-full min-h-[400px] bg-muted relative overflow-hidden rounded-xl">
+    <Skeleton className="absolute inset-0 rounded-xl" />
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10">
+      <div className="w-10 h-10 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+      <p className="text-xs font-medium text-muted-foreground">Carregando mapa…</p>
+    </div>
+    {/* Fake pin placeholders */}
+    <div className="absolute top-1/3 left-1/4 w-5 h-6 rounded-full bg-muted-foreground/10" />
+    <div className="absolute top-1/2 right-1/3 w-5 h-6 rounded-full bg-muted-foreground/10" />
+    <div className="absolute bottom-1/3 left-1/2 w-5 h-6 rounded-full bg-muted-foreground/10" />
+  </div>
+);
 
 // ─── Main component ────────────────────────────────────────────────
 const SearchResults = () => {
@@ -194,16 +210,20 @@ const SearchResults = () => {
   const hasActiveFilters = activeFilterChips.length > 0;
   const clearAll = () => setFilters(emptyFilters);
 
-  const handleSelect = (e: React.MouseEvent, space: any) => {
+  const handleSelect = useCallback((e: React.MouseEvent, space: any) => {
     e.stopPropagation();
     navigate(`/espaco/${space.id}`, { state: { space, simulation: params } });
-  };
+  }, [navigate, params]);
 
-  const handleCardClick = (space: any) => {
+  const handleCardClick = useCallback((space: any) => {
     navigate(`/espaco/${space.id}`, { state: { space, simulation: params } });
-  };
+  }, [navigate, params]);
 
-  const handlePinClick = (id: number | string) => {
+  const handlePinHover = useCallback((id: number | string | null) => {
+    setHighlightedSpaceId(id);
+  }, []);
+
+  const handlePinClick = useCallback((id: number | string) => {
     const space = filteredSortedSpaces.find((s) => s.id === id);
     if (space) {
       if (mobileView === "map") {
@@ -217,7 +237,7 @@ const SearchResults = () => {
         setHighlightedSpaceId(id);
       }
     }
-  };
+  }, [filteredSortedSpaces, mobileView]);
 
   // ─── RENDER ────────────────────────────────────────────────────
   return (
@@ -355,15 +375,11 @@ const SearchResults = () => {
 
         {/* ── RIGHT: Map ── */}
         <div className={`lg:flex-1 lg:sticky lg:top-[105px] lg:h-[calc(100vh-105px)] ${mobileView === "list" ? "hidden lg:block" : "flex-1"}`}>
-          <Suspense fallback={
-            <div className="w-full h-full min-h-[400px] bg-muted flex items-center justify-center rounded-xl">
-              <p className="text-sm text-muted-foreground">Carregando mapa...</p>
-            </div>
-          }>
+          <Suspense fallback={<MapSkeleton />}>
             <SpaceMap
               spaces={mapSpaces}
               highlightedId={highlightedSpaceId}
-              onPinHover={setHighlightedSpaceId}
+              onPinHover={handlePinHover}
               onPinClick={handlePinClick}
               className="h-full w-full lg:rounded-none"
             />
