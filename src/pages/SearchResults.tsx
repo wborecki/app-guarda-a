@@ -166,7 +166,18 @@ const SearchResults = () => {
   const [mobileView, setMobileView] = useState<"list" | "map">("list");
   const cardRefs = useRef<Record<number | string, HTMLDivElement | null>>({});
 
-  const filteredSortedSpaces = useMemo(() => {
+  // Sync spaceUse filter change back to URL
+  useEffect(() => {
+    const current = searchParams.get("mode") || "";
+    const desired = filters.spaceUse === "all" ? "" : filters.spaceUse;
+    if (current !== desired) {
+      const next = new URLSearchParams(searchParams);
+      if (desired) next.set("mode", desired);
+      else next.delete("mode");
+      setSearchParams(next, { replace: true });
+    }
+  }, [filters.spaceUse]);
+
     let result = [...allSpaces];
     if (filters.types.length > 0) result = result.filter(s => filters.types.includes(s.type));
     if (filters.spaceUse !== "all") {
