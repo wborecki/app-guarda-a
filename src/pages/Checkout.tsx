@@ -63,14 +63,8 @@ const Checkout = () => {
   const simulation = state?.simulation;
 
   // Payment state
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("credit");
   const [confirmed, setConfirmed] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvv, setCardCvv] = useState("");
-  const [installments, setInstallments] = useState("1");
 
   // Photo upload state
   const [photos, setPhotos] = useState<File[]>([]);
