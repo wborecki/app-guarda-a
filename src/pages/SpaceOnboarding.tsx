@@ -928,6 +928,8 @@ const SpaceOnboarding = () => {
                         <div><span className="text-muted-foreground">Volume:</span> <span className="font-medium text-foreground">{space.volume ? `${Number(space.volume).toFixed(1)} m³` : "—"}</span></div>
                         <div><span className="text-muted-foreground">Fotos:</span> <span className="font-medium text-foreground">{space.photos?.length || 0} foto(s)</span></div>
                         <div><span className="text-muted-foreground">Recebimento:</span> <span className="font-medium text-foreground">{hasPayment ? "Configurado" : "Pendente"}</span></div>
+                        <div><span className="text-muted-foreground">Preço/m³/dia:</span> <span className="font-medium text-foreground">{(space as any).price_per_day ? `R$ ${Number((space as any).price_per_day).toFixed(2).replace(".", ",")}` : "—"}</span></div>
+                        <div><span className="text-muted-foreground">Taxa limpeza:</span> <span className="font-medium text-foreground">{(space as any).cleaning_fee_enabled ? `R$ ${Number((space as any).cleaning_fee_amount || 0).toFixed(2).replace(".", ",")}` : "Não"}</span></div>
                       </div>
                     </div>
 
