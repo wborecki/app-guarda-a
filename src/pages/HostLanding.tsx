@@ -320,20 +320,32 @@ const HostLanding = () => {
                         {/* === SPACE USE === */}
                         <div className="space-y-2.5">
                           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Para que tipo de uso?</p>
-                          <Select value={form.spaceUse} onValueChange={v => setForm({...form, spaceUse: v as any})}>
-                            <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="objects">Objetos</SelectItem>
-                              <SelectItem value="vehicles">Veículos</SelectItem>
-                              <SelectItem value="both">Ambos (objetos e veículos)</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <div className="grid grid-cols-3 gap-1.5">
+                            {([
+                              { value: "objects", label: "Objetos" },
+                              { value: "vehicles", label: "Veículos" },
+                              { value: "both", label: "Ambos" },
+                            ] as const).map(opt => (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => setForm({...form, spaceUse: opt.value})}
+                                className={`text-xs font-medium px-3 py-2.5 rounded-lg border transition-colors ${
+                                  form.spaceUse === opt.value
+                                    ? "bg-accent/10 border-accent/40 text-accent"
+                                    : "bg-card border-border/60 text-muted-foreground hover:border-primary/30"
+                                }`}
+                              >
+                                {opt.label}
+                              </button>
+                            ))}
+                          </div>
                         </div>
 
                         {/* === SPACE TYPE === */}
                         <div className="space-y-2.5">
                           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Tipo de espaço</p>
-                          <Select key={form.spaceUse} value={form.spaceType} onValueChange={v => setForm({...form, spaceType: v})}>
+                          <Select value={form.spaceType} onValueChange={v => setForm({...form, spaceType: v})}>
                             <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Selecione o tipo" /></SelectTrigger>
                             <SelectContent>
                               <SelectItem value="garagem">Garagem</SelectItem>
@@ -342,9 +354,7 @@ const HostLanding = () => {
                               <SelectItem value="area-coberta">Área coberta</SelectItem>
                               <SelectItem value="galpao">Pequeno galpão</SelectItem>
                               <SelectItem value="comercial">Espaço comercial</SelectItem>
-                              {(form.spaceUse === "vehicles" || form.spaceUse === "both") && (
-                                <SelectItem value="estacionamento">Estacionamento / Vaga</SelectItem>
-                              )}
+                              <SelectItem value="estacionamento">Estacionamento / Vaga</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
