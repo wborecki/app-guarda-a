@@ -129,13 +129,17 @@ const SpaceCard = ({
                     <span className="text-[10px] font-normal text-muted-foreground ml-1">total</span>
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">
-                    {reservedVol} m³ × {days}d + taxa
+                    {reservedVol} m³ × {isHourly ? `${hours}h` : `${days}d`} + taxa
                   </p>
-                  {days > 1 && (
+                  {isHourly && bp.hourlyRate ? (
+                    <p className="text-[10px] text-accent font-medium">
+                      ≈ R$ {bp.hourlyRate.toFixed(2).replace(".", ",")}/m³/hora
+                    </p>
+                  ) : days > 1 ? (
                     <p className="text-[10px] text-primary/70 font-medium">
                       ≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m³/dia
                     </p>
-                  )}
+                  ) : null}
                 </div>
                 <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-4 sm:px-5 shadow-sm text-xs" onClick={onSelect}>
                   Ver detalhes
