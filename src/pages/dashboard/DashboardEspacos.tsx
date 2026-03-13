@@ -45,8 +45,9 @@ const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: {
 
   return (
     <>
-      <div className="flex gap-4 p-4 rounded-xl border border-border/60 bg-card hover:shadow-sm transition-shadow">
-        <div className="w-20 h-20 rounded-lg bg-secondary shrink-0 overflow-hidden">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-4 rounded-xl border border-border/60 bg-card hover:shadow-sm transition-shadow">
+        {/* Thumbnail */}
+        <div className="w-full sm:w-20 h-32 sm:h-20 rounded-lg bg-secondary shrink-0 overflow-hidden">
           {thumb ? (
             <img src={thumb} alt="Espaço" className="w-full h-full object-cover" />
           ) : (
@@ -56,6 +57,7 @@ const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: {
           )}
         </div>
 
+        {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-1">
             <h3 className="text-sm font-semibold text-foreground truncate">
@@ -82,15 +84,16 @@ const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: {
           </p>
         </div>
 
-        <div className="flex items-start gap-1 shrink-0">
+        {/* Actions */}
+        <div className="flex items-center sm:items-start gap-2 sm:gap-1 shrink-0">
           {isDraft ? (
-            <Button size="sm" variant="outline" className="text-xs h-8 gap-1" asChild>
+            <Button size="sm" variant="outline" className="text-xs h-8 gap-1 flex-1 sm:flex-none" asChild>
               <Link to={`/anunciar/finalizar?id=${space.id}`}>
                 <FileEdit size={12} /> Continuar
               </Link>
             </Button>
           ) : (
-            <Button size="sm" variant="outline" className="text-xs h-8 gap-1" asChild>
+            <Button size="sm" variant="outline" className="text-xs h-8 gap-1 flex-1 sm:flex-none" asChild>
               <Link to={`/anunciar/finalizar?id=${space.id}`}>
                 <Edit2 size={12} /> Editar
               </Link>
