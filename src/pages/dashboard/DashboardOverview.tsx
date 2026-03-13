@@ -164,7 +164,7 @@ const DashboardOverview = () => {
       <OnboardingChecklist />
 
       {/* ── Stats Grid ───────────────────────────────── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-5">
         <StatCard
           icon={Package}
           label="Reservas ativas"
