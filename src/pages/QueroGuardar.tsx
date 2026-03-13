@@ -34,8 +34,9 @@ const faqs = [
 ];
 
 const pricingTiers = [
+  { period: "1 hora", price: "R$ 0,21", daily: "proporcional" },
   { period: "1 dia", price: "R$ 5", daily: "R$ 5,00/dia" },
-  { period: "7 dias", price: "R$ 15,75", daily: "R$ 2,25/dia" },
+  { period: "7 dias", price: "R$ 19", daily: "R$ 2,71/dia" },
   { period: "30 dias", price: "R$ 45", daily: "R$ 1,50/dia" },
 ];
 
