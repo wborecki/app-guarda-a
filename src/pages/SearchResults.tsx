@@ -187,6 +187,12 @@ const SearchResults = () => {
         return use === filters.spaceUse || use === "both";
       });
     }
+    if (filters.vehicleTypes.length > 0) {
+      result = result.filter(s => {
+        const compat: string[] = s.vehicle_compatible || [];
+        return filters.vehicleTypes.some(vt => compat.includes(vt));
+      });
+    }
     if (filters.maxPrice !== null) {
       result = result.filter(s => {
         const rate = s.pricePerDay || s.price_per_day || MIN_DAILY_RATE;
