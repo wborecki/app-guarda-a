@@ -12,6 +12,7 @@ import { useEffect, useState, useMemo, useRef, useCallback, lazy, Suspense } fro
 import { calculatePrice, getSuggestedDailyRate, PRICING_HINT_SHORT, MIN_DAILY_RATE } from "@/lib/pricing";
 import { supabase } from "@/integrations/supabase/client";
 import { decodeSearchParams } from "@/lib/searchParams";
+import { vehicleCategories } from "@/data/vehicleCategories";
 import {
   type SortOption, type Filters,
   sortLabels, emptyFilters,
