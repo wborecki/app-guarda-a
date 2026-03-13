@@ -11,7 +11,7 @@ import {
   MapPin, Shield, Lock, CreditCard,
   CheckCircle2, Info, ChevronRight,
   Camera, Upload, ImagePlus, X, AlertTriangle, FileText, Ban,
-  ShieldAlert, Loader2
+  ShieldAlert, Loader2, Package, Car
 } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
 import { useToast } from "@/hooks/use-toast";
