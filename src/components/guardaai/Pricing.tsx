@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
-import { CheckCircle, Info, DollarSign, Clock, Shield, Users, Sparkles } from "lucide-react";
+import { CheckCircle, Info, DollarSign, Clock, Shield, Users, Sparkles, ArrowRight, Home } from "lucide-react";
 import { MIN_VOLUME, MIN_DAILY_RATE, CLEANING_FEE_RATE, CLEANING_FEE_MIN, CLEANING_FEE_MAX, CLEANING_FEE_THRESHOLD_DAYS } from "@/lib/pricing";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Pricing = () => {
   return (
@@ -127,6 +129,25 @@ const Pricing = () => {
               <span>{text}</span>
             </div>
           ))}
+        </motion.div>
+
+        {/* Host CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mt-8 md:mt-10"
+        >
+          <p className="text-xs text-muted-foreground mb-3">
+            Tem um espaço disponível? Operadores profissionais e anfitriões independentes são bem-vindos.
+          </p>
+          <Button asChild variant="outline" className="group h-10 px-6 text-sm font-semibold border-accent/40 text-accent hover:bg-accent/5 hover:border-accent/60">
+            <Link to="/anunciar">
+              <Home size={15} className="mr-1.5" />
+              Anuncie seu espaço
+              <ArrowRight size={14} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
         </motion.div>
       </div>
     </section>
