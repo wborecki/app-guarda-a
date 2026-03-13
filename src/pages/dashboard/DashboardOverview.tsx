@@ -202,7 +202,7 @@ const DashboardOverview = () => {
               ? "Sem eventos agendados"
               : `${upcomingReservations} reserva${upcomingReservations !== 1 ? "s" : ""} futura${upcomingReservations !== 1 ? "s" : ""}`
           }
-          color="bg-blue-100/80 text-blue-600"
+          color="bg-primary/10 text-primary"
         />
         <StatCard
           icon={Wallet}
