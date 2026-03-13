@@ -346,3 +346,10 @@ const Hero = () => {
           >
             <SocialProofBar />
           </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
