@@ -65,6 +65,7 @@ const App = () => (
   <HelmetProvider>
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+    <StorageModeProvider>
     <TooltipProvider>
       <Toaster />
       <Sonner />
