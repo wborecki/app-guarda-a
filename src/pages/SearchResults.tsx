@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import {
-  MapPin, Ruler, Calendar, Navigation, Info, Map as MapIcon, List, Pencil,
+  MapPin, Ruler, Calendar, Navigation, Info, Map as MapIcon, List, Pencil, Clock,
 } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
 import { useEffect, useState, useMemo, useRef, useCallback, lazy, Suspense } from "react";
@@ -57,7 +57,8 @@ const SearchResults = () => {
     [searchParams, location.state]
   );
 
-  const { days, totalVol, location: userLocation, deliveryDate, deliveryTime, pickupDate, pickupTime } = params;
+  const { days, hours = 0, totalVol, location: userLocation, deliveryDate, deliveryTime, pickupDate, pickupTime } = params;
+  const isHourly = days === 0 && hours > 0;
   const shortLocation = useMemo(() => shortenLocation(userLocation), [userLocation]);
   const templateSpaces = useMemo(() => generateSpacesForCity(userLocation), [userLocation]);
 
@@ -137,6 +138,8 @@ const SearchResults = () => {
           lat: 0,
           lng: 0,
           isReal: true,
+          rental_type: (s as any).rental_type || "daily",
+          availability_schedule: (s as any).availability_schedule || {},
         };
       });
       setDbSpaces(mapped);
@@ -279,14 +282,22 @@ const SearchResults = () => {
                   {" → "}
                   {format(new Date(pickupDate), "dd/MM", { locale: pt })}
                 </span>
-                <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] sm:text-xs font-bold">
-                  {days}d
-                </span>
+                {isHourly ? (
+                  <span className="px-1.5 py-0.5 rounded bg-accent/10 text-accent text-[10px] sm:text-xs font-bold flex items-center gap-0.5">
+                    <Clock size={9} /> {hours}h
+                  </span>
+                ) : (
+                  <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] sm:text-xs font-bold">
+                    {days}d
+                  </span>
+                )}
               </div>
             ) : (
               <div className="flex items-center gap-1 flex-shrink-0">
                 <Calendar size={12} className="text-primary flex-shrink-0" />
-                <span className="text-muted-foreground">{days} {days === 1 ? "dia" : "dias"}</span>
+                <span className="text-muted-foreground">
+                  {isHourly ? `${hours} hora${hours > 1 ? "s" : ""}` : `${days} ${days === 1 ? "dia" : "dias"}`}
+                </span>
               </div>
             )}
             <button
@@ -351,6 +362,7 @@ const SearchResults = () => {
                   allSpaces={filteredSortedSpaces}
                   totalVol={totalVol}
                   days={days}
+                  hours={hours}
                   index={index}
                   isHighlighted={highlightedSpaceId === space.id}
                   onMouseEnter={() => setHighlightedSpaceId(space.id)}

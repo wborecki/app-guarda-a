@@ -8,11 +8,15 @@ const faqs = [
   },
   {
     q: "Como o preço é calculado?",
-    a: "O preço é baseado no volume que seus objetos vão ocupar (mínimo de 1 m³). Usamos uma tabela progressiva: quanto mais tempo você guardar, menor o valor proporcional por dia. Uma taxa de serviço fixa de R$ 28,00 é adicionada no checkout.",
+    a: "O preço é baseado no volume que seus objetos vão ocupar (mínimo de 1 m³). Usamos uma tabela progressiva: quanto mais tempo você guardar, menor o valor proporcional por dia. Reservas por hora são proporcionais à diária. Uma taxa de serviço fixa de R$ 28,00 é adicionada no checkout.",
   },
   {
     q: "Quanto custa guardar no GuardaAí?",
-    a: "Diárias a partir de R$ 5,00/m³. Para 30 dias, o valor é R$ 45,00/m³. Em planos anuais, a partir de R$ 40,00/m³. Quanto maior o período, menor o custo por dia.",
+    a: "Diárias a partir de R$ 5,00/m³. Para 30 dias, o valor é R$ 45,00/m³. Reservas por hora a partir de R$ 0,21/m³/hora. Quanto maior o período, menor o custo por dia.",
+  },
+  {
+    q: "Posso guardar por poucas horas?",
+    a: "Sim! Espaços que aceitam locação por hora permitem reservas de poucas horas. O valor é proporcional à diária (diária ÷ 24). Basta selecionar o mesmo dia de entrada e saída e ajustar os horários.",
   },
   {
     q: "Posso guardar por poucos dias?",
@@ -52,7 +56,7 @@ const faqs = [
   },
   {
     q: "Como faço para anunciar meu espaço?",
-    a: "Cadastre seu espaço com dimensões, tipo e fotos. Depois é só aguardar solicitações e aceitar as reservas que fizerem sentido para você.",
+    a: "Cadastre seu espaço com dimensões, tipo e fotos. Defina seus horários de atendimento e se aceita reservas por hora, por dia ou ambos. Depois é só aguardar solicitações e aceitar as reservas.",
   },
   {
     q: "Preciso medir meu objeto?",
@@ -61,6 +65,10 @@ const faqs = [
   {
     q: "Posso pagar online?",
     a: "Sim. Todo o processo de reserva e pagamento pode ser feito diretamente pela plataforma.",
+  },
+  {
+    q: "Como funcionam os horários de atendimento?",
+    a: "Cada anfitrião define os horários em que está disponível para receber e devolver itens, por dia da semana. Ao reservar, você pode verificar os horários disponíveis antes de confirmar.",
   },
 ];
 

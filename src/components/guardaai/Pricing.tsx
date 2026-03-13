@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Info, DollarSign } from "lucide-react";
-import { PRICING_EXPLANATION, MIN_VOLUME, SERVICE_FEE, PRICE_HIGHLIGHTS } from "@/lib/pricing";
+import { Check, X, Clock, TrendingDown, Sparkles, CheckCircle, Calculator, Info, DollarSign, Timer } from "lucide-react";
+import { PRICING_EXPLANATION, MIN_VOLUME, SERVICE_FEE, PRICE_HIGHLIGHTS, HOURLY_RATE } from "@/lib/pricing";
 
 const Pricing = () => {
   return (
@@ -63,7 +63,7 @@ const Pricing = () => {
                 <span className="text-[11px] md:text-sm text-primary-foreground/45">/m³ mês</span>
               </div>
               <p className="text-[10px] md:text-xs text-primary-foreground/35 mb-0.5">ou a partir de R$ 40,00/m³ em planos anuais</p>
-              <p className="text-[10px] md:text-xs text-primary-foreground/35 mb-3">Diária a partir de R$ 5,00 / m³</p>
+              <p className="text-[10px] md:text-xs text-primary-foreground/35 mb-3">Diária a partir de R$ 5,00/m³ · Por hora a partir de R$ {HOURLY_RATE.toFixed(2).replace(".", ",")}/m³</p>
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px] md:text-sm">
                   <Check size={13} className="text-accent shrink-0" /> Tabela progressiva
@@ -73,6 +73,9 @@ const Pricing = () => {
                 </div>
                 <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px] md:text-sm">
                   <Check size={13} className="text-accent shrink-0" /> Espaços perto de você
+                </div>
+                <div className="flex items-center gap-2 text-primary-foreground/80 text-[11px] md:text-sm">
+                  <Check size={13} className="text-accent shrink-0" /> Aceita por hora ou dia
                 </div>
               </div>
             </div>
@@ -86,12 +89,13 @@ const Pricing = () => {
           viewport={{ once: true }}
           className="mb-5 md:mb-8"
         >
-          <h3 className="text-[12.5px] md:text-sm font-semibold text-foreground mb-3 text-center">Tabela progressiva (por 1 m³)</h3>
+          <h3 className="text-[12.5px] md:text-sm font-semibold text-foreground mb-3 text-center">Tabela progressiva (por 1 m³) — hora e dia</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
             {PRICE_HIGHLIGHTS.map((h, i) => {
               const isPopular = h.days === 30;
-              const icons = [Clock, Calculator, TrendingDown, Sparkles];
+              const icons = [Timer, Clock, Calculator, Sparkles];
               const Icon = icons[i];
+              const isHourlyItem = h.days === 0;
               return (
                 <div
                   key={i}
@@ -117,7 +121,7 @@ const Pricing = () => {
                     <span className={`text-[10px] md:text-xs font-normal ${isPopular ? "text-primary-foreground/50" : "text-muted-foreground"}`}>/m³</span>
                   </p>
                   <p className={`text-[9px] md:text-[10px] ${isPopular ? "text-primary-foreground/40" : "text-muted-foreground/50"}`}>
-                    ≈ R${(h.price / h.days).toFixed(2).replace(".", ",")}/dia
+                    {isHourlyItem ? "proporcional à diária" : `≈ R$${(h.price / h.days).toFixed(2).replace(".", ",")}/dia`}
                   </p>
                 </div>
               );

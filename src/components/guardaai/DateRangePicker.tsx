@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { format, differenceInDays } from "date-fns";
+import { format, differenceInDays, isSameDay } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, ArrowRight } from "lucide-react";
+import { CalendarIcon, ArrowRight, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { DateRange } from "react-day-picker";
 
@@ -29,9 +29,14 @@ export default function DateRangePicker({
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<"start" | "end">("start");
 
+  const isSameDayReservation =
+    deliveryDate && pickupDate && isSameDay(deliveryDate, pickupDate);
+
   const days =
     deliveryDate && pickupDate
-      ? Math.max(differenceInDays(pickupDate, deliveryDate), 1)
+      ? isSameDayReservation
+        ? 0
+        : Math.max(differenceInDays(pickupDate, deliveryDate), 1)
       : 0;
 
   const range: DateRange | undefined =
@@ -59,12 +64,37 @@ export default function DateRangePicker({
         onDeliveryChange(selectedRange.from);
         onPickupChange(selectedRange.to);
         setTimeout(() => setOpen(false), 300);
-      } else if (selectedRange.from) {
-        onDeliveryChange(selectedRange.from);
-        onPickupChange(undefined);
-        setStep("end");
+      } else if (selectedRange.from && !selectedRange.to) {
+        // User clicked same day as start — allow same-day (hourly) reservation
+        if (deliveryDate && isSameDay(selectedRange.from, deliveryDate)) {
+          onPickupChange(new Date(deliveryDate));
+          setTimeout(() => setOpen(false), 300);
+        } else {
+          onDeliveryChange(selectedRange.from);
+          onPickupChange(undefined);
+          setStep("end");
+        }
       }
     }
+  };
+
+  // ── Period display text ──
+  const periodText = () => {
+    if (isSameDayReservation) {
+      return (
+        <span className="ml-0.5 px-1.5 py-0.5 rounded bg-accent/10 text-accent text-[11px] font-bold leading-none flex items-center gap-0.5">
+          <Clock size={9} /> Por hora
+        </span>
+      );
+    }
+    if (days > 0) {
+      return (
+        <span className="ml-0.5 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[11px] font-bold leading-none">
+          {days}d
+        </span>
+      );
+    }
+    return null;
   };
 
   // ── Compact trigger content ──
@@ -75,9 +105,7 @@ export default function DateRangePicker({
           {format(deliveryDate, "dd/MM", { locale: pt })}
           <ArrowRight size={11} className="text-muted-foreground" />
           {format(pickupDate, "dd/MM", { locale: pt })}
-          <span className="ml-0.5 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[11px] font-bold leading-none">
-            {days}d
-          </span>
+          {periodText()}
         </span>
       );
     }
@@ -101,9 +129,15 @@ export default function DateRangePicker({
           <span className="font-medium">{format(deliveryDate, "dd/MM", { locale: pt })}</span>
           <ArrowRight size={12} className="text-muted-foreground" />
           <span className="font-medium">{format(pickupDate, "dd/MM", { locale: pt })}</span>
-          <span className="ml-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">
-            {days} {days === 1 ? "dia" : "dias"}
-          </span>
+          {isSameDayReservation ? (
+            <span className="ml-1 px-1.5 py-0.5 rounded bg-accent/10 text-accent text-xs font-bold flex items-center gap-0.5">
+              <Clock size={10} /> Por hora
+            </span>
+          ) : (
+            <span className="ml-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">
+              {days} {days === 1 ? "dia" : "dias"}
+            </span>
+          )}
         </span>
       );
     }
@@ -162,6 +196,7 @@ export default function DateRangePicker({
             {deliveryDate && step === "end" && (
               <p className="text-[11px] text-muted-foreground mt-0.5">
                 Entrada: {format(deliveryDate, "dd 'de' MMMM", { locale: pt })}
+                <span className="text-accent ml-1.5">· Clique no mesmo dia para reserva por hora</span>
               </p>
             )}
           </div>
@@ -174,13 +209,19 @@ export default function DateRangePicker({
             className="p-3 pointer-events-auto"
             locale={pt}
           />
-          {days > 0 && (
+          {(days > 0 || isSameDayReservation) && (
             <div className="px-3 pb-3 pt-0">
               <div className="flex items-center justify-between py-2 px-3 rounded-lg bg-primary/5 border border-primary/10">
                 <span className="text-xs text-muted-foreground">Total do período</span>
-                <span className="text-sm font-bold text-primary">
-                  {days} {days === 1 ? "dia" : "dias"}
-                </span>
+                {isSameDayReservation ? (
+                  <span className="text-sm font-bold text-accent flex items-center gap-1">
+                    <Clock size={12} /> Mesmo dia (por hora)
+                  </span>
+                ) : (
+                  <span className="text-sm font-bold text-primary">
+                    {days} {days === 1 ? "dia" : "dias"}
+                  </span>
+                )}
               </div>
             </div>
           )}
@@ -195,6 +236,14 @@ export default function DateRangePicker({
             {format(deliveryDate!, "dd/MM/yyyy", { locale: pt })} → {format(pickupDate!, "dd/MM/yyyy", { locale: pt })}
           </span>
           <span className="font-bold text-primary">· {days} {days === 1 ? "dia" : "dias"}</span>
+        </div>
+      )}
+      {!compact && isSameDayReservation && (
+        <div className="flex items-center gap-2 mt-2 text-xs text-accent">
+          <Clock size={12} />
+          <span>
+            {format(deliveryDate!, "dd/MM/yyyy", { locale: pt })} · Reserva por hora
+          </span>
         </div>
       )}
     </div>

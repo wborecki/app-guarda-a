@@ -60,6 +60,8 @@ const Checkout = () => {
   const space = state?.space;
   const reservedArea = Math.max(state?.reservedVolume || state?.reservedArea || 1, 1);
   const days = Math.max(state?.days || 1, 1);
+  const hours = state?.simulation?.hours || 0;
+  const isHourlyReservation = days <= 1 && hours > 0;
   const simulation = state?.simulation;
 
   // Payment state
@@ -681,7 +683,7 @@ const Checkout = () => {
                       <div className="flex justify-between text-sm items-center">
                         <span className="text-muted-foreground">Período total</span>
                         <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-xs font-bold">
-                          {days} {days === 1 ? "dia" : "dias"}
+                          {isHourlyReservation ? `${hours} hora${hours > 1 ? "s" : ""}` : `${days} ${days === 1 ? "dia" : "dias"}`}
                         </span>
                       </div>
                       {space.owner && (
@@ -721,7 +723,7 @@ const Checkout = () => {
                         <span className="text-foreground font-medium">{formatBRL(bp.subtotal)}</span>
                       </div>
                       <div className="text-[11px] text-muted-foreground/70 pl-0.5">
-                        {reservedArea} m³ × {days} {days === 1 ? "dia" : "dias"} → {formatBRL(bp.pricePerM3)}/m³
+                        {reservedArea} m³ × {isHourlyReservation ? `${hours}h` : `${days} ${days === 1 ? "dia" : "dias"}`} → {formatBRL(bp.pricePerM3)}/m³
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Taxa de serviço (fixa)</span>

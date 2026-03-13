@@ -27,14 +27,16 @@ const trustItems = [
 
 const faqs = [
   { q: "O que posso guardar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce e itens pessoais. Itens ilegais, perigosos ou perecíveis são proibidos." },
-  { q: "Como o preço é calculado?", a: "O preço é baseado no volume ocupado (m³) e no período. Usamos uma tabela progressiva de R$ 5/m³ (1 dia) a R$ 45/m³ (30 dias). Mínimo de 1 m³. Uma taxa de serviço de R$ 28,00 é adicionada no checkout." },
+  { q: "Como o preço é calculado?", a: "O preço é baseado no volume ocupado (m³) e no período. Usamos uma tabela progressiva de R$ 5/m³ (1 dia) a R$ 45/m³ (30 dias). Reservas por hora são proporcionais à diária. Mínimo de 1 m³. Uma taxa de serviço de R$ 28,00 é adicionada no checkout." },
+  { q: "Posso guardar por poucas horas?", a: "Sim! Espaços que aceitam por hora permitem reservas curtas. Basta selecionar o mesmo dia e ajustar os horários no simulador." },
   { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. A tabela progressiva garante preço justo para qualquer período." },
   { q: "Como funciona a segurança?", a: "Objetos são cadastrados com foto, ambas as partes aceitam termos de responsabilidade, e toda intermediação é feita digitalmente pela plataforma." },
 ];
 
 const pricingTiers = [
+  { period: "1 hora", price: "R$ 0,21", daily: "proporcional" },
   { period: "1 dia", price: "R$ 5", daily: "R$ 5,00/dia" },
-  { period: "7 dias", price: "R$ 15,75", daily: "R$ 2,25/dia" },
+  { period: "7 dias", price: "R$ 19", daily: "R$ 2,71/dia" },
   { period: "30 dias", price: "R$ 45", daily: "R$ 1,50/dia" },
 ];
 
@@ -105,7 +107,7 @@ const QueroGuardar = () => {
                   transition={{ delay: 0.5 }}
                 >
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço por m³</p>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-4 gap-2.5">
                     {pricingTiers.map((t, i) => (
                       <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-primary/30 transition-colors">
                         <p className="text-[10px] font-medium text-muted-foreground mb-1">{t.period}</p>

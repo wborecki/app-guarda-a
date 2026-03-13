@@ -47,6 +47,9 @@ const PHOTO_TIPS = [
   "Condições do local",
 ];
 
+type AvailabilitySlot = { start: string; end: string };
+type AvailabilitySchedule = Record<string, AvailabilitySlot>;
+
 type SpaceData = {
   id: string;
   location: string;
@@ -74,6 +77,8 @@ type SpaceData = {
   document_number: string;
   status: string;
   onboarding_step: number;
+  rental_type: string;
+  availability_schedule: AvailabilitySchedule;
 };
 
 // Debounced field hook — keeps local state, saves after delay
@@ -424,6 +429,32 @@ const SpaceOnboarding = () => {
                       <CalendarCheck size={16} className="text-accent" /> Disponibilidade e acesso
                     </h2>
 
+                    {/* Rental type */}
+                    <div>
+                      <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-2 block">Tipo de locação aceita</label>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          { value: "daily", label: "Por dia", desc: "Reservas de 1+ dias" },
+                          { value: "hourly", label: "Por hora", desc: "Reservas de poucas horas" },
+                          { value: "both", label: "Ambos", desc: "Aceita hora e diária" },
+                        ].map(opt => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => updateSpace({ rental_type: opt.value } as any)}
+                            className={`flex flex-col items-start px-4 py-2.5 rounded-xl border text-left transition-colors ${
+                              (space as any).rental_type === opt.value
+                                ? "border-accent bg-accent/10 text-accent-foreground"
+                                : "border-border bg-secondary/40 text-muted-foreground hover:border-accent/40"
+                            }`}
+                          >
+                            <span className="text-xs font-semibold">{opt.label}</span>
+                            <span className="text-[10px] text-muted-foreground">{opt.desc}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
                     <div>
                       <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Tipo de disponibilidade</label>
                       <Select value={space.availability} onValueChange={v => updateSpace({ availability: v })}>
@@ -448,10 +479,10 @@ const SpaceOnboarding = () => {
                                 key={d.value}
                                 type="button"
                                 onClick={() => {
-                                  const days = selected
+                                  const newDays = selected
                                     ? (space.available_days || []).filter(v => v !== d.value)
                                     : [...(space.available_days || []), d.value];
-                                  updateSpace({ available_days: days });
+                                  updateSpace({ available_days: newDays });
                                 }}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                                   selected ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground hover:bg-secondary/80"
@@ -465,9 +496,81 @@ const SpaceOnboarding = () => {
                       </div>
                     )}
 
+                    {/* Availability schedule per day */}
+                    <div>
+                      <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-2 block">
+                        Horários de atendimento por dia
+                      </label>
+                      <p className="text-[10px] text-muted-foreground mb-3">
+                        Defina em quais horários você pode receber e devolver itens em cada dia da semana.
+                      </p>
+                      <div className="space-y-2">
+                        {WEEKDAYS.map(d => {
+                          const schedule = ((space as any).availability_schedule || {}) as AvailabilitySchedule;
+                          const slot = schedule[d.value] || { start: "", end: "" };
+                          const isEnabled = !!slot.start && !!slot.end;
+                          return (
+                            <div key={d.value} className="flex items-center gap-2">
+                              <Switch
+                                checked={isEnabled}
+                                onCheckedChange={checked => {
+                                  const newSchedule = { ...schedule };
+                                  if (checked) {
+                                    newSchedule[d.value] = { start: "08:00", end: "18:00" };
+                                  } else {
+                                    delete newSchedule[d.value];
+                                  }
+                                  updateSpace({ availability_schedule: newSchedule } as any);
+                                }}
+                                className="scale-[0.75]"
+                              />
+                              <span className={`w-8 text-xs font-medium ${isEnabled ? "text-foreground" : "text-muted-foreground/50"}`}>
+                                {d.label}
+                              </span>
+                              {isEnabled && (
+                                <div className="flex items-center gap-1.5">
+                                  <Input
+                                    type="time"
+                                    value={slot.start}
+                                    onChange={e => {
+                                      const newSchedule = { ...schedule, [d.value]: { ...slot, start: e.target.value } };
+                                      updateSpace({ availability_schedule: newSchedule } as any);
+                                    }}
+                                    className="w-24 h-8 text-xs"
+                                  />
+                                  <span className="text-[10px] text-muted-foreground">às</span>
+                                  <Input
+                                    type="time"
+                                    value={slot.end}
+                                    onChange={e => {
+                                      const newSchedule = { ...schedule, [d.value]: { ...slot, end: e.target.value } };
+                                      updateSpace({ availability_schedule: newSchedule } as any);
+                                    }}
+                                    className="w-24 h-8 text-xs"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-2 text-xs text-primary"
+                        onClick={() => {
+                          const allSchedule: AvailabilitySchedule = {};
+                          WEEKDAYS.forEach(d => { allSchedule[d.value] = { start: "08:00", end: "18:00" }; });
+                          updateSpace({ availability_schedule: allSchedule } as any);
+                        }}
+                      >
+                        Preencher todos (08:00–18:00)
+                      </Button>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Horário de acesso</label>
+                        <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">Horário de acesso geral</label>
                         <Select value={space.access_hours} onValueChange={v => updateSpace({ access_hours: v })}>
                           <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Selecione" /></SelectTrigger>
                           <SelectContent>

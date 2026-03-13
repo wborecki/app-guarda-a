@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Star, Ruler, Shield } from "lucide-react";
+import { MapPin, Star, Ruler, Shield, Clock } from "lucide-react";
 import CardCarousel from "./CardCarousel";
-import { calculatePrice } from "@/lib/pricing";
+import { calculatePrice, calculateHourlyPrice } from "@/lib/pricing";
 import { computePrimaryBadge, getUseCaseHint } from "@/data/searchMockData";
 
 interface SpaceCardProps {
@@ -11,6 +11,7 @@ interface SpaceCardProps {
   allSpaces: any[];
   totalVol: number;
   days: number;
+  hours?: number;
   index: number;
   isHighlighted: boolean;
   onMouseEnter: () => void;
@@ -21,13 +22,15 @@ interface SpaceCardProps {
 }
 
 const SpaceCard = ({
-  space, allSpaces, totalVol, days, index,
+  space, allSpaces, totalVol, days, hours = 0, index,
   isHighlighted, onMouseEnter, onMouseLeave, onClick, onSelect, cardRef,
 }: SpaceCardProps) => {
   const reservedVol = Math.max(totalVol, 1);
-  const bp = calculatePrice(reservedVol, days);
+  const isHourly = days === 0 && hours > 0;
+  const bp = isHourly ? calculateHourlyPrice(reservedVol, hours) : calculatePrice(reservedVol, days);
   const primaryBadge = computePrimaryBadge(space, allSpaces);
   const useHint = getUseCaseHint(space.type);
+  const rentalType = space.rental_type || "daily";
 
   return (
     <motion.div
@@ -100,6 +103,15 @@ const SpaceCard = ({
                     <Shield size={10} className="text-primary/70" />
                     {space.owner}
                   </span>
+                  {(rentalType === "hourly" || rentalType === "both") && (
+                    <>
+                      <span className="w-px h-3 bg-border" />
+                      <span className="flex items-center gap-0.5 text-accent font-semibold">
+                        <Clock size={9} />
+                        Aceita por hora
+                      </span>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap gap-x-3 gap-y-0.5">
@@ -117,13 +129,17 @@ const SpaceCard = ({
                     <span className="text-[10px] font-normal text-muted-foreground ml-1">total</span>
                   </p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">
-                    {reservedVol} m³ × {days}d + taxa
+                    {reservedVol} m³ × {isHourly ? `${hours}h` : `${days}d`} + taxa
                   </p>
-                  {days > 1 && (
+                  {isHourly && bp.hourlyRate ? (
+                    <p className="text-[10px] text-accent font-medium">
+                      ≈ R$ {bp.hourlyRate.toFixed(2).replace(".", ",")}/m³/hora
+                    </p>
+                  ) : days > 1 ? (
                     <p className="text-[10px] text-primary/70 font-medium">
                       ≈ R$ {bp.dailyRate.toFixed(2).replace(".", ",")}/m³/dia
                     </p>
-                  )}
+                  ) : null}
                 </div>
                 <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-4 sm:px-5 shadow-sm text-xs" onClick={onSelect}>
                   Ver detalhes
