@@ -407,7 +407,7 @@ const HostLanding = () => {
                               <SelectItem value="custom">Personalizada (informar nas obs.)</SelectItem>
                             </SelectContent>
                           </Select>
-                          <div className="grid grid-cols-2 gap-2.5">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                             <Select value={form.accessHours} onValueChange={v => setForm({...form, accessHours: v})}>
                               <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Horário de acesso" /></SelectTrigger>
                               <SelectContent>
