@@ -220,6 +220,25 @@ const Hero = () => {
                   Precisa calcular em detalhe? Use o simulador →
                 </Link>
               </div>
+
+              {/* Social proof */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45, duration: 0.5 }}
+                className="mt-7 pt-5 border-t border-border/40"
+              >
+                <SocialProofBar className="justify-start" />
+              </motion.div>
+                </Button>
+                <span className="text-border">|</span>
+                <Link
+                  to="/quero-guardar"
+                  className="text-sm text-muted-foreground/85 hover:text-primary transition-colors hover:underline underline-offset-4 decoration-muted-foreground/30 hover:decoration-primary/50"
+                >
+                  Precisa calcular em detalhe? Use o simulador →
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>
