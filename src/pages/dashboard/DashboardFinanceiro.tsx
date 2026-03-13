@@ -10,7 +10,7 @@ const DashboardFinanceiro = () => (
     </div>
 
     {/* Summary cards */}
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-5 mb-8">
       <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
