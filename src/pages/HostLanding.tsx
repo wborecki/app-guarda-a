@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import storageSupportImg from "@/assets/storage-vehicles-support.jpg";
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -536,6 +537,20 @@ const HostLanding = () => {
                   <p className="text-xs font-semibold text-foreground">{s.label}</p>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ========== IMAGEM DE APOIO ========== */}
+        <section className="py-8 md:py-12">
+          <div className="container max-w-4xl">
+            <div className="rounded-2xl overflow-hidden border border-border/60 shadow-lg">
+              <img
+                src={storageSupportImg}
+                alt="Espaço organizado com moto, bicicleta e caixas para armazenamento"
+                className="w-full h-48 md:h-64 object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>

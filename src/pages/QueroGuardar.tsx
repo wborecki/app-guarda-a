@@ -4,6 +4,7 @@ import Footer from "@/components/guardaai/Footer";
 import Simulator from "@/components/guardaai/Simulator";
 import { motion } from "framer-motion";
 import { Shield, Clock, DollarSign, MapPin, CheckCircle2, Lock, Camera, FileText, Warehouse, ArrowRight, TrendingDown, Car } from "lucide-react";
+import storageSupportImg from "@/assets/storage-vehicles-support.jpg";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 
@@ -134,6 +135,20 @@ const QueroGuardar = () => {
                   <Simulator embedded />
                 </div>
               </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========== IMAGEM DE APOIO ========== */}
+        <section className="py-8 md:py-12">
+          <div className="container max-w-4xl">
+            <div className="rounded-2xl overflow-hidden border border-border/60 shadow-lg">
+              <img
+                src={storageSupportImg}
+                alt="Espaço de armazenamento organizado com moto, bicicleta e caixas"
+                className="w-full h-48 md:h-64 object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>
