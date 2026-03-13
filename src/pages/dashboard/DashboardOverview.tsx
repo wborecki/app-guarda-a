@@ -38,7 +38,7 @@ const StatCard = ({
       </div>
       <TrendingUp size={14} className="text-muted-foreground/40" />
     </div>
-    <p className="text-3xl font-bold text-foreground tracking-tight">{value}</p>
+    <p className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">{value}</p>
     <p className="text-sm text-muted-foreground mt-1">{label}</p>
     {subtitle && <p className="text-xs text-muted-foreground/70 mt-0.5">{subtitle}</p>}
   </div>
