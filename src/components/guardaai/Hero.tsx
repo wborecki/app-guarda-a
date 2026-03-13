@@ -234,10 +234,6 @@ const Hero = () => {
           </motion.div>
         </div>
       </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
 
       {/* ═══════════════════════════════════════════════
           MOBILE LAYOUT — premium mobile-first
