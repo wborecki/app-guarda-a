@@ -13,7 +13,7 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   // Geral
-  { category: "todas", q: "O que é o GuardaAí?", a: "O GuardaAí é um marketplace de armazenamento que conecta quem precisa guardar objetos com quem tem espaço disponível — garagens, quartos, depósitos e até espaços profissionais. Encontre opções perto de você, com preços flexíveis." },
+  { category: "todas", q: "O que é o GuardaAí?", a: "O GuardaAí é um marketplace de armazenamento que conecta quem precisa guardar objetos ou veículos com quem tem espaço disponível — garagens, vagas, quartos, depósitos e espaços profissionais. Encontre opções perto de você, com preços flexíveis." },
 
   // Preços
   { category: "precos", q: "Como o preço é calculado?", a: "O preço é definido pelo anfitrião, com base no volume que seus objetos vão ocupar (mínimo de 1 m³) e na duração da reserva. A GuardaAí sugere valores de referência, mas o anfitrião tem liberdade para definir seu próprio preço, respeitando o mínimo da plataforma." },
