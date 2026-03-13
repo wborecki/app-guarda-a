@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Warehouse, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff } from "lucide-react";
+import { Warehouse, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff, Car } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
