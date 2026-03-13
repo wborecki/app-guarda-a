@@ -79,6 +79,9 @@ type SpaceData = {
   onboarding_step: number;
   rental_type: string;
   availability_schedule: AvailabilitySchedule;
+  price_per_day: number;
+  cleaning_fee_enabled: boolean;
+  cleaning_fee_amount: number;
 };
 
 // Debounced field hook — keeps local state, saves after delay
@@ -453,6 +456,95 @@ const SpaceOnboarding = () => {
                           </button>
                         ))}
                       </div>
+                    </div>
+
+                    {/* Pricing */}
+                    <div className="rounded-lg border border-border bg-secondary/20 p-4 space-y-3">
+                      <h3 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                        <Wallet size={14} className="text-accent" /> Defina o preço do seu espaço
+                      </h3>
+                      <p className="text-[10px] text-muted-foreground leading-relaxed">
+                        Você pode definir livremente o valor da sua locação. A GuardaAí sugere uma referência, mas a decisão final é sua. Mínimo: R$ 1,50/m³/dia.
+                      </p>
+
+                      <div>
+                        <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">
+                          Preço por m³/dia (R$)
+                        </label>
+                        <div className="flex items-center gap-3">
+                          <Input
+                            type="number"
+                            step="0.10"
+                            min="1.50"
+                            value={(space as any).price_per_day || ""}
+                            onChange={e => {
+                              const val = parseFloat(e.target.value);
+                              updateSpace({ price_per_day: isNaN(val) ? 0 : val } as any);
+                            }}
+                            placeholder="Ex: 5.00"
+                            className="w-32 h-10 text-sm"
+                          />
+                          <span className="text-[10px] text-muted-foreground">
+                            Sugestão: R$ 5,00/m³/dia (1 dia) · R$ 2,71 (7 dias) · R$ 1,50 (30 dias)
+                          </span>
+                        </div>
+                        {(space as any).price_per_day > 0 && (space as any).price_per_day < 1.5 && (
+                          <p className="text-[10px] text-destructive mt-1 flex items-center gap-1">
+                            <AlertCircle size={10} /> O valor mínimo é R$ 1,50 por m³/dia.
+                          </p>
+                        )}
+                      </div>
+
+                      <p className="text-[10px] text-muted-foreground italic">
+                        Reservas por horas são permitidas, com cobrança mínima equivalente a 1 diária.
+                      </p>
+                    </div>
+
+                    {/* Cleaning fee */}
+                    <div className="rounded-lg border border-border bg-secondary/20 p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-xs font-bold text-foreground">Taxa de limpeza (opcional)</h3>
+                          <p className="text-[10px] text-muted-foreground">Apenas para reservas acima de 7 dias.</p>
+                        </div>
+                        <Switch
+                          checked={(space as any).cleaning_fee_enabled || false}
+                          onCheckedChange={checked => {
+                            const updates: any = { cleaning_fee_enabled: checked };
+                            if (checked && !(space as any).cleaning_fee_amount) {
+                              // Suggest based on volume
+                              const vol = space.volume || 1;
+                              const suggested = Math.min(Math.max(Math.round(vol * 0.5 * 100) / 100, 5), 20);
+                              updates.cleaning_fee_amount = suggested;
+                            }
+                            updateSpace(updates);
+                          }}
+                        />
+                      </div>
+                      {(space as any).cleaning_fee_enabled && (
+                        <div>
+                          <label className="text-[11px] font-semibold text-muted-foreground uppercase mb-1.5 block">
+                            Valor da taxa (R$)
+                          </label>
+                          <div className="flex items-center gap-3">
+                            <Input
+                              type="number"
+                              step="0.50"
+                              min="5"
+                              max="20"
+                              value={(space as any).cleaning_fee_amount || ""}
+                              onChange={e => {
+                                const val = parseFloat(e.target.value);
+                                updateSpace({ cleaning_fee_amount: isNaN(val) ? 0 : val } as any);
+                              }}
+                              className="w-28 h-10 text-sm"
+                            />
+                            <span className="text-[10px] text-muted-foreground">
+                              Sugestão: R$ 0,50/m³ · Mín. R$ 5 · Máx. R$ 20
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div>
@@ -836,6 +928,8 @@ const SpaceOnboarding = () => {
                         <div><span className="text-muted-foreground">Volume:</span> <span className="font-medium text-foreground">{space.volume ? `${Number(space.volume).toFixed(1)} m³` : "—"}</span></div>
                         <div><span className="text-muted-foreground">Fotos:</span> <span className="font-medium text-foreground">{space.photos?.length || 0} foto(s)</span></div>
                         <div><span className="text-muted-foreground">Recebimento:</span> <span className="font-medium text-foreground">{hasPayment ? "Configurado" : "Pendente"}</span></div>
+                        <div><span className="text-muted-foreground">Preço/m³/dia:</span> <span className="font-medium text-foreground">{(space as any).price_per_day ? `R$ ${Number((space as any).price_per_day).toFixed(2).replace(".", ",")}` : "—"}</span></div>
+                        <div><span className="text-muted-foreground">Taxa limpeza:</span> <span className="font-medium text-foreground">{(space as any).cleaning_fee_enabled ? `R$ ${Number((space as any).cleaning_fee_amount || 0).toFixed(2).replace(".", ",")}` : "Não"}</span></div>
                       </div>
                     </div>
 
