@@ -56,6 +56,7 @@ const App = () => (
           <Route path="/buscar" element={<SearchResults />} />
           <Route path="/espaco/:id" element={<SpaceDetails />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/pagamento-sucesso" element={<PaymentSuccess />} />
           <Route path="/termos/locatario" element={<TermsRenter />} />
           <Route path="/termos/anfitriao" element={<TermsHost />} />
           <Route path="/itens-proibidos" element={<ProhibitedItems />} />
