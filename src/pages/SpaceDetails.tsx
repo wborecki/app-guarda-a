@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import {
   Star, MapPin, Shield, ChevronLeft, ChevronRight,
   MessageSquare, User, Clock, CheckCircle2, Lock, FileText,
-  Camera, Package, Calendar, Pencil, Plus, Minus, Info, Ruler
+  Camera, Package, Calendar, Pencil, Plus, Minus, Info, Ruler,
+  Send
 } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +17,8 @@ import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { calculatePrice, PRICING_HINT_SHORT, SERVICE_FEE } from "@/lib/pricing";
+import { useReviews } from "@/hooks/useReviews";
+import { Textarea } from "@/components/ui/textarea";
 
 const SpaceDetails = () => {
   const location = useLocation();
@@ -30,6 +33,11 @@ const SpaceDetails = () => {
   const [days, setDays] = useState(initialDays);
   const [reservedArea, setReservedArea] = useState(initialReservedArea);
   const [editingReservation, setEditingReservation] = useState(false);
+
+  // Review form state — must be before any early returns
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   // Gallery carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -49,6 +57,12 @@ const SpaceDetails = () => {
   const scrollToIndex = useCallback((index: number) => {
     emblaApi?.scrollTo(index);
   }, [emblaApi]);
+
+  // Real reviews from database
+  const { reviews: realReviews, avgRating: realAvgRating, totalReviews: realTotalReviews, canReview, submitting, submitReview } = useReviews(
+    space?.dbId || null,
+    space?.hostId || null
+  );
 
   if (!space) {
     return <SpaceDetailsSkeleton />;
@@ -77,17 +91,21 @@ const SpaceDetails = () => {
     });
   };
 
-  const allReviews = [
+  // Fallback: show mock reviews if no real ones exist yet
+  const mockReviews = [
     { name: "Pedro A.", rating: 5, date: "2024-01-15", text: "Espaço exatamente como descrito, fácil acesso e muito perto de casa. Super recomendo." },
     { name: "Lucia R.", rating: 5, date: "2024-02-20", text: "Usei durante uma reforma e foi tudo muito tranquilo. Proprietário muito atencioso." },
     { name: "Fernando G.", rating: 4, date: "2023-12-10", text: "Bom espaço, proprietário pontual e comunicativo. Voltarei a usar." },
     { name: "Sandra L.", rating: 5, date: "2024-02-05", text: "Ótimo local, exatamente como descrito no anúncio. Me senti segura." },
     { name: "Diego C.", rating: 4, date: "2023-11-20", text: "Muito prático e bem localizado. Bom atendimento e local seguro." },
-    ...(space.reviewsList || []),
-  ].slice(0, 5);
+  ];
 
-  const avgRating = space.rating;
-  const totalReviews = space.reviews;
+  const hasRealReviews = realReviews.length > 0;
+  const displayReviews = hasRealReviews
+    ? realReviews.map((r) => ({ name: r.reviewer_name, rating: r.rating, date: r.created_at, text: r.comment }))
+    : mockReviews;
+  const avgRating = hasRealReviews ? realAvgRating : space.rating;
+  const totalReviews = hasRealReviews ? realTotalReviews : space.reviews;
 
   const allFeatures = [
     ...space.features,
@@ -302,6 +320,7 @@ const SpaceDetails = () => {
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <MessageSquare size={16} className="text-primary" />
                   Avaliações ({totalReviews})
+                  {!hasRealReviews && <span className="text-[10px] text-muted-foreground/50 font-normal">(exemplo)</span>}
                 </h3>
                 <div className="flex items-center gap-1">
                   <Star size={14} className="text-accent fill-accent" />
@@ -309,8 +328,62 @@ const SpaceDetails = () => {
                   <span className="text-xs text-muted-foreground">média</span>
                 </div>
               </div>
+
+              {/* Review form */}
+              {canReview && (
+                <Card className="mb-4 border-primary/20">
+                  <CardContent className="p-4">
+                    {!showReviewForm ? (
+                      <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => setShowReviewForm(true)}>
+                        <Pencil size={14} />
+                        Avaliar este espaço
+                      </Button>
+                    ) : (
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-foreground">Como foi sua experiência?</p>
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <button key={i} onClick={() => setReviewRating(i + 1)} className="p-0.5">
+                              <Star size={22} className={i < reviewRating ? "text-accent fill-accent" : "text-muted-foreground/30"} />
+                            </button>
+                          ))}
+                          <span className="text-sm text-muted-foreground ml-2">{reviewRating}/5</span>
+                        </div>
+                        <Textarea
+                          value={reviewComment}
+                          onChange={(e) => setReviewComment(e.target.value)}
+                          placeholder="Conte como foi guardar seus itens neste espaço..."
+                          className="min-h-[80px] text-sm"
+                        />
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            disabled={submitting || !reviewComment.trim()}
+                            className="gap-1.5"
+                            onClick={async () => {
+                              const ok = await submitReview(reviewRating, reviewComment.trim());
+                              if (ok) {
+                                toast({ title: "Avaliação enviada!", description: "Obrigado pelo feedback." });
+                                setShowReviewForm(false);
+                                setReviewComment("");
+                              } else {
+                                toast({ title: "Erro ao enviar", description: "Tente novamente.", variant: "destructive" });
+                              }
+                            }}
+                          >
+                            <Send size={13} />
+                            {submitting ? "Enviando..." : "Enviar avaliação"}
+                          </Button>
+                          <Button variant="ghost" size="sm" onClick={() => setShowReviewForm(false)}>Cancelar</Button>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
               <div className="space-y-2.5 sm:space-y-3">
-                {allReviews.map((review, i) => (
+                {displayReviews.map((review, i) => (
                   <Card key={i}>
                     <CardContent className="p-3.5 sm:p-4">
                       <div className="flex items-center justify-between mb-1.5">
