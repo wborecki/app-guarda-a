@@ -17,7 +17,7 @@ const Footer = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
   }, [isHomePage, navigate]);
 
   return (
-    <footer className="bg-foreground text-background py-10 md:py-20">
+    <footer ref={ref} {...props} className="bg-foreground text-background py-10 md:py-20">
       <div className="container px-5 md:px-8">
         {/* ── Mobile: stacked layout ── */}
         <div className="md:hidden space-y-8 mb-8">
