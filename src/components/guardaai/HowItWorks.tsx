@@ -3,11 +3,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, MapPin, Calculator, CreditCard, Truck, Home, Camera, Send, Banknote, ClipboardList } from "lucide-react";
 
 const stepsGuardar = [
-  { icon: ClipboardList, title: "Escolha o que guardar", desc: "Selecione os objetos que precisa armazenar" },
+  { icon: ClipboardList, title: "Escolha o que guardar", desc: "Selecione objetos ou veículos que precisa armazenar" },
   { icon: MapPin, title: "Localização e tempo", desc: "Diga onde você está e por quanto tempo precisa" },
-  { icon: Calculator, title: "Cálculo automático", desc: "Calculamos a metragem e volume necessários" },
+  { icon: Calculator, title: "Cálculo automático", desc: "Calculamos a metragem e espaço necessários" },
   { icon: CreditCard, title: "Reserve e pague", desc: "Pagamento seguro pela plataforma" },
-  { icon: Truck, title: "Leve seus objetos", desc: "Transporte seus itens para o espaço escolhido" },
+  { icon: Truck, title: "Leve seus itens", desc: "Transporte seus objetos ou veículos ao espaço" },
 ];
 
 const stepsEspaco = [
