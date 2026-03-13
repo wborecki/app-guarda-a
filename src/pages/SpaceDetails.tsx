@@ -8,7 +8,7 @@ import {
   Star, MapPin, Shield, ChevronLeft, ChevronRight,
   MessageSquare, User, Clock, CheckCircle2, Lock, FileText,
   Camera, Package, Calendar, Pencil, Plus, Minus, Info, Ruler,
-  Send
+  Send, Car, DoorOpen
 } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
 import { useToast } from "@/hooks/use-toast";
@@ -19,6 +19,7 @@ import { pt } from "date-fns/locale";
 import { calculatePrice, PRICING_HINT_SHORT, MIN_DAILY_RATE, formatBRL } from "@/lib/pricing";
 import { useReviews } from "@/hooks/useReviews";
 import { Textarea } from "@/components/ui/textarea";
+import { vehicleCategories } from "@/data/vehicleCategories";
 
 const SpaceDetails = () => {
   const location = useLocation();
