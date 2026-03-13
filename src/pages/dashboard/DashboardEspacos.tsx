@@ -257,7 +257,7 @@ const DashboardEspacos = () => {
                 <EmptyState icon={FileEdit} title="Nenhum rascunho" description="Rascunhos de espaços não finalizados aparecerão aqui." />
               </div>
             ) : (
-              <div className="space-y-3">{drafts.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{drafts.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
 
