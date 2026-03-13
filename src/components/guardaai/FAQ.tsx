@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 const faqs = [
   {
     q: "O que é o GuardaAí?",
-    a: "O GuardaAí é uma plataforma que conecta quem precisa guardar objetos com quem tem espaço sobrando — como garagens, quartos vazios e depósitos. É um self storage descentralizado, mais barato e mais perto de você.",
+    a: "O GuardaAí é um marketplace de armazenamento que conecta quem precisa guardar objetos com quem tem espaço disponível — garagens, quartos, depósitos e até espaços profissionais. Encontre opções perto de você, com preços flexíveis.",
   },
   {
     q: "Como o preço é calculado?",
