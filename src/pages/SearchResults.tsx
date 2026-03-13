@@ -153,15 +153,16 @@ const SearchResults = () => {
 
   const [sortBy, setSortBy] = useState<SortOption>("proximity");
 
-  // Initialise spaceUse filter from URL mode param
-  const initialSpaceUse = useMemo(() => {
+  // Initialise filters from URL params
+  const initialFilters = useMemo(() => {
     const m = params.mode;
-    if (m === "objects") return "objects" as const;
-    if (m === "vehicles") return "vehicles" as const;
-    return "all" as const;
+    const spaceUse = m === "objects" ? "objects" as const : m === "vehicles" ? "vehicles" as const : "all" as const;
+    const vtParam = searchParams.get("vt") || "";
+    const vehicleTypes = vtParam ? vtParam.split(",").filter(Boolean) : [];
+    return { ...emptyFilters, spaceUse, vehicleTypes };
   }, []); // only on mount
 
-  const [filters, setFilters] = useState<Filters>({ ...emptyFilters, spaceUse: initialSpaceUse });
+  const [filters, setFilters] = useState<Filters>(initialFilters);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [highlightedSpaceId, setHighlightedSpaceId] = useState<number | string | null>(null);
   const [mobileView, setMobileView] = useState<"list" | "map">("list");
