@@ -169,12 +169,12 @@ const Login = () => {
                 <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar veículos</h3>
                 <p className="text-xs text-muted-foreground">Carros, motos, barcos e mais.</p>
               </div>
-              <div className="p-4 rounded-2xl bg-accent/5 border border-accent/15 text-center">
-                <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-2">
-                  <Home size={18} className="text-accent" />
+              <div className="p-4 rounded-2xl bg-secondary border border-border/60 text-center">
+                <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center mx-auto mb-2">
+                  <Home size={18} className="text-foreground" />
                 </div>
                 <h3 className="text-sm font-semibold text-foreground mb-0.5">Anunciar espaço</h3>
-                <p className="text-xs text-muted-foreground">Espaços, solicitações e ganhos.</p>
+                <p className="text-xs text-muted-foreground">Ganhe renda com espaço ocioso.</p>
               </div>
             </motion.div>
           )}
