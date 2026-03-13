@@ -247,7 +247,7 @@ const DashboardEspacos = () => {
                 <EmptyState icon={Eye} title="Nenhum espaço publicado" description="Seus espaços publicados aparecerão aqui." actionLabel="Anunciar espaço" actionHref="/anunciar" />
               </div>
             ) : (
-              <div className="space-y-3">{published.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{published.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
 
