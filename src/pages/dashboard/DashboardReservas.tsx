@@ -129,7 +129,7 @@ const DashboardReservas = () => {
     return (
       <div className="w-full max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">Minhas reservas</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight mb-1">Minhas reservas</h1>
           <p className="text-muted-foreground text-sm">Carregando...</p>
         </div>
       </div>
@@ -139,7 +139,7 @@ const DashboardReservas = () => {
   return (
     <div className="w-full max-w-7xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">Minhas reservas</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight mb-1">Minhas reservas</h1>
         <p className="text-muted-foreground text-sm">
           Acompanhe suas reservas de espaços para armazenamento.
           {reservations.length > 0 && ` ${reservations.length} reserva${reservations.length !== 1 ? "s" : ""} no total.`}

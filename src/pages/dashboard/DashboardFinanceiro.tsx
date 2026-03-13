@@ -5,28 +5,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const DashboardFinanceiro = () => (
   <div className="w-full max-w-7xl mx-auto">
     <div className="mb-6">
-      <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">Financeiro</h1>
+      <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight mb-1">Financeiro</h1>
       <p className="text-muted-foreground text-sm">Acompanhe pagamentos, recebimentos e repasses.</p>
     </div>
 
     {/* Summary cards */}
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-5 mb-8">
       <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
             <ArrowDownRight size={18} className="text-primary" />
           </div>
         </div>
-        <p className="text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
+        <p className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
         <p className="text-sm text-muted-foreground mt-1">Pagamentos realizados</p>
       </div>
       <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-9 h-9 rounded-xl bg-emerald-100/80 flex items-center justify-center">
-            <ArrowUpRight size={18} className="text-emerald-600" />
+          <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+            <ArrowUpRight size={18} className="text-primary" />
           </div>
         </div>
-        <p className="text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
+        <p className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
         <p className="text-sm text-muted-foreground mt-1">Valores recebidos</p>
       </div>
       <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
@@ -35,7 +35,7 @@ const DashboardFinanceiro = () => (
             <Wallet size={18} className="text-accent" />
           </div>
         </div>
-        <p className="text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
+        <p className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">R$ 0,00</p>
         <p className="text-sm text-muted-foreground mt-1">Saldo disponível</p>
       </div>
     </div>

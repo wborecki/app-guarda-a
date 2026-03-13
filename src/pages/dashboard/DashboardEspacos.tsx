@@ -128,7 +128,7 @@ const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: {
 
       {/* Suggested pricing table per space */}
       {!isDraft && (
-        <div className="sm:ml-24 mr-4 mb-1">
+        <div className="ml-0 sm:ml-24 mr-0 sm:mr-4 mb-1">
           <SuggestedPricingTable
             onApply={() => onApplySuggestedPrice(space.id)}
           />
@@ -216,12 +216,12 @@ const DashboardEspacos = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">Meus espaços</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight mb-1">Meus espaços</h1>
           <p className="text-muted-foreground text-sm">Gerencie seus espaços anunciados e rascunhos.</p>
         </div>
-        <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-1.5" asChild>
+        <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-1.5 self-start sm:self-auto" asChild>
           <Link to="/anunciar"><Plus size={14} /> Novo espaço</Link>
         </Button>
       </div>

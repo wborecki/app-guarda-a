@@ -31,14 +31,14 @@ const StatCard = ({
   subtitle?: string;
   color: string;
 }) => (
-  <div className="rounded-2xl border border-border/60 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
+  <div className="rounded-2xl border border-border/60 bg-card p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow">
     <div className="flex items-center justify-between mb-4">
       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}>
         <Icon size={20} />
       </div>
       <TrendingUp size={14} className="text-muted-foreground/40" />
     </div>
-    <p className="text-3xl font-bold text-foreground tracking-tight">{value}</p>
+    <p className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">{value}</p>
     <p className="text-sm text-muted-foreground mt-1">{label}</p>
     {subtitle && <p className="text-xs text-muted-foreground/70 mt-0.5">{subtitle}</p>}
   </div>
@@ -164,7 +164,7 @@ const DashboardOverview = () => {
       <OnboardingChecklist />
 
       {/* ── Stats Grid ───────────────────────────────── */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 md:gap-5">
         <StatCard
           icon={Package}
           label="Reservas ativas"
@@ -202,14 +202,14 @@ const DashboardOverview = () => {
               ? "Sem eventos agendados"
               : `${upcomingReservations} reserva${upcomingReservations !== 1 ? "s" : ""} futura${upcomingReservations !== 1 ? "s" : ""}`
           }
-          color="bg-blue-100/80 text-blue-600"
+          color="bg-primary/10 text-primary"
         />
         <StatCard
           icon={Wallet}
           label="Saldo disponível"
           value={balance !== null ? `R$ ${balance.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}` : "—"}
           subtitle={balance === null ? "Carregando..." : "Balanço atualizado"}
-          color="bg-emerald-100/80 text-emerald-600"
+          color="bg-primary/10 text-primary"
         />
       </div>
 
