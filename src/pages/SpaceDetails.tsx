@@ -286,6 +286,53 @@ const SpaceDetails = () => {
                     </div>
                   ))}
                 </div>
+
+                {/* Vehicle compatibility */}
+                {(space.space_use === "vehicles" || space.space_use === "both") && (
+                  <div className="mt-4 sm:mt-5">
+                    <h3 className="text-sm font-semibold text-foreground mb-2.5 sm:mb-3 flex items-center gap-2">
+                      <Car size={16} className="text-primary" /> Compatibilidade com veículos
+                    </h3>
+                    {space.vehicle_compatible && space.vehicle_compatible.length > 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {(space.vehicle_compatible as string[]).map((vid: string) => {
+                          const v = vehicleCategories.find(c => c.id === vid);
+                          if (!v) return null;
+                          return (
+                            <div key={vid} className="flex items-center gap-2 text-sm text-foreground bg-secondary/50 rounded-lg px-3 py-2 border border-border/30">
+                              <span className="text-base">{v.icon}</span>
+                              <span className="text-xs font-medium truncate">{v.nome.split("(")[0].trim()}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">Compatibilidade não especificada. Consulte o anfitrião.</p>
+                    )}
+                    {(space.gate_width || space.gate_height) && (
+                      <div className="flex flex-wrap gap-3 mt-3">
+                        {space.gate_width && (
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary/50 rounded-lg px-3 py-2 border border-border/30">
+                            <DoorOpen size={13} className="text-primary" />
+                            <span>Largura portão: <strong className="text-foreground">{space.gate_width}m</strong></span>
+                          </div>
+                        )}
+                        {space.gate_height && (
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary/50 rounded-lg px-3 py-2 border border-border/30">
+                            <DoorOpen size={13} className="text-primary" />
+                            <span>Altura portão: <strong className="text-foreground">{space.gate_height}m</strong></span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {space.covered !== undefined && (
+                      <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
+                        <CheckCircle2 size={12} className="text-primary" />
+                        <span>{space.covered ? "Espaço coberto" : "Espaço descoberto"}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </motion.div>
 
               {/* Owner */}
