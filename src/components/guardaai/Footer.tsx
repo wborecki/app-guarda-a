@@ -107,7 +107,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-background/10 pt-4 md:pt-6 text-center">
+        <div className="border-t border-background/10 pt-4 md:pt-6 text-center" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))" }}>
           <p className="text-[10px] md:text-sm text-background/40">
             © {new Date().getFullYear()} GuardaAí. Todos os direitos reservados.
           </p>
