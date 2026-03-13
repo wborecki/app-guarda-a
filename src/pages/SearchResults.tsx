@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import {
-  MapPin, Ruler, Calendar, Navigation, Info, Map as MapIcon, List, Pencil,
+  MapPin, Ruler, Calendar, Navigation, Info, Map as MapIcon, List, Pencil, Clock,
 } from "lucide-react";
 import BackButton from "@/components/guardaai/BackButton";
 import { useEffect, useState, useMemo, useRef, useCallback, lazy, Suspense } from "react";
