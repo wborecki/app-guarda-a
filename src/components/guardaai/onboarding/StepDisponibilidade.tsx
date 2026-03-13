@@ -195,25 +195,27 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
               const slot = schedule[d.value] || { start: "", end: "" };
               const isEnabled = !!slot.start && !!slot.end;
               return (
-                <div key={d.value} className="flex items-center gap-2">
-                  <Switch
-                    checked={isEnabled}
-                    onCheckedChange={checked => {
-                      const newSchedule = { ...schedule };
-                      if (checked) {
-                        newSchedule[d.value] = { start: "08:00", end: "18:00" };
-                      } else {
-                        delete newSchedule[d.value];
-                      }
-                      updateSpace({ availability_schedule: newSchedule } as any);
-                    }}
-                    className="scale-[0.75]"
-                  />
-                  <span className={`w-8 text-xs font-medium ${isEnabled ? "text-foreground" : "text-muted-foreground/50"}`}>
-                    {d.label}
-                  </span>
+              <div key={d.value} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 p-2 sm:p-0 rounded-lg sm:rounded-none bg-secondary/30 sm:bg-transparent border border-border/40 sm:border-0">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={isEnabled}
+                      onCheckedChange={checked => {
+                        const newSchedule = { ...schedule };
+                        if (checked) {
+                          newSchedule[d.value] = { start: "08:00", end: "18:00" };
+                        } else {
+                          delete newSchedule[d.value];
+                        }
+                        updateSpace({ availability_schedule: newSchedule } as any);
+                      }}
+                      className="scale-[0.75]"
+                    />
+                    <span className={`text-xs font-medium ${isEnabled ? "text-foreground" : "text-muted-foreground/50"}`}>
+                      {d.label}
+                    </span>
+                  </div>
                   {isEnabled && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 pl-8 sm:pl-0">
                       <Input
                         type="time"
                         value={slot.start}
@@ -221,7 +223,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
                           const newSchedule = { ...schedule, [d.value]: { ...slot, start: e.target.value } };
                           updateSpace({ availability_schedule: newSchedule } as any);
                         }}
-                        className="w-24 h-8 text-xs"
+                        className="w-[calc(50%-12px)] sm:w-24 h-8 text-xs"
                       />
                       <span className="text-[10px] text-muted-foreground">às</span>
                       <Input
@@ -231,7 +233,7 @@ const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
                           const newSchedule = { ...schedule, [d.value]: { ...slot, end: e.target.value } };
                           updateSpace({ availability_schedule: newSchedule } as any);
                         }}
-                        className="w-24 h-8 text-xs"
+                        className="w-[calc(50%-12px)] sm:w-24 h-8 text-xs"
                       />
                     </div>
                   )}
