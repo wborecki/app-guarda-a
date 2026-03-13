@@ -3,10 +3,10 @@ import { DollarSign, MapPin, Zap, Calendar, Wallet, ShieldCheck } from "lucide-r
 
 const items = [
   { icon: DollarSign, title: "Muito mais acessível", desc: "Preços flexíveis definidos pelos anfitriões, com valores acessíveis." },
-  { icon: MapPin, title: "Espaços perto de casa", desc: "Encontre opções no seu bairro, sem atravessar a cidade." },
+  { icon: MapPin, title: "Espaços perto de casa", desc: "Encontre opções no seu bairro para guardar objetos ou veículos." },
   { icon: Zap, title: "Reserva simples e rápida", desc: "Escolha, reserve e pague online em minutos." },
   { icon: Calendar, title: "Curtos e longos períodos", desc: "Guarde por dias, semanas ou meses. Flexibilidade total." },
-  { icon: Wallet, title: "Renda extra garantida", desc: "Transforme espaço ocioso em dinheiro." },
+  { icon: Wallet, title: "Renda extra garantida", desc: "Transforme espaço ocioso em dinheiro — garagens, vagas e depósitos." },
   { icon: ShieldCheck, title: "Segurança na plataforma", desc: "Cadastro com foto, termos claros e intermediação digital." },
 ];
 

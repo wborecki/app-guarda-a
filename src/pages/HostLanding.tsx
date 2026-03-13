@@ -202,7 +202,7 @@ const HostLanding = () => {
                 </h1>
 
                 <p className="text-[15px] md:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
-                  Garagens, quartos, depósitos e áreas cobertas podem gerar renda. Cadastre seu espaço e receba por cada reserva realizada.
+                  Garagens, vagas, quartos, depósitos e áreas cobertas podem gerar renda — para guardar objetos ou veículos. Cadastre e comece a ganhar.
                 </p>
 
                 {/* Benefits */}

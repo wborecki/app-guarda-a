@@ -27,7 +27,7 @@ const ForHosts = () => {
               Transforme espaço vazio em renda extra.
             </h2>
             <p className="text-muted-foreground text-[13px] md:text-lg mb-4 md:mb-8 leading-relaxed">
-              Garagens, quartos vazios e depósitos podem virar uma nova fonte de renda. Cadastre e comece a ganhar.
+              Garagens, vagas, quartos vazios e depósitos podem virar uma nova fonte de renda — para guardar objetos ou veículos. Cadastre e comece a ganhar.
             </p>
 
             <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-[13px] md:text-base px-5 md:px-8 h-10 md:h-11 group" asChild>
