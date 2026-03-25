@@ -7,6 +7,7 @@ import { CalendarCheck, Clock, DoorOpen, ChevronDown, Copy, Wallet, AlertCircle 
 import { toast } from "@/hooks/use-toast";
 import SuggestedPricingTable from "@/components/guardaai/SuggestedPricingTable";
 import { type StepProps, type AvailabilitySchedule, WEEKDAYS } from "./types";
+import StepGuidance from "./StepGuidance";
 
 const AVAILABILITY_PRESETS = [
   { value: "always", label: "Sempre disponível", desc: "24h, todos os dias", icon: "🟢" },
@@ -107,15 +108,19 @@ const StepDisponibilidade = ({ space, updateSpace, errors = {} }: StepProps) => 
 
   return (
     <div className="space-y-5">
+      <StepGuidance
+        icon={CalendarCheck}
+        title="Defina quando seu espaço está disponível"
+        subtitle="Escolha uma opção pronta ou personalize dia a dia. Não se preocupe — você pode ajustar isso a qualquer momento."
+        tip="A maioria dos anfitriões escolhe 'Sempre disponível' ou 'Dias úteis'. É o mais simples para começar."
+      />
+
       {/* Section 1: Availability preset */}
       <div className="rounded-xl border border-border bg-card p-5 space-y-4">
         <div>
           <h2 className="text-base font-bold text-foreground flex items-center gap-2">
             <CalendarCheck size={16} className="text-accent" /> Quando seu espaço está disponível?
           </h2>
-          <p className="text-xs text-muted-foreground mt-1">
-            Escolha a opção que melhor descreve sua rotina. Você pode mudar depois.
-          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

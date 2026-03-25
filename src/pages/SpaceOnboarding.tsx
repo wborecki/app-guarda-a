@@ -16,6 +16,8 @@ import StepDetalhes from "@/components/guardaai/onboarding/StepDetalhes";
 import StepFotos from "@/components/guardaai/onboarding/StepFotos";
 import StepRecebimento from "@/components/guardaai/onboarding/StepRecebimento";
 import StepRevisao from "@/components/guardaai/onboarding/StepRevisao";
+import WelcomeModal from "@/components/guardaai/onboarding/WelcomeModal";
+import HelpButton from "@/components/guardaai/onboarding/HelpButton";
 
 const SpaceOnboarding = () => {
   const { user, loading: authLoading } = useAuth();
@@ -28,6 +30,7 @@ const SpaceOnboarding = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -51,6 +54,10 @@ const SpaceOnboarding = () => {
     }
     setSpace(data as unknown as SpaceData);
     setCurrentStep(data.onboarding_step || 1);
+    // Show welcome modal only on first visit (step 1, no data filled yet)
+    if ((data.onboarding_step || 1) <= 1 && !data.location) {
+      setShowWelcome(true);
+    }
     setLoading(false);
   };
 
@@ -111,6 +118,13 @@ const SpaceOnboarding = () => {
       }
     }
     setValidationErrors({});
+    // Show success feedback when advancing
+    if (step > currentStep) {
+      const stepNames = ["", "Dados básicos", "Disponibilidade", "Descrição", "Fotos", "Recebimento"];
+      if (stepNames[currentStep]) {
+        toast({ title: `✅ ${stepNames[currentStep]} salvo!`, description: "Seus dados foram gravados automaticamente." });
+      }
+    }
     setCurrentStep(step);
     if (space && step > (space.onboarding_step || 1)) {
       await updateSpace({ onboarding_step: step });
@@ -180,6 +194,7 @@ const SpaceOnboarding = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO title="Cadastrar espaço" description="Complete o cadastro do seu espaço na GuardaAí e comece a receber reservas." noIndex />
+      {showWelcome && <WelcomeModal onStart={() => setShowWelcome(false)} />}
       <Header />
       <main className="pt-20 pb-16">
         <div className="container max-w-3xl mx-auto px-4">
@@ -270,6 +285,7 @@ const SpaceOnboarding = () => {
         </div>
       </main>
       <Footer />
+      <HelpButton />
     </div>
   );
 };

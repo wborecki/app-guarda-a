@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Eye, CheckCircle2, AlertCircle, ArrowRight, Edit2 } from "lucide-react";
+import { Eye, CheckCircle2, AlertCircle, ArrowRight, Edit2, PartyPopper, Shield, Save } from "lucide-react";
 import { type StepProps, SPACE_TYPE_LABELS } from "./types";
 
 interface StepRevisaoProps extends StepProps {
@@ -10,13 +10,13 @@ interface StepRevisaoProps extends StepProps {
   setCurrentStep: (step: number) => void;
 }
 
-const STEP_MAP: Record<number, string> = {
-  0: "Resumo",
-  1: "Disponibilidade",
-  2: "Detalhes",
-  3: "Fotos",
-  4: "Recebimento",
-};
+const STEP_LABELS = [
+  { label: "Dados do espaço", step: 1, emoji: "🏠" },
+  { label: "Disponibilidade e preço", step: 2, emoji: "📅" },
+  { label: "Descrição", step: 3, emoji: "📝" },
+  { label: "Fotos", step: 4, emoji: "📷" },
+  { label: "Recebimento", step: 5, emoji: "💳" },
+];
 
 const StepRevisao = ({ space, completionItems, isReadyToPublish, onPublish, onSaveDraft, setCurrentStep }: StepRevisaoProps) => {
   const hasPayment = space && space.pix_key && space.beneficiary_name;
@@ -38,24 +38,49 @@ const StepRevisao = ({ space, completionItems, isReadyToPublish, onPublish, onSa
           </span>
         </div>
 
+        {isReadyToPublish ? (
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/15">
+            <PartyPopper size={18} className="text-primary shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-foreground">Tudo pronto para publicar!</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Revise os dados abaixo e publique quando estiver satisfeito. Você pode editar depois.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-accent/5 border border-accent/15">
+            <AlertCircle size={18} className="text-accent shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-foreground">Quase lá!</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Complete os itens pendentes abaixo para poder publicar seu anúncio.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Checklist */}
         <div className="space-y-2">
           {completionItems.map((item, i) => (
             <div key={i} className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
-              item.done ? "border-primary/15 bg-primary/5" : "border-destructive/15 bg-destructive/5"
+              item.done ? "border-primary/15 bg-primary/5" : "border-accent/20 bg-accent/5"
             }`}>
               {item.done ? (
                 <CheckCircle2 size={16} className="text-primary shrink-0" />
               ) : (
-                <AlertCircle size={16} className="text-destructive shrink-0" />
+                <div className="w-4 h-4 rounded-full border-2 border-accent/40 shrink-0" />
               )}
-              <span className={`text-sm font-medium flex-1 ${item.done ? "text-foreground" : "text-destructive"}`}>
+              <span className="text-[13px] mr-auto">
+                {STEP_LABELS[i]?.emoji}{" "}
+              </span>
+              <span className={`text-sm font-medium flex-1 ${item.done ? "text-foreground" : "text-foreground/80"}`}>
                 {item.label}
               </span>
               <Button
-                variant="ghost"
+                variant={item.done ? "ghost" : "outline"}
                 size="sm"
-                className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground"
+                className={`text-xs h-7 px-2.5 ${!item.done ? "border-accent/30 text-accent hover:bg-accent/10" : "text-muted-foreground hover:text-foreground"}`}
                 onClick={() => setCurrentStep(i + 1)}
               >
                 <Edit2 size={11} className="mr-1" />
@@ -120,8 +145,12 @@ const StepRevisao = ({ space, completionItems, isReadyToPublish, onPublish, onSa
           onClick={onSaveDraft}
           className="w-full h-10 text-sm"
         >
-          Salvar rascunho e sair
+          <Save size={14} className="mr-1.5" />
+          Salvar rascunho e continuar depois
         </Button>
+        <p className="text-[10px] text-muted-foreground text-center flex items-center justify-center gap-1">
+          <Shield size={10} /> Seu anúncio pode ser editado a qualquer momento após a publicação.
+        </p>
       </div>
     </div>
   );
