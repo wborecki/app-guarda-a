@@ -4,7 +4,7 @@ import { Wallet, CheckCircle2, Shield } from "lucide-react";
 import { type StepProps } from "./types";
 import { useDebouncedField } from "./useDebouncedField";
 
-const StepRecebimento = ({ space, updateSpace }: StepProps) => {
+const StepRecebimento = ({ space, updateSpace, errors = {} }: StepProps) => {
   const [pixKeyLocal, setPixKeyLocal] = useDebouncedField(space?.pix_key || "", v => updateSpace({ pix_key: v }));
   const [beneficiaryLocal, setBeneficiaryLocal] = useDebouncedField(space?.beneficiary_name || "", v => updateSpace({ beneficiary_name: v }));
   const [documentLocal, setDocumentLocal] = useDebouncedField(space?.document_number || "", v => updateSpace({ document_number: v }));
@@ -54,8 +54,9 @@ const StepRecebimento = ({ space, updateSpace }: StepProps) => {
               value={pixKeyLocal}
               onChange={e => setPixKeyLocal(e.target.value)}
               placeholder="Informe sua chave Pix"
-              className="h-10 text-sm"
+              className={`h-10 text-sm ${errors.pix_key ? "border-destructive ring-1 ring-destructive/30" : ""}`}
             />
+            {errors.pix_key && <p className="text-[10px] text-destructive mt-1">{errors.pix_key}</p>}
           </div>
         </div>
 
@@ -68,8 +69,9 @@ const StepRecebimento = ({ space, updateSpace }: StepProps) => {
               value={beneficiaryLocal}
               onChange={e => setBeneficiaryLocal(e.target.value)}
               placeholder="Nome completo"
-              className="h-10 text-sm"
+              className={`h-10 text-sm ${errors.beneficiary_name ? "border-destructive ring-1 ring-destructive/30" : ""}`}
             />
+            {errors.beneficiary_name && <p className="text-[10px] text-destructive mt-1">{errors.beneficiary_name}</p>}
           </div>
           <div>
             <label className="text-xs font-medium text-foreground mb-1.5 block">

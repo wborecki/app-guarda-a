@@ -88,6 +88,10 @@ const SpaceOnboarding = () => {
       case 3:
         if (!space.description?.trim()) errors.description = "Adicione uma descrição do espaço";
         break;
+      case 5:
+        if (!space.pix_key?.trim()) errors.pix_key = "Informe sua chave Pix";
+        if (!space.beneficiary_name?.trim()) errors.beneficiary_name = "Informe o nome do titular";
+        break;
     }
     return errors;
   };
@@ -157,7 +161,7 @@ const SpaceOnboarding = () => {
       case 2: return <StepDisponibilidade space={space} updateSpace={updateSpace} errors={validationErrors} />;
       case 3: return <StepDetalhes space={space} updateSpace={updateSpace} errors={validationErrors} />;
       case 4: return <StepFotos space={space} updateSpace={updateSpace} />;
-      case 5: return <StepRecebimento space={space} updateSpace={updateSpace} />;
+      case 5: return <StepRecebimento space={space} updateSpace={updateSpace} errors={validationErrors} />;
       case 6: return (
         <StepRevisao
           space={space}
