@@ -63,7 +63,7 @@ function detectPreset(space: StepProps["space"]): string {
   return "";
 }
 
-const StepDisponibilidade = ({ space, updateSpace }: StepProps) => {
+const StepDisponibilidade = ({ space, updateSpace, errors = {} }: StepProps) => {
   const currentPreset = detectPreset(space);
   const [selectedPreset, setSelectedPreset] = useState(currentPreset || "");
   const isCustom = selectedPreset === "custom";

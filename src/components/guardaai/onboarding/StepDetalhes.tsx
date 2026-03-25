@@ -3,7 +3,7 @@ import { FileText, ChevronDown } from "lucide-react";
 import { type StepProps } from "./types";
 import { useDebouncedField } from "./useDebouncedField";
 
-const StepDetalhes = ({ space, updateSpace }: StepProps) => {
+const StepDetalhes = ({ space, updateSpace, errors = {} }: StepProps) => {
   const [descLocal, setDescLocal] = useDebouncedField(space?.description || "", v => updateSpace({ description: v }));
   const [rulesLocal, setRulesLocal] = useDebouncedField(space?.rules || "", v => updateSpace({ rules: v }));
   const [securityLocal, setSecurityLocal] = useDebouncedField(space?.security_features || "", v => updateSpace({ security_features: v }));

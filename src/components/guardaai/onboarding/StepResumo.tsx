@@ -67,7 +67,7 @@ const StepResumo = ({ space, updateSpace, errors = {} }: StepProps) => {
               Tipo de espaço <span className="text-destructive">*</span>
             </label>
             <Select value={space.space_type} onValueChange={v => updateSpace({ space_type: v })}>
-              <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <SelectTrigger className={`h-10 text-sm ${errors.space_type ? "border-destructive ring-1 ring-destructive/30" : ""}`}><SelectValue placeholder="Selecione" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="garagem">Garagem</SelectItem>
                 <SelectItem value="quarto">Quarto vazio</SelectItem>
@@ -77,6 +77,7 @@ const StepResumo = ({ space, updateSpace, errors = {} }: StepProps) => {
                 <SelectItem value="comercial">Espaço comercial</SelectItem>
               </SelectContent>
             </Select>
+            {errors.space_type && <p className="text-[10px] text-destructive mt-1">{errors.space_type}</p>}
           </div>
           <div>
             <label className="text-xs font-medium text-foreground mb-1.5 block">
