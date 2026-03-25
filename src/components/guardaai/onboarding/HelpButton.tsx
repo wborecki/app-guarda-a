@@ -58,7 +58,7 @@ const HelpButton = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-20 right-6 z-40 w-[calc(100vw-3rem)] max-w-sm bg-card rounded-2xl border border-border shadow-2xl overflow-hidden"
+            className="fixed bottom-20 left-6 z-40 w-[calc(100vw-3rem)] max-w-sm bg-card rounded-2xl border border-border shadow-2xl overflow-hidden"
           >
             <div className="p-5 space-y-4">
               <div>
