@@ -140,6 +140,11 @@ const StepDisponibilidade = ({ space, updateSpace, errors = {} }: StepProps) => 
             </button>
           ))}
         </div>
+        {errors.availability && !selectedPreset && (
+          <p className="text-[11px] text-destructive flex items-center gap-1">
+            <AlertCircle size={12} /> {errors.availability}
+          </p>
+        )}
 
         {/* Custom schedule editor */}
         {isCustom && (
