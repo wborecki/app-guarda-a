@@ -278,6 +278,7 @@ const SpaceOnboarding = () => {
         </div>
       </main>
       <Footer />
+      <HelpButton />
     </div>
   );
 };
