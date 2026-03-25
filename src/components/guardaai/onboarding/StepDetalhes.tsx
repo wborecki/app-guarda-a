@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { FileText, ChevronDown, Lightbulb } from "lucide-react";
+import { motion } from "framer-motion";
 import { type StepProps } from "./types";
 import { useDebouncedField } from "./useDebouncedField";
 import StepGuidance from "./StepGuidance";
