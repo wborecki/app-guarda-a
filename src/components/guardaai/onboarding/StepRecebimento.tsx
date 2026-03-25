@@ -4,7 +4,7 @@ import { Wallet, CheckCircle2, Shield } from "lucide-react";
 import { type StepProps } from "./types";
 import { useDebouncedField } from "./useDebouncedField";
 
-const StepRecebimento = ({ space, updateSpace }: StepProps) => {
+const StepRecebimento = ({ space, updateSpace, errors = {} }: StepProps) => {
   const [pixKeyLocal, setPixKeyLocal] = useDebouncedField(space?.pix_key || "", v => updateSpace({ pix_key: v }));
   const [beneficiaryLocal, setBeneficiaryLocal] = useDebouncedField(space?.beneficiary_name || "", v => updateSpace({ beneficiary_name: v }));
   const [documentLocal, setDocumentLocal] = useDebouncedField(space?.document_number || "", v => updateSpace({ document_number: v }));
