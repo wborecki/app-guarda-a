@@ -3,8 +3,24 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Camera, Upload, X, Loader2, ImagePlus } from "lucide-react";
-import { type StepProps, PHOTO_TIPS } from "./types";
+import { Camera, Upload, X, Loader2, ImagePlus, CheckCircle2, AlertTriangle } from "lucide-react";
+import { type StepProps } from "./types";
+import StepGuidance from "./StepGuidance";
+
+const PHOTO_GUIDE = [
+  { emoji: "📷", title: "Visão geral", desc: "Mostre o espaço completo, de um ângulo amplo", priority: "Essencial" },
+  { emoji: "🚪", title: "Entrada / acesso", desc: "Como o locatário chega até o espaço", priority: "Essencial" },
+  { emoji: "📦", title: "Espaço interno", desc: "Mostre o interior e o que cabe dentro", priority: "Recomendado" },
+  { emoji: "🔒", title: "Segurança", desc: "Portão, tranca, câmera ou portaria", priority: "Recomendado" },
+  { emoji: "🌤️", title: "Condições", desc: "Mostre que o espaço é limpo e conservado", priority: "Diferencial" },
+];
+
+const PHOTO_DONTS = [
+  "Fotos escuras ou borradas",
+  "Espaço sujo ou desorganizado",
+  "Objetos pessoais aparecendo",
+  "Fotos de outros cômodos",
+];
 
 const StepFotos = ({ space, updateSpace }: StepProps) => {
   const { user } = useAuth();
@@ -45,7 +61,7 @@ const StepFotos = ({ space, updateSpace }: StepProps) => {
     setPhotoFiles([]);
     setUploadingPhotos(false);
     if (uploaded.length > 0) {
-      toast({ title: `${uploaded.length} foto(s) enviada(s)!` });
+      toast({ title: `✅ ${uploaded.length} foto(s) enviada(s) com sucesso!` });
     }
   };
 
@@ -56,27 +72,55 @@ const StepFotos = ({ space, updateSpace }: StepProps) => {
 
   return (
     <div className="space-y-5">
+      <StepGuidance
+        icon={Camera}
+        title="Fotos que geram confiança"
+        subtitle="Espaços com fotos recebem até 5x mais interesse. Mostre que seu espaço é real, organizado e seguro."
+        tip="Use luz natural, tire fotos de diferentes ângulos e mantenha o espaço limpo antes de fotografar."
+      />
+
       <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-        <div>
+        <div className="flex items-center justify-between">
           <h2 className="text-base font-bold text-foreground flex items-center gap-2">
             <Camera size={16} className="text-accent" /> Fotos do espaço
           </h2>
-          <p className="text-xs text-muted-foreground mt-1">
-            Fotos reais aumentam a confiança e as chances de reserva. <span className="font-medium text-foreground">Opcional, mas recomendado.</span>
-          </p>
+          <span className="text-[10px] font-medium text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+            Opcional, mas recomendado
+          </span>
         </div>
 
-        {/* Tips as simple list */}
-        <div className="p-3 rounded-lg bg-secondary/30 border border-border/50">
-          <p className="text-[11px] font-medium text-foreground mb-1.5">📸 Sugestões de fotos:</p>
-          <ul className="text-[11px] text-muted-foreground space-y-0.5">
-            {PHOTO_TIPS.map((tip, i) => (
-              <li key={i} className="flex items-center gap-1.5">
-                <span className="w-1 h-1 rounded-full bg-accent shrink-0" />
-                {tip}
-              </li>
+        {/* Photo guide cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {PHOTO_GUIDE.map((item, i) => (
+            <div key={i} className="flex items-start gap-2.5 p-3 rounded-lg bg-secondary/30 border border-border/50">
+              <span className="text-base mt-0.5">{item.emoji}</span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <p className="text-[11px] font-semibold text-foreground">{item.title}</p>
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${
+                    item.priority === "Essencial" ? "bg-accent/10 text-accent" :
+                    item.priority === "Recomendado" ? "bg-primary/10 text-primary" :
+                    "bg-muted text-muted-foreground"
+                  }`}>{item.priority}</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* What to avoid */}
+        <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/10">
+          <p className="text-[10px] font-semibold text-destructive mb-1.5 flex items-center gap-1">
+            <AlertTriangle size={10} /> O que evitar:
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {PHOTO_DONTS.map((item, i) => (
+              <span key={i} className="text-[10px] text-muted-foreground bg-background px-2 py-1 rounded-md border border-border/50">
+                ✕ {item}
+              </span>
             ))}
-          </ul>
+          </div>
         </div>
 
         {/* Photos grid */}
@@ -92,6 +136,11 @@ const StepFotos = ({ space, updateSpace }: StepProps) => {
                 >
                   <X size={12} />
                 </button>
+                {i === 0 && (
+                  <span className="absolute bottom-1 left-1 text-[8px] bg-foreground/70 text-background px-1.5 py-0.5 rounded-md font-medium">
+                    Capa
+                  </span>
+                )}
               </div>
             ))}
             {photoFiles.map((file, i) => (
@@ -116,9 +165,16 @@ const StepFotos = ({ space, updateSpace }: StepProps) => {
             <span className="text-xs text-muted-foreground text-center">
               Arraste ou clique para adicionar fotos
             </span>
-            <span className="text-[10px] text-muted-foreground/60">{totalPhotos}/5 fotos</span>
+            <span className="text-[10px] text-muted-foreground/60">{totalPhotos}/5 fotos · JPG, PNG</span>
             <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoSelect} />
           </label>
+        )}
+
+        {totalPhotos >= 5 && (
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-primary/5 border border-primary/10">
+            <CheckCircle2 size={13} className="text-primary" />
+            <span className="text-[11px] text-primary font-medium">Máximo de fotos atingido ✓</span>
+          </div>
         )}
 
         {photoFiles.length > 0 && (
