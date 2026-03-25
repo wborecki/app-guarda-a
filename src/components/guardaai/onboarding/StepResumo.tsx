@@ -15,7 +15,7 @@ const SPACE_USE_OPTIONS = [
   { value: "both", label: "Objetos e veículos" },
 ];
 
-const StepResumo = ({ space, updateSpace }: StepProps) => {
+const StepResumo = ({ space, updateSpace, errors = {} }: StepProps) => {
   const spaceUse = (space as any).space_use || "objects";
   const acceptsVehicles = spaceUse === "vehicles" || spaceUse === "both";
   const vehicleCompat: string[] = ((space as any).vehicle_compatible as string[]) || [];
