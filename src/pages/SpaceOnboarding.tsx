@@ -16,6 +16,8 @@ import StepDetalhes from "@/components/guardaai/onboarding/StepDetalhes";
 import StepFotos from "@/components/guardaai/onboarding/StepFotos";
 import StepRecebimento from "@/components/guardaai/onboarding/StepRecebimento";
 import StepRevisao from "@/components/guardaai/onboarding/StepRevisao";
+import WelcomeModal from "@/components/guardaai/onboarding/WelcomeModal";
+import HelpButton from "@/components/guardaai/onboarding/HelpButton";
 
 const SpaceOnboarding = () => {
   const { user, loading: authLoading } = useAuth();
