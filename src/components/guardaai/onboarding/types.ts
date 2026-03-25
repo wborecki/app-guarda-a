@@ -75,4 +75,5 @@ export const SPACE_TYPE_LABELS: Record<string, string> = {
 export interface StepProps {
   space: SpaceData;
   updateSpace: (updates: Partial<SpaceData>) => Promise<void>;
+  errors?: Record<string, string>;
 }
