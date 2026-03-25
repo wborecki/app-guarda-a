@@ -3,7 +3,7 @@ import { FileText, ChevronDown } from "lucide-react";
 import { type StepProps } from "./types";
 import { useDebouncedField } from "./useDebouncedField";
 
-const StepDetalhes = ({ space, updateSpace }: StepProps) => {
+const StepDetalhes = ({ space, updateSpace, errors = {} }: StepProps) => {
   const [descLocal, setDescLocal] = useDebouncedField(space?.description || "", v => updateSpace({ description: v }));
   const [rulesLocal, setRulesLocal] = useDebouncedField(space?.rules || "", v => updateSpace({ rules: v }));
   const [securityLocal, setSecurityLocal] = useDebouncedField(space?.security_features || "", v => updateSpace({ security_features: v }));
@@ -31,11 +31,15 @@ const StepDetalhes = ({ space, updateSpace }: StepProps) => {
             value={descLocal}
             onChange={e => setDescLocal(e.target.value)}
             rows={4}
-            className="text-sm resize-none"
+            className={`text-sm resize-none ${errors.description ? "border-destructive ring-1 ring-destructive/30" : ""}`}
           />
-          <p className="text-[10px] text-muted-foreground mt-1">
-            Dica: Mencione o tipo de espaço, condições e o que cabe nele.
-          </p>
+          {errors.description ? (
+            <p className="text-[10px] text-destructive mt-1">{errors.description}</p>
+          ) : (
+            <p className="text-[10px] text-muted-foreground mt-1">
+              Dica: Mencione o tipo de espaço, condições e o que cabe nele.
+            </p>
+          )}
         </div>
       </div>
 

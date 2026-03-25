@@ -71,7 +71,42 @@ const SpaceOnboarding = () => {
     setSaving(false);
   }, [space]);
 
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  const validateStep = (step: number): Record<string, string> => {
+    if (!space) return {};
+    const errors: Record<string, string> = {};
+    switch (step) {
+      case 1:
+        if (!space.location?.trim()) errors.location = "Informe a localização do espaço";
+        if (!space.space_type?.trim()) errors.space_type = "Selecione o tipo de espaço";
+        break;
+      case 2:
+        if (!space.availability?.trim()) errors.availability = "Selecione a disponibilidade";
+        if (!(space as any).price_per_day || (space as any).price_per_day < 1.5) errors.price = "Defina um preço mínimo de R$ 1,50/m³/dia";
+        break;
+      case 3:
+        if (!space.description?.trim()) errors.description = "Adicione uma descrição do espaço";
+        break;
+    }
+    return errors;
+  };
+
   const goToStep = async (step: number) => {
+    // Only validate when advancing forward via the "Continuar" button
+    if (step > currentStep) {
+      const errors = validateStep(currentStep);
+      if (Object.keys(errors).length > 0) {
+        setValidationErrors(errors);
+        toast({
+          title: "Preencha os campos obrigatórios",
+          description: Object.values(errors)[0],
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    setValidationErrors({});
     setCurrentStep(step);
     if (space && step > (space.onboarding_step || 1)) {
       await updateSpace({ onboarding_step: step });
@@ -118,9 +153,9 @@ const SpaceOnboarding = () => {
 
   const renderStep = () => {
     switch (currentStep) {
-      case 1: return <StepResumo space={space} updateSpace={updateSpace} />;
-      case 2: return <StepDisponibilidade space={space} updateSpace={updateSpace} />;
-      case 3: return <StepDetalhes space={space} updateSpace={updateSpace} />;
+      case 1: return <StepResumo space={space} updateSpace={updateSpace} errors={validationErrors} />;
+      case 2: return <StepDisponibilidade space={space} updateSpace={updateSpace} errors={validationErrors} />;
+      case 3: return <StepDetalhes space={space} updateSpace={updateSpace} errors={validationErrors} />;
       case 4: return <StepFotos space={space} updateSpace={updateSpace} />;
       case 5: return <StepRecebimento space={space} updateSpace={updateSpace} />;
       case 6: return (

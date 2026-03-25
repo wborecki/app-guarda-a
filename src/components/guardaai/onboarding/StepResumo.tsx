@@ -15,7 +15,7 @@ const SPACE_USE_OPTIONS = [
   { value: "both", label: "Objetos e veículos" },
 ];
 
-const StepResumo = ({ space, updateSpace }: StepProps) => {
+const StepResumo = ({ space, updateSpace, errors = {} }: StepProps) => {
   const spaceUse = (space as any).space_use || "objects";
   const acceptsVehicles = spaceUse === "vehicles" || spaceUse === "both";
   const vehicleCompat: string[] = ((space as any).vehicle_compatible as string[]) || [];
@@ -52,9 +52,13 @@ const StepResumo = ({ space, updateSpace }: StepProps) => {
             value={space.location}
             onChange={v => updateSpace({ location: v })}
             placeholder="Bairro, cidade ou endereço"
-            className="h-10 text-sm"
+            className={`h-10 text-sm ${errors.location ? "border-destructive ring-1 ring-destructive/30" : ""}`}
           />
-          <p className="text-[10px] text-muted-foreground mt-1">Não exibimos o endereço exato publicamente.</p>
+          {errors.location ? (
+            <p className="text-[10px] text-destructive mt-1">{errors.location}</p>
+          ) : (
+            <p className="text-[10px] text-muted-foreground mt-1">Não exibimos o endereço exato publicamente.</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -63,7 +67,7 @@ const StepResumo = ({ space, updateSpace }: StepProps) => {
               Tipo de espaço <span className="text-destructive">*</span>
             </label>
             <Select value={space.space_type} onValueChange={v => updateSpace({ space_type: v })}>
-              <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Selecione" /></SelectTrigger>
+              <SelectTrigger className={`h-10 text-sm ${errors.space_type ? "border-destructive ring-1 ring-destructive/30" : ""}`}><SelectValue placeholder="Selecione" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="garagem">Garagem</SelectItem>
                 <SelectItem value="quarto">Quarto vazio</SelectItem>
@@ -73,6 +77,7 @@ const StepResumo = ({ space, updateSpace }: StepProps) => {
                 <SelectItem value="comercial">Espaço comercial</SelectItem>
               </SelectContent>
             </Select>
+            {errors.space_type && <p className="text-[10px] text-destructive mt-1">{errors.space_type}</p>}
           </div>
           <div>
             <label className="text-xs font-medium text-foreground mb-1.5 block">
