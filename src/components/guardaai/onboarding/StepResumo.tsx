@@ -52,9 +52,13 @@ const StepResumo = ({ space, updateSpace, errors = {} }: StepProps) => {
             value={space.location}
             onChange={v => updateSpace({ location: v })}
             placeholder="Bairro, cidade ou endereço"
-            className="h-10 text-sm"
+            className={`h-10 text-sm ${errors.location ? "border-destructive ring-1 ring-destructive/30" : ""}`}
           />
-          <p className="text-[10px] text-muted-foreground mt-1">Não exibimos o endereço exato publicamente.</p>
+          {errors.location ? (
+            <p className="text-[10px] text-destructive mt-1">{errors.location}</p>
+          ) : (
+            <p className="text-[10px] text-muted-foreground mt-1">Não exibimos o endereço exato publicamente.</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
