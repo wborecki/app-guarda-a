@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Camera, Upload, X, Loader2, ImagePlus, CheckCircle2, AlertTriangle } from "lucide-react";
+import { motion } from "framer-motion";
 import { type StepProps } from "./types";
 import StepGuidance from "./StepGuidance";
 
@@ -92,7 +93,15 @@ const StepFotos = ({ space, updateSpace }: StepProps) => {
         {/* Photo guide cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {PHOTO_GUIDE.map((item, i) => (
-            <div key={i} className="flex items-start gap-2.5 p-3 rounded-lg bg-secondary/30 border border-border/50">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.07, duration: 0.3 }}
+              whileHover={{ scale: 1.03, y: -2, boxShadow: "0 4px 16px -4px hsl(var(--accent) / 0.12)" }}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-start gap-2.5 p-3 rounded-lg bg-secondary/30 border border-border/50 cursor-default transition-colors duration-150"
+            >
               <span className="text-base mt-0.5">{item.emoji}</span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
@@ -105,7 +114,7 @@ const StepFotos = ({ space, updateSpace }: StepProps) => {
                 </div>
                 <p className="text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 

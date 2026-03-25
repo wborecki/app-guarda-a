@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Wallet, CheckCircle2, Shield, Clock, CreditCard } from "lucide-react";
+import { motion } from "framer-motion";
 import { type StepProps } from "./types";
 import { useDebouncedField } from "./useDebouncedField";
 import StepGuidance from "./StepGuidance";
@@ -30,20 +31,34 @@ const StepRecebimento = ({ space, updateSpace, errors = {} }: StepProps) => {
 
         {/* How it works */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div className="p-3 rounded-lg bg-primary/5 border border-primary/10 flex items-start gap-2">
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
+            whileHover={{ scale: 1.03, boxShadow: "0 3px 12px -3px hsl(var(--primary) / 0.12)" }}
+            whileTap={{ scale: 0.97 }}
+            className="p-3 rounded-lg bg-primary/5 border border-primary/10 flex items-start gap-2 cursor-default"
+          >
             <Shield size={13} className="text-primary mt-0.5 shrink-0" />
             <div>
               <p className="text-[11px] font-medium text-foreground">Dados protegidos</p>
               <p className="text-[10px] text-muted-foreground">Usados apenas para transferir seus ganhos.</p>
             </div>
-          </div>
-          <div className="p-3 rounded-lg bg-accent/5 border border-accent/10 flex items-start gap-2">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+            whileHover={{ scale: 1.03, boxShadow: "0 3px 12px -3px hsl(var(--accent) / 0.12)" }}
+            whileTap={{ scale: 0.97 }}
+            className="p-3 rounded-lg bg-accent/5 border border-accent/10 flex items-start gap-2 cursor-default"
+          >
             <Clock size={13} className="text-accent mt-0.5 shrink-0" />
             <div>
               <p className="text-[11px] font-medium text-foreground">Receba rápido</p>
               <p className="text-[10px] text-muted-foreground">Pagamento liberado após check-in confirmado.</p>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

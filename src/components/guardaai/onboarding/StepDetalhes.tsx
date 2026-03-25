@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { FileText, ChevronDown, Lightbulb } from "lucide-react";
+import { motion } from "framer-motion";
 import { type StepProps } from "./types";
 import { useDebouncedField } from "./useDebouncedField";
 import StepGuidance from "./StepGuidance";
@@ -151,10 +152,13 @@ const StepDetalhes = ({ space, updateSpace, errors = {} }: StepProps) => {
             {SECURITY_EXAMPLES.map(item => {
               const isSelected = securityLocal?.includes(item);
               return (
-                <button
+                 <motion.button
                   key={item}
                   type="button"
                   onClick={() => !isSelected && applySecurityExample(item)}
+                  whileHover={{ scale: 1.06, y: -1 }}
+                  whileTap={{ scale: 0.94 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-colors ${
                     isSelected
                       ? "bg-primary/10 border-primary/20 text-primary font-medium"
@@ -162,7 +166,7 @@ const StepDetalhes = ({ space, updateSpace, errors = {} }: StepProps) => {
                   }`}
                 >
                   {isSelected ? "✓ " : "+ "}{item}
-                </button>
+                </motion.button>
               );
             })}
           </div>
