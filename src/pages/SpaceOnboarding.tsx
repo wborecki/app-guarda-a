@@ -153,9 +153,9 @@ const SpaceOnboarding = () => {
 
   const renderStep = () => {
     switch (currentStep) {
-      case 1: return <StepResumo space={space} updateSpace={updateSpace} />;
-      case 2: return <StepDisponibilidade space={space} updateSpace={updateSpace} />;
-      case 3: return <StepDetalhes space={space} updateSpace={updateSpace} />;
+      case 1: return <StepResumo space={space} updateSpace={updateSpace} errors={validationErrors} />;
+      case 2: return <StepDisponibilidade space={space} updateSpace={updateSpace} errors={validationErrors} />;
+      case 3: return <StepDetalhes space={space} updateSpace={updateSpace} errors={validationErrors} />;
       case 4: return <StepFotos space={space} updateSpace={updateSpace} />;
       case 5: return <StepRecebimento space={space} updateSpace={updateSpace} />;
       case 6: return (
