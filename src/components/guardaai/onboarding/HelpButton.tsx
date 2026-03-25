@@ -31,10 +31,10 @@ const HelpButton = () => {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button — positioned on the left to avoid conflict with chat widget */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors flex items-center justify-center group"
+        className="fixed bottom-6 left-6 z-40 w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-colors flex items-center justify-center group"
         aria-label="Preciso de ajuda"
       >
         <AnimatePresence mode="wait">
@@ -58,7 +58,7 @@ const HelpButton = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-20 right-6 z-40 w-[calc(100vw-3rem)] max-w-sm bg-card rounded-2xl border border-border shadow-2xl overflow-hidden"
+            className="fixed bottom-20 left-6 z-40 w-[calc(100vw-3rem)] max-w-sm bg-card rounded-2xl border border-border shadow-2xl overflow-hidden"
           >
             <div className="p-5 space-y-4">
               <div>
