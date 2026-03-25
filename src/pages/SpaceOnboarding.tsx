@@ -55,7 +55,7 @@ const SpaceOnboarding = () => {
     setSpace(data as unknown as SpaceData);
     setCurrentStep(data.onboarding_step || 1);
     // Show welcome modal only on first visit (step 1, no data filled yet)
-    if ((data.onboarding_step || 1) <= 1 && !data.location) {
+    if ((data.onboarding_step || 1) <= 1 && !data.description) {
       setShowWelcome(true);
     }
     setLoading(false);
