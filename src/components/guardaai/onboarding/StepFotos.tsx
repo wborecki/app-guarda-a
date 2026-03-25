@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Camera, Upload, X, Loader2, ImagePlus, CheckCircle2, AlertTriangle } from "lucide-react";
+import { motion } from "framer-motion";
 import { type StepProps } from "./types";
 import StepGuidance from "./StepGuidance";
 
