@@ -69,8 +69,9 @@ const StepRecebimento = ({ space, updateSpace, errors = {} }: StepProps) => {
               value={beneficiaryLocal}
               onChange={e => setBeneficiaryLocal(e.target.value)}
               placeholder="Nome completo"
-              className="h-10 text-sm"
+              className={`h-10 text-sm ${errors.beneficiary_name ? "border-destructive ring-1 ring-destructive/30" : ""}`}
             />
+            {errors.beneficiary_name && <p className="text-[10px] text-destructive mt-1">{errors.beneficiary_name}</p>}
           </div>
           <div>
             <label className="text-xs font-medium text-foreground mb-1.5 block">
