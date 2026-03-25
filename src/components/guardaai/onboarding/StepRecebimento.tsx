@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Wallet, CheckCircle2, Shield, Clock, CreditCard } from "lucide-react";
+import { motion } from "framer-motion";
 import { type StepProps } from "./types";
 import { useDebouncedField } from "./useDebouncedField";
 import StepGuidance from "./StepGuidance";
