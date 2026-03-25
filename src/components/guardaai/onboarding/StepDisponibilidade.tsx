@@ -288,13 +288,17 @@ const StepDisponibilidade = ({ space, updateSpace, errors = {} }: StepProps) => 
                 updateSpace({ price_per_day: isNaN(val) ? 0 : val } as any);
               }}
               placeholder="Ex: 5.00"
-              className="w-full sm:w-36 h-10 text-sm"
+              className={`w-full sm:w-36 h-10 text-sm ${errors.price ? "border-destructive ring-1 ring-destructive/30" : ""}`}
             />
-            {(space as any).price_per_day > 0 && (space as any).price_per_day < 1.5 && (
+            {errors.price && !(space as any).price_per_day ? (
+              <p className="text-[10px] text-destructive mt-1 flex items-center gap-1">
+                <AlertCircle size={10} /> {errors.price}
+              </p>
+            ) : (space as any).price_per_day > 0 && (space as any).price_per_day < 1.5 ? (
               <p className="text-[10px] text-destructive mt-1 flex items-center gap-1">
                 <AlertCircle size={10} /> Mínimo: R$ 1,50/m³/dia
               </p>
-            )}
+            ) : null}
           </div>
           <Button
             type="button"
