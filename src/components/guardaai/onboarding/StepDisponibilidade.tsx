@@ -7,6 +7,7 @@ import { CalendarCheck, Clock, DoorOpen, ChevronDown, Copy, Wallet, AlertCircle 
 import { toast } from "@/hooks/use-toast";
 import SuggestedPricingTable from "@/components/guardaai/SuggestedPricingTable";
 import { type StepProps, type AvailabilitySchedule, WEEKDAYS } from "./types";
+import StepGuidance from "./StepGuidance";
 
 const AVAILABILITY_PRESETS = [
   { value: "always", label: "Sempre disponível", desc: "24h, todos os dias", icon: "🟢" },
