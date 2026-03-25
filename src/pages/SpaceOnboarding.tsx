@@ -214,9 +214,11 @@ const SpaceOnboarding = () => {
 
             <div className="flex items-center gap-2 mb-4">
               <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-accent rounded-full transition-all duration-500"
-                  style={{ width: `${completionPercent}%` }}
+                <motion.div
+                  className="h-full bg-accent rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${completionPercent}%` }}
+                  transition={{ type: "spring", stiffness: 80, damping: 20, mass: 0.8 }}
                 />
               </div>
               <span className="text-[10px] font-semibold text-accent">{completionPercent}%</span>
