@@ -54,8 +54,9 @@ const StepRecebimento = ({ space, updateSpace, errors = {} }: StepProps) => {
               value={pixKeyLocal}
               onChange={e => setPixKeyLocal(e.target.value)}
               placeholder="Informe sua chave Pix"
-              className="h-10 text-sm"
+              className={`h-10 text-sm ${errors.pix_key ? "border-destructive ring-1 ring-destructive/30" : ""}`}
             />
+            {errors.pix_key && <p className="text-[10px] text-destructive mt-1">{errors.pix_key}</p>}
           </div>
         </div>
 
