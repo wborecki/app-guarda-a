@@ -202,7 +202,7 @@ const StepDisponibilidade = ({ space, updateSpace, errors = {} }: StepProps) => 
                             const newSchedule = { ...schedule, [d.value]: { ...slot, start: e.target.value } };
                             updateSpace({ availability_schedule: newSchedule } as any);
                           }}
-                          className="w-24 h-8 text-xs"
+                          className="flex-1 sm:w-24 sm:flex-none h-8 text-xs min-w-0"
                         />
                         <span className="text-[10px] text-muted-foreground">às</span>
                         <Input
@@ -212,13 +212,13 @@ const StepDisponibilidade = ({ space, updateSpace, errors = {} }: StepProps) => 
                             const newSchedule = { ...schedule, [d.value]: { ...slot, end: e.target.value } };
                             updateSpace({ availability_schedule: newSchedule } as any);
                           }}
-                          className="w-24 h-8 text-xs"
+                          className="flex-1 sm:w-24 sm:flex-none h-8 text-xs min-w-0"
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                          className="hidden sm:flex h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
                           title="Copiar para todos os dias"
                           onClick={() => copyFromDay(d.value)}
                         >
