@@ -88,6 +88,10 @@ const SpaceOnboarding = () => {
       case 3:
         if (!space.description?.trim()) errors.description = "Adicione uma descrição do espaço";
         break;
+      case 5:
+        if (!space.pix_key?.trim()) errors.pix_key = "Informe sua chave Pix";
+        if (!space.beneficiary_name?.trim()) errors.beneficiary_name = "Informe o nome do titular";
+        break;
     }
     return errors;
   };
