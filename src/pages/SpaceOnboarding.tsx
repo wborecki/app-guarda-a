@@ -118,6 +118,13 @@ const SpaceOnboarding = () => {
       }
     }
     setValidationErrors({});
+    // Show success feedback when advancing
+    if (step > currentStep) {
+      const stepNames = ["", "Dados básicos", "Disponibilidade", "Descrição", "Fotos", "Recebimento"];
+      if (stepNames[currentStep]) {
+        toast({ title: `✅ ${stepNames[currentStep]} salvo!`, description: "Seus dados foram gravados automaticamente." });
+      }
+    }
     setCurrentStep(step);
     if (space && step > (space.onboarding_step || 1)) {
       await updateSpace({ onboarding_step: step });
