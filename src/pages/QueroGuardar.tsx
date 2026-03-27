@@ -1,50 +1,55 @@
+import SEO from "@/components/SEO";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
 import Simulator from "@/components/guardaai/Simulator";
 import { motion } from "framer-motion";
-import { Shield, Clock, DollarSign, MapPin, CheckCircle2, Lock, Camera, FileText, Package, ArrowRight, TrendingDown } from "lucide-react";
+import { Shield, Clock, DollarSign, MapPin, CheckCircle2, Lock, Camera, FileText, Warehouse, ArrowRight, TrendingDown, Car } from "lucide-react";
+import storageSupportImg from "@/assets/storage-vehicles-support.jpg";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 
 const steps = [
-  { num: "1", icon: MapPin, title: "Simule e busque", desc: "Informe seus itens e encontre espaços disponíveis na sua região." },
+  { num: "1", icon: MapPin, title: "Simule e busque", desc: "Informe o que quer guardar — objetos ou veículos — e encontre espaços na sua região." },
   { num: "2", icon: Clock, title: "Reserve online", desc: "Escolha datas, confirme o valor e reserve em poucos cliques." },
-  { num: "3", icon: CheckCircle2, title: "Guarde com segurança", desc: "Leve seus itens ao local. Tudo registrado e intermediado pela plataforma." },
+  { num: "3", icon: CheckCircle2, title: "Guarde com segurança", desc: "Leve seus itens ou veículos ao local. Tudo registrado pela plataforma." },
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Mais acessível", desc: "Preços muito abaixo de self storages tradicionais." },
-  { icon: Shield, title: "Seguro e registrado", desc: "Itens fotografados, cadastrados e protegidos por termos." },
-  { icon: TrendingDown, title: "Tabela progressiva", desc: "Quanto mais dias, menor o custo por dia por m³." },
+  { icon: DollarSign, title: "Mais acessível", desc: "Preços flexíveis para caixas, estoque, carros, motos e mais." },
+  { icon: Shield, title: "Seguro e registrado", desc: "Objetos e veículos cadastrados e protegidos por termos." },
+  { icon: TrendingDown, title: "Preço flexível", desc: "Cada anfitrião define seu valor. Sem taxa de serviço." },
 ];
 
 const trustItems = [
-  { icon: Camera, title: "Registro fotográfico", desc: "Todos os objetos são fotografados antes do armazenamento." },
+  { icon: Camera, title: "Registro fotográfico", desc: "Objetos e veículos são fotografados antes do armazenamento." },
   { icon: FileText, title: "Termos de responsabilidade", desc: "Regras claras aceitas por ambas as partes antes de cada reserva." },
   { icon: Lock, title: "Intermediação pela plataforma", desc: "O GuardaAí atua como intermediador seguro em toda a operação." },
 ];
 
 const faqs = [
-  { q: "O que posso guardar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce e itens pessoais. Itens ilegais, perigosos ou perecíveis são proibidos." },
-  { q: "Como o preço é calculado?", a: "O preço é baseado no volume ocupado (m³) e no período. Usamos uma tabela progressiva de R$ 5/m³ (1 dia) a R$ 45/m³ (30 dias). Mínimo de 1 m³. Uma taxa de serviço de R$ 28,00 é adicionada no checkout." },
-  { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. A tabela progressiva garante preço justo para qualquer período." },
-  { q: "Como funciona a segurança?", a: "Objetos são cadastrados com foto, ambas as partes aceitam termos de responsabilidade, e toda intermediação é feita digitalmente pela plataforma." },
+  { q: "O que posso guardar?", a: "Móveis, caixas, bicicletas, malas, equipamentos, estoque de e-commerce e itens pessoais. Também é possível guardar veículos como carros, motos, SUVs, caminhonetes, vans, jet skis e barcos pequenos em espaços compatíveis. Itens ilegais, perigosos ou perecíveis são proibidos." },
+  { q: "Posso guardar meu carro ou moto?", a: "Sim! Basta selecionar o modo 'Veículos' no simulador. Você encontrará garagens, vagas e espaços cobertos que aceitam veículos como carros, motos, SUVs, caminhonetes e até barcos." },
+  { q: "Quem define o preço?", a: "O anfitrião define o preço do espaço. A GuardaAí sugere valores de referência, mas não impõe uma tabela fixa. O mínimo é R$ 1,50/m³/dia." },
+  { q: "Posso guardar por poucas horas?", a: "Sim! Espaços que aceitam por hora permitem reservas curtas. A cobrança mínima é de 1 diária." },
+  { q: "Posso guardar por poucos dias?", a: "Sim, a partir de 1 dia. O preço varia conforme o anfitrião." },
+  { q: "Como funciona a segurança?", a: "Objetos e veículos são cadastrados com foto, ambas as partes aceitam termos de responsabilidade, e toda intermediação é feita digitalmente pela plataforma." },
 ];
 
 const pricingTiers = [
-  { period: "1 dia", price: "R$ 5", daily: "R$ 5,00/dia" },
-  { period: "7 dias", price: "R$ 15,75", daily: "R$ 2,25/dia" },
-  { period: "30 dias", price: "R$ 45", daily: "R$ 1,50/dia" },
+  { period: "1 dia", price: "R$ 5,00", daily: "sugestão/m³" },
+  { period: "7 dias", price: "R$ 2,71", daily: "sugestão/m³/dia" },
+  { period: "30 dias", price: "R$ 1,50", daily: "mínimo/m³/dia" },
+  { period: "Por hora", price: "aceito", daily: "mín. 1 diária" },
 ];
 
 const QueroGuardar = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Quero guardar objetos ou veículos" description="Simule o custo de armazenamento para objetos ou veículos, encontre garagens, vagas e depósitos disponíveis e reserve online." canonical="/quero-guardar" />
       <Header />
       <main>
         {/* ========== HERO + SIMULATOR ========== */}
         <section className="relative pt-24 pb-10 md:pt-28 md:pb-16 overflow-hidden">
-          {/* Background blobs */}
           <div className="absolute inset-0 -z-10">
             <div className="absolute top-16 -left-20 w-80 h-80 bg-primary/6 rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-0 w-72 h-72 bg-accent/5 rounded-full blur-3xl" />
@@ -59,20 +64,17 @@ const QueroGuardar = () => {
                 transition={{ duration: 0.45 }}
                 className="pt-1 lg:pt-6"
               >
-                {/* Chip */}
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide uppercase mb-4">
-                  <Package size={13} />
-                  Armazenamento fácil e acessível
+                  <Warehouse size={13} />
+                  Objetos e veículos
                 </div>
 
-                {/* Headline */}
                 <h1 className="text-[1.75rem] md:text-4xl lg:text-[2.65rem] font-extrabold text-foreground leading-[1.15] mb-3">
-                  Guarde suas coisas<br className="hidden md:block" /> por <span className="text-primary">muito menos</span>
+                  Guarde objetos ou veículos<br className="hidden md:block" /> por <span className="text-primary">muito menos</span>
                 </h1>
 
-                {/* Subtitle */}
                 <p className="text-[15px] md:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
-                  Espaços reais perto de você, com preço justo e segurança garantida. Simule agora e descubra o valor.
+                  Encontre garagens, vagas e depósitos perto de você para guardar caixas, estoque, carros, motos, barcos e mais. Simule agora.
                 </p>
 
                 {/* Benefits */}
@@ -96,14 +98,14 @@ const QueroGuardar = () => {
                   ))}
                 </div>
 
-                {/* Pricing reference cards */}
+                {/* Pricing reference */}
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço por m³</p>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Referência de preço</p>
+                  <div className="grid grid-cols-4 gap-2.5">
                     {pricingTiers.map((t, i) => (
                       <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-primary/30 transition-colors">
                         <p className="text-[10px] font-medium text-muted-foreground mb-1">{t.period}</p>
@@ -113,7 +115,7 @@ const QueroGuardar = () => {
                     ))}
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
-                    Tabela progressiva por m³. Quanto maior o período, menor o custo diário. Taxa de serviço de R$ 28,00 adicionada no checkout.
+                    Preço definido pelo anfitrião. Mínimo R$ 1,50/m³/dia. Sem taxa de serviço. Reservas por hora com cobrança mínima de 1 diária.
                   </p>
                 </motion.div>
               </motion.div>
@@ -128,11 +130,25 @@ const QueroGuardar = () => {
                 <div className="rounded-2xl bg-card border border-border/80 shadow-xl overflow-hidden">
                   <div className="px-5 pt-5 pb-2 border-b border-border/60 bg-secondary/30">
                     <h2 className="text-base font-bold text-foreground">Simule seu armazenamento</h2>
-                    <p className="text-xs text-muted-foreground mt-0.5">Calcule o volume e o preço em segundos.</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Objetos ou veículos — calcule volume e preço em segundos.</p>
                   </div>
                   <Simulator embedded />
                 </div>
               </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========== IMAGEM DE APOIO ========== */}
+        <section className="py-8 md:py-12">
+          <div className="container max-w-4xl">
+            <div className="rounded-2xl overflow-hidden border border-border/60 shadow-lg">
+              <img
+                src={storageSupportImg}
+                alt="Espaço de armazenamento organizado com moto, bicicleta e caixas"
+                className="w-full h-48 md:h-64 object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>
@@ -142,7 +158,7 @@ const QueroGuardar = () => {
           <div className="container max-w-4xl">
             <div className="text-center mb-8">
               <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Como funciona</h2>
-              <p className="text-sm text-muted-foreground">Três passos simples para guardar seus itens com segurança.</p>
+              <p className="text-sm text-muted-foreground">Três passos simples para guardar objetos ou veículos com segurança.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {steps.map((step, i) => (
@@ -170,13 +186,13 @@ const QueroGuardar = () => {
           </div>
         </section>
 
-        {/* ========== SEGURANÇA E CONFIANÇA ========== */}
+        {/* ========== SEGURANÇA ========== */}
         <section className="py-12 md:py-16">
           <div className="container max-w-4xl">
             <div className="text-center mb-8">
               <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Segurança e confiança</h2>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Seus objetos protegidos por regras claras, registro fotográfico e intermediação digital.
+                Seus objetos e veículos protegidos por regras claras e intermediação digital.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -205,7 +221,7 @@ const QueroGuardar = () => {
           <div className="container max-w-2xl">
             <div className="text-center mb-6">
               <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Perguntas frequentes</h2>
-              <p className="text-sm text-muted-foreground">Tire suas dúvidas sobre o serviço.</p>
+              <p className="text-sm text-muted-foreground">Tire suas dúvidas sobre guardar objetos e veículos.</p>
             </div>
             <Accordion type="single" collapsible className="space-y-2">
               {faqs.map((faq, i) => (
@@ -232,7 +248,7 @@ const QueroGuardar = () => {
             >
               <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">Pronto para guardar?</h2>
               <p className="text-sm text-muted-foreground mb-5">
-                Simule o preço, encontre um espaço e guarde seus itens com segurança.
+                Simule o preço, encontre um espaço e guarde seus objetos ou veículos com segurança.
               </p>
               <Button
                 size="lg"

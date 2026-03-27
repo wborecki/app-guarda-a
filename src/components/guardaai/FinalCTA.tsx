@@ -19,7 +19,7 @@ const FinalCTA = () => {
 
           <div className="relative px-5 py-8 md:px-12 md:py-12 text-center">
             <h2 className="text-[1.15rem] md:text-2xl font-bold text-foreground mb-1.5 md:mb-2 tracking-tight leading-tight">
-              Precisa de espaço para guardar suas coisas?
+              Precisa guardar objetos ou veículos?
             </h2>
 
             <p className="text-[12.5px] md:text-sm text-muted-foreground mb-5 md:mb-6 max-w-md mx-auto leading-relaxed">

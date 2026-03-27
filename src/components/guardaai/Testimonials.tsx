@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 
@@ -5,12 +6,12 @@ const testimonials = [
   {
     name: "Carla M.",
     role: "Guardou durante reforma",
-    text: "Encontrei um espaço a 3 quadras de casa. Simples e muito mais barato que um self storage.",
+    text: "Encontrei um espaço a 3 quadras de casa. Simples, prático e com preço justo.",
   },
   {
     name: "Lucas P.",
-    role: "Guardou durante viagem",
-    text: "Fui viajar por 3 meses e deixei tudo num quarto vazio pelo GuardaAí. Voltei e estava tudo perfeito.",
+    role: "Guardou carro durante viagem",
+    text: "Fui viajar por 3 meses e deixei meu carro numa garagem pelo GuardaAí. Voltei e estava tudo perfeito.",
   },
   {
     name: "Ana R.",
@@ -19,12 +20,44 @@ const testimonials = [
   },
   {
     name: "Roberto S.",
-    role: "Anunciante de espaço",
-    text: "Minha garagem ficava vazia o dia todo. Agora ganho quase R$400 por mês sem fazer nada.",
+    role: "Anunciante de garagem",
+    text: "Minha garagem ficava vazia o dia todo. Agora guardo o carro de um vizinho e ganho quase R$400 por mês.",
+  },
+  {
+    name: "Marcos T.",
+    role: "Guardou moto e caixas",
+    text: "Precisei guardar a moto e umas caixas de mudança. Achei um espaço que aceitava os dois, perfeito.",
   },
 ];
 
 const Testimonials = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const updateActiveIndex = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const childWidth = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 12
+      : 1;
+    setActiveIndex(Math.round(scrollLeft / childWidth));
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateActiveIndex, { passive: true });
+    return () => el.removeEventListener("scroll", updateActiveIndex);
+  }, [updateActiveIndex]);
+
+  const scrollTo = (index: number) => {
+    const el = scrollRef.current;
+    if (!el || !el.firstElementChild) return;
+    const childWidth = (el.firstElementChild as HTMLElement).offsetWidth + 12;
+    el.scrollTo({ left: childWidth * index, behavior: "smooth" });
+  };
+
   return (
     <section className="py-10 md:py-20">
       <div className="container px-5 md:px-8">
@@ -38,12 +71,14 @@ const Testimonials = () => {
             O que nossos usuários dizem
           </h2>
           <p className="text-muted-foreground text-[13px] md:text-lg">
-            Histórias reais de quem já usa o GuardaAí.
+            Histórias reais de quem guarda objetos e veículos pelo GuardaAí.
           </p>
         </motion.div>
 
-        {/* Mobile: horizontal scroll. Desktop: grid */}
-        <div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory -mx-5 px-5 md:mx-0 md:px-0 md:grid md:grid-cols-4 md:gap-6 md:overflow-visible md:pb-0 scrollbar-none">
+        <div
+          ref={scrollRef}
+          className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory -mx-5 px-5 md:mx-0 md:px-0 md:grid md:grid-cols-5 md:gap-4 md:overflow-visible md:pb-0 scrollbar-none"
+        >
           {testimonials.map((t, i) => (
             <motion.div
               key={i}
@@ -51,7 +86,7 @@ const Testimonials = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="min-w-[72vw] sm:min-w-[45vw] md:min-w-0 snap-center p-4 md:p-6 rounded-xl md:rounded-2xl bg-card border border-border/60 shrink-0"
+              className="min-w-[78vw] sm:min-w-[45vw] md:min-w-0 snap-center p-4 md:p-5 rounded-xl md:rounded-2xl bg-card border border-border/60 shrink-0"
             >
               <div className="flex gap-0.5 mb-2 md:mb-3">
                 {[...Array(5)].map((_, j) => (
@@ -67,10 +102,19 @@ const Testimonials = () => {
           ))}
         </div>
 
-        {/* Scroll indicator - mobile only */}
-        <div className="flex justify-center gap-1 mt-3 md:hidden">
+        <div className="flex justify-center gap-1.5 mt-3 md:hidden">
           {testimonials.map((_, i) => (
-            <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === 0 ? "bg-primary/50" : "bg-border"}`} />
+            <button
+              key={i}
+              type="button"
+              aria-label={`Ir para depoimento ${i + 1}`}
+              onClick={() => scrollTo(i)}
+              className={`rounded-full transition-all duration-300 ${
+                i === activeIndex
+                  ? "w-4 h-1.5 bg-primary/70"
+                  : "w-1.5 h-1.5 bg-border hover:bg-muted-foreground/30"
+              }`}
+            />
           ))}
         </div>
       </div>

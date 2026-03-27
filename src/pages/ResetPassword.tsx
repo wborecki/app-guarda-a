@@ -1,3 +1,4 @@
+import SEO from "@/components/SEO";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +48,7 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO title="Redefinir senha" noIndex />
       <Header />
       <main className="flex-1 pt-24 pb-16">
         <div className="container max-w-lg mx-auto">

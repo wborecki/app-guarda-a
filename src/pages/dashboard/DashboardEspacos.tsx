@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
+import SuggestedPricingTable from "@/components/guardaai/SuggestedPricingTable";
 
 type Space = {
   id: string;
@@ -23,6 +24,7 @@ type Space = {
   status: string;
   onboarding_step: number;
   created_at: string;
+  price_per_day: number | null;
 };
 
 const typeLabels: Record<string, string> = {
@@ -34,7 +36,7 @@ const typeLabels: Record<string, string> = {
   comercial: "Espaço comercial",
 };
 
-const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete: (id: string) => void; onToggleStatus: (id: string, newStatus: string) => void }) => {
+const SpaceCard = ({ space, onDelete, onToggleStatus, onApplySuggestedPrice }: { space: Space; onDelete: (id: string) => void; onToggleStatus: (id: string, newStatus: string) => void; onApplySuggestedPrice: (id: string) => void }) => {
   const isDraft = space.status === "draft";
   const isInactive = space.status === "inactive";
   const thumb = space.photos?.[0];
@@ -43,8 +45,9 @@ const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete
 
   return (
     <>
-      <div className="flex gap-4 p-4 rounded-xl border border-border bg-card hover:shadow-sm transition-shadow">
-        <div className="w-20 h-20 rounded-lg bg-secondary shrink-0 overflow-hidden">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 p-4 rounded-xl border border-border/60 bg-card hover:shadow-sm transition-shadow">
+        {/* Thumbnail */}
+        <div className="w-full sm:w-20 h-32 sm:h-20 rounded-lg bg-secondary shrink-0 overflow-hidden">
           {thumb ? (
             <img src={thumb} alt="Espaço" className="w-full h-full object-cover" />
           ) : (
@@ -54,6 +57,7 @@ const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete
           )}
         </div>
 
+        {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-1">
             <h3 className="text-sm font-semibold text-foreground truncate">
@@ -80,15 +84,16 @@ const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete
           </p>
         </div>
 
-        <div className="flex items-start gap-1 shrink-0">
+        {/* Actions */}
+        <div className="flex items-center sm:items-start gap-2 sm:gap-1 shrink-0">
           {isDraft ? (
-            <Button size="sm" variant="outline" className="text-xs h-8 gap-1" asChild>
+            <Button size="sm" variant="outline" className="text-xs h-8 gap-1 flex-1 sm:flex-none" asChild>
               <Link to={`/anunciar/finalizar?id=${space.id}`}>
                 <FileEdit size={12} /> Continuar
               </Link>
             </Button>
           ) : (
-            <Button size="sm" variant="outline" className="text-xs h-8 gap-1" asChild>
+            <Button size="sm" variant="outline" className="text-xs h-8 gap-1 flex-1 sm:flex-none" asChild>
               <Link to={`/anunciar/finalizar?id=${space.id}`}>
                 <Edit2 size={12} /> Editar
               </Link>
@@ -120,6 +125,15 @@ const SpaceCard = ({ space, onDelete, onToggleStatus }: { space: Space; onDelete
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Suggested pricing table per space */}
+      {!isDraft && (
+        <div className="ml-0 sm:ml-24 mr-0 sm:mr-4 mb-1">
+          <SuggestedPricingTable
+            onApply={() => onApplySuggestedPrice(space.id)}
+          />
+        </div>
+      )}
 
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>
@@ -159,7 +173,7 @@ const DashboardEspacos = () => {
     setLoading(true);
     const { data } = await supabase
       .from("spaces")
-      .select("id, location, space_type, width, length, height, volume, photos, status, onboarding_step, created_at")
+      .select("id, location, space_type, width, length, height, volume, photos, status, onboarding_step, created_at, price_per_day")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
     setSpaces((data as Space[]) || []);
@@ -186,18 +200,28 @@ const DashboardEspacos = () => {
     }
   };
 
+  const handleApplySuggestedPrice = async (id: string) => {
+    const { error } = await supabase.from("spaces").update({ price_per_day: 5.0, updated_at: new Date().toISOString() }).eq("id", id);
+    if (error) {
+      toast({ title: "Erro ao aplicar", description: error.message, variant: "destructive" });
+    } else {
+      setSpaces(prev => prev.map(s => s.id === id ? { ...s, price_per_day: 5.0 } : s));
+      toast({ title: "Tabela sugerida aplicada", description: "Preço base definido como R$ 5,00/m³/dia." });
+    }
+  };
+
   const published = spaces.filter(s => s.status === "published");
   const drafts = spaces.filter(s => s.status === "draft");
   const inactive = spaces.filter(s => s.status === "inactive");
 
   return (
-    <div className="max-w-5xl">
-      <div className="flex items-center justify-between mb-6">
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground mb-1">Meus espaços</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight mb-1">Meus espaços</h1>
           <p className="text-muted-foreground text-sm">Gerencie seus espaços anunciados e rascunhos.</p>
         </div>
-        <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-1.5" asChild>
+        <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-1.5 self-start sm:self-auto" asChild>
           <Link to="/anunciar"><Plus size={14} /> Novo espaço</Link>
         </Button>
       </div>
@@ -222,31 +246,31 @@ const DashboardEspacos = () => {
 
           <TabsContent value="publicados">
             {published.length === 0 ? (
-              <div className="rounded-2xl border bg-card">
+              <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
                 <EmptyState icon={Eye} title="Nenhum espaço publicado" description="Seus espaços publicados aparecerão aqui." actionLabel="Anunciar espaço" actionHref="/anunciar" />
               </div>
             ) : (
-              <div className="space-y-3">{published.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{published.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
 
           <TabsContent value="rascunhos">
             {drafts.length === 0 ? (
-              <div className="rounded-2xl border bg-card">
+              <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
                 <EmptyState icon={FileEdit} title="Nenhum rascunho" description="Rascunhos de espaços não finalizados aparecerão aqui." />
               </div>
             ) : (
-              <div className="space-y-3">{drafts.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{drafts.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
 
           <TabsContent value="inativos">
             {inactive.length === 0 ? (
-              <div className="rounded-2xl border bg-card">
+              <div className="rounded-2xl border border-border/60 bg-card shadow-sm">
                 <EmptyState icon={EyeOff} title="Nenhum espaço inativo" description="Espaços desativados aparecerão aqui. Você pode reativá-los a qualquer momento." />
               </div>
             ) : (
-              <div className="space-y-3">{inactive.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} />)}</div>
+              <div className="space-y-3">{inactive.map(s => <SpaceCard key={s.id} space={s} onDelete={handleDelete} onToggleStatus={handleToggleStatus} onApplySuggestedPrice={handleApplySuggestedPrice} />)}</div>
             )}
           </TabsContent>
         </Tabs>

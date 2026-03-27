@@ -1,9 +1,9 @@
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileText } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { FileText } from "lucide-react";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import BackButton from "@/components/guardaai/BackButton";
 
 const clauses = [
   "É o único responsável pelos bens, objetos, materiais, produtos e itens que cadastrar, transportar, entregar, armazenar ou mantiver vinculados à reserva realizada por meio da plataforma.",
@@ -21,16 +21,13 @@ const clauses = [
 ];
 
 const TermsRenter = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Termos do Locatário" description="Termos e condições para locatários na plataforma GuardaAí. Leia antes de reservar um espaço." canonical="/termos/locatario" />
       <Header />
       <main className="pt-24 pb-16">
         <div className="container max-w-3xl px-4 md:px-8">
-          <Button variant="ghost" size="sm" onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")} className="mb-6 gap-1.5 text-muted-foreground">
-            <ArrowLeft size={16} /> Voltar
-          </Button>
+          <BackButton label="Página anterior" fallbackTo="/" className="mb-6" />
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-3 mb-6">

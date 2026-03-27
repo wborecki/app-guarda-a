@@ -1,17 +1,17 @@
 import { motion } from "framer-motion";
-import { Camera, FileText, ShieldAlert, Ban, Clock, UserX, Shield, Handshake, Lock, Home } from "lucide-react";
+import { Camera, FileText, ShieldAlert, Ban, UserX, Clock, Shield, Handshake, Lock, Home } from "lucide-react";
 
 const userFeatures = [
-  { icon: Camera, title: "Cadastro com foto", desc: "Objetos fotografados e registrados na plataforma." },
+  { icon: Camera, title: "Cadastro com foto", desc: "Objetos e veículos fotografados e registrados na plataforma." },
   { icon: FileText, title: "Termos claros", desc: "Responsabilidade aceita por ambas as partes." },
-  { icon: ShieldAlert, title: "Declaração de responsabilidade", desc: "Natureza e estado dos objetos declarados." },
+  { icon: ShieldAlert, title: "Declaração de responsabilidade", desc: "Natureza e estado dos itens ou veículos declarados." },
   { icon: Handshake, title: "Intermediação digital", desc: "Segurança na comunicação e transações." },
 ];
 
 const hostFeatures = [
   { icon: Ban, title: "Itens proibidos", desc: "Drogas, armas, explosivos e itens ilegais vetados." },
-  { icon: UserX, title: "Direito de recusa", desc: "Objetos fora das regras podem ser recusados." },
-  { icon: Clock, title: "Regra de abandono", desc: "Objetos não retirados no prazo são tratados conforme termos." },
+  { icon: UserX, title: "Direito de recusa", desc: "Objetos ou veículos fora das regras podem ser recusados." },
+  { icon: Clock, title: "Regra de abandono", desc: "Itens não retirados no prazo são tratados conforme termos." },
   { icon: Shield, title: "Proteção para você", desc: "Regras claras contra uso indevido do espaço." },
 ];
 
@@ -48,7 +48,7 @@ const Security = () => {
             Segurança e confiança
           </h2>
           <p className="text-muted-foreground text-[13px] md:text-lg max-w-2xl mx-auto">
-            Regras claras e intermediação digital para proteger todos.
+            Regras claras para proteger objetos, veículos e todas as partes envolvidas.
           </p>
         </motion.div>
 
@@ -61,7 +61,7 @@ const Security = () => {
               className="text-[13px] md:text-xl font-bold text-foreground mb-3 md:mb-6 text-center"
             >
               <Lock size={15} className="inline mr-1.5 text-primary md:w-[18px] md:h-[18px]" />
-              Para quem guarda objetos
+              Para quem guarda
             </motion.h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6">
               {userFeatures.map((f, i) => (

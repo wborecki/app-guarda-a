@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { Home, ArrowRight } from "lucide-react";
 
 const examples = [
-  { area: "3 m³", income: "R$ 135/mês", desc: "Uma garagem pequena" },
-  { area: "5 m³", income: "R$ 225/mês", desc: "Um quarto vazio" },
-  { area: "10 m³", income: "R$ 450/mês", desc: "Um depósito médio" },
+  { area: "Vaga de garagem", income: "R$ 250/mês", desc: "Estacionamento para 1 carro" },
+  { area: "3 m³ de depósito", income: "R$ 135/mês", desc: "Caixas, malas e objetos" },
+  { area: "Garagem coberta", income: "R$ 400/mês", desc: "Carro + objetos no fundo" },
+  { area: "10 m³ de galpão", income: "R$ 450/mês", desc: "Móveis, estoque ou veículos" },
 ];
 
 const ForHosts = () => {
@@ -24,10 +25,10 @@ const ForHosts = () => {
               Para quem tem espaço sobrando
             </div>
             <h2 className="text-[1.3rem] md:text-4xl font-bold text-foreground mb-2 md:mb-4 leading-tight">
-              Transforme espaço vazio em renda extra.
+              Garagem, vaga ou depósito parado?<br className="hidden md:block" /> Transforme em renda.
             </h2>
             <p className="text-muted-foreground text-[13px] md:text-lg mb-4 md:mb-8 leading-relaxed">
-              Garagens, quartos vazios e depósitos podem virar uma nova fonte de renda. Cadastre e comece a ganhar.
+              Anuncie para quem precisa guardar caixas, estoque, carros, motos, barcos e mais. Cadastre em minutos e comece a faturar.
             </p>
 
             <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground text-[13px] md:text-base px-5 md:px-8 h-10 md:h-11 group" asChild>
@@ -42,7 +43,7 @@ const ForHosts = () => {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-2 md:space-y-4"
+            className="space-y-2 md:space-y-3"
           >
             {examples.map((ex, i) => (
               <motion.div
@@ -51,11 +52,11 @@ const ForHosts = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="p-3.5 md:p-6 rounded-xl md:rounded-2xl bg-card border border-border/60 flex items-center justify-between hover:shadow-md transition-shadow"
+                className="p-3.5 md:p-5 rounded-xl md:rounded-2xl bg-card border border-border/60 flex items-center justify-between hover:shadow-md transition-shadow"
               >
                 <div>
                   <p className="text-[11px] md:text-sm text-muted-foreground/70">{ex.desc}</p>
-                  <p className="font-semibold text-foreground text-[13px] md:text-base">{ex.area} disponíveis</p>
+                  <p className="font-semibold text-foreground text-[13px] md:text-base">{ex.area}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[9px] md:text-xs text-muted-foreground/60">Renda estimada</p>
@@ -64,7 +65,7 @@ const ForHosts = () => {
               </motion.div>
             ))}
             <p className="text-[9px] md:text-xs text-muted-foreground/55 text-center">
-              * Valores ilustrativos baseados em R$45/m³ por mês.
+              * Valores ilustrativos. Rendimento real depende do preço definido e da demanda.
             </p>
           </motion.div>
         </div>

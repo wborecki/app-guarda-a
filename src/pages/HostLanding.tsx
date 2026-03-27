@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import storageSupportImg from "@/assets/storage-vehicles-support.jpg";
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -30,38 +32,39 @@ const spaceTypes = [
   { icon: BedDouble, label: "Quarto vazio" },
   { icon: Container, label: "Depósito" },
   { icon: Tent, label: "Área coberta" },
-  { icon: Building2, label: "Pequeno galpão" },
-  { icon: Store, label: "Espaço comercial" },
+  { icon: Building2, label: "Galpão / Pátio" },
+  { icon: Store, label: "Estacionamento / Vaga" },
 ];
 
 const benefits = [
-  { icon: DollarSign, title: "Renda por reserva", desc: "Receba por cada m³ reservado no seu espaço." },
+  { icon: DollarSign, title: "Renda por reserva", desc: "Receba por cada m³ ou vaga reservada no seu espaço." },
   { icon: Shield, title: "Seguro e intermediado", desc: "Termos, fotos e intermediação digital pela plataforma." },
-  { icon: CheckCircle2, title: "Você no controle", desc: "Aceite ou recuse solicitações, defina suas regras." },
+  { icon: CheckCircle2, title: "Você no controle", desc: "Aceite ou recuse, defina preço e regras — para objetos ou veículos." },
 ];
 
 const securityItems = [
-  { icon: Camera, title: "Foto obrigatória dos itens", desc: "Todos os objetos são registrados antes do armazenamento." },
+  { icon: Camera, title: "Foto obrigatória", desc: "Objetos e veículos são registrados antes do armazenamento." },
   { icon: FileText, title: "Termos de responsabilidade", desc: "Regras claras aceitas por ambas as partes antes de cada reserva." },
   { icon: Ban, title: "Itens proibidos", desc: "Drogas, armas, explosivos, perecíveis e itens ilegais são vetados." },
-  { icon: UserX, title: "Direito de recusa", desc: "Você pode recusar objetos que não se enquadrem nas regras." },
-  { icon: Clock, title: "Política de abandono", desc: "Objetos não retirados no prazo são tratados conforme os termos." },
+  { icon: UserX, title: "Direito de recusa", desc: "Você pode recusar objetos ou veículos fora das regras." },
+  { icon: Clock, title: "Política de abandono", desc: "Itens não retirados no prazo são tratados conforme os termos." },
   { icon: Lock, title: "Intermediação digital", desc: "O GuardaAí atua como intermediador seguro entre as partes." },
 ];
 
 const faqItems = [
-  { q: "Que tipo de espaço posso anunciar?", a: "Garagens, quartos vazios, depósitos, áreas cobertas, galpões pequenos e espaços comerciais ociosos — residenciais ou comerciais." },
-  { q: "Como o valor é calculado?", a: "O preço cobrado do cliente segue uma tabela progressiva de R$ 5 (1 dia) a R$ 45 (30 dias) por m³. Seu ganho é calculado sobre esse valor, descontada a comissão da plataforma." },
-  { q: "Posso recusar objetos?", a: "Sim. O anfitrião tem total direito de recusar objetos inadequados ou fora das regras da plataforma." },
-  { q: "Como recebo meu pagamento?", a: "Os pagamentos são processados pela plataforma e repassados para sua conta, descontada a comissão." },
+  { q: "Que tipo de espaço posso anunciar?", a: "Garagens, vagas, quartos vazios, depósitos, áreas cobertas, galpões, pátios e estacionamentos — residenciais ou comerciais. Espaços para guardar objetos, veículos ou ambos." },
+  { q: "Posso anunciar vaga para veículos?", a: "Sim! Ao cadastrar, selecione 'Veículos' ou 'Ambos' como tipo de uso. Informe as dimensões do portão e quais veículos o espaço comporta (carros, motos, SUVs, barcos, etc.)." },
+  { q: "Quem define o preço?", a: "Você define o preço do seu espaço livremente. A GuardaAí sugere valores de referência, mas a decisão final é sua. O mínimo obrigatório é R$ 1,50/m³/dia." },
+  { q: "Posso recusar objetos ou veículos?", a: "Sim. O anfitrião tem total direito de recusar itens inadequados ou veículos incompatíveis com o espaço." },
+  { q: "Como recebo meu pagamento?", a: "Os pagamentos são processados pela plataforma e repassados para sua conta." },
   { q: "Que itens são proibidos?", a: "Drogas, armas, explosivos, materiais perecíveis, animais vivos e qualquer item ilegal." },
   { q: "Preciso estar em casa para receber itens?", a: "Depende do seu modelo. Você pode combinar horários de acesso ou oferecer acesso independente, conforme sua preferência." },
 ];
 
 const earningsExamples = [
-  { label: "Garagem", size: "3 m³", value: "R$ 135" },
-  { label: "Quarto", size: "5 m³", value: "R$ 225" },
-  { label: "Depósito", size: "10 m³", value: "R$ 450" },
+  { label: "Vaga garagem", size: "1 carro", value: "R$ 250" },
+  { label: "Depósito", size: "5 m³", value: "R$ 225" },
+  { label: "Garagem grande", size: "carro + objetos", value: "R$ 400" },
 ];
 
 const HostLanding = () => {
@@ -75,6 +78,7 @@ const HostLanding = () => {
   const [form, setForm] = useState({
     location: "",
     spaceType: "", spaceCategory: "",
+    spaceUse: "objects" as "objects" | "vehicles" | "both",
     height: "", width: "", length: "",
     covered: false, closed: false, easyAccess: false,
     availability: "continuous",
@@ -123,6 +127,7 @@ const HostLanding = () => {
         location: form.location,
         space_type: form.spaceType,
         space_category: form.spaceCategory,
+        space_use: form.spaceUse,
         height: parseFloat(form.height) || 0,
         width: parseFloat(form.width) || 0,
         length: parseFloat(form.length) || 0,
@@ -166,6 +171,11 @@ const HostLanding = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Anuncie garagem, vaga ou depósito"
+        description="Transforme espaço ocioso em renda. Anuncie garagem, vaga, depósito ou galpão na GuardaAí para guardar objetos e veículos."
+        canonical="/anunciar"
+      />
       <Header />
       <main>
         {/* ========== HERO + FORM ========== */}
@@ -190,11 +200,11 @@ const HostLanding = () => {
                 </div>
 
                 <h1 className="text-[1.75rem] md:text-4xl lg:text-[2.65rem] font-extrabold text-foreground leading-[1.15] mb-3">
-                  Transforme espaço ocioso<br className="hidden md:block" /> em <span className="text-accent">renda extra</span>
+                  Garagem, vaga ou depósito parado?<br className="hidden md:block" /> Transforme em <span className="text-accent">renda extra</span>
                 </h1>
 
                 <p className="text-[15px] md:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
-                  Garagens, quartos, depósitos e áreas cobertas podem gerar renda. Cadastre seu espaço e receba por cada reserva realizada.
+                  Anuncie para quem precisa guardar caixas, estoque, carros, motos, barcos e mais. Cadastre em minutos e comece a faturar.
                 </p>
 
                 {/* Benefits */}
@@ -225,17 +235,17 @@ const HostLanding = () => {
                   transition={{ delay: 0.5 }}
                 >
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-2.5">Estimativa de renda bruta mensal</p>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5">
                     {earningsExamples.map((e, i) => (
-                      <div key={i} className="relative p-3.5 rounded-xl bg-card border border-border/80 hover:border-accent/30 transition-colors">
-                        <p className="text-[10px] font-medium text-muted-foreground">{e.label} · {e.size}</p>
-                        <p className="text-lg font-bold text-accent leading-none mt-1">{e.value}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">/mês</p>
+                      <div key={i} className="relative p-2.5 sm:p-3.5 rounded-xl bg-card border border-border/80 hover:border-accent/30 transition-colors">
+                        <p className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">{e.label} · {e.size}</p>
+                        <p className="text-base sm:text-lg font-bold text-accent leading-none mt-1">{e.value}</p>
+                        <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5">/mês</p>
                       </div>
                     ))}
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
-                    * Estimativas brutas com ocupação total a R$ 45/m³ por 30 dias. Rendimento real varia conforme demanda e comissão da plataforma.
+                    * Estimativas brutas com ocupação total a R$ 1,50/m³/dia por 30 dias. Rendimento real varia conforme o preço definido pelo anfitrião e a demanda.
                   </p>
                 </motion.div>
               </motion.div>
@@ -284,8 +294,7 @@ const HostLanding = () => {
                       </div>
                     ) : (
                     <>
-                    {step === 1 ? (
-                      <>
+                    <div className={step === 1 ? "space-y-4" : "hidden"}>
                         {/* Connected user badge */}
                         <div className="flex items-center gap-2 p-2.5 rounded-xl bg-secondary/60 border border-border/60">
                           <CheckCircle2 size={15} className="text-primary shrink-0" />
@@ -309,6 +318,31 @@ const HostLanding = () => {
                           />
                         </div>
 
+                        {/* === SPACE USE === */}
+                        <div className="space-y-2.5">
+                          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Para que tipo de uso?</p>
+                          <div className="grid grid-cols-3 gap-1.5">
+                            {([
+                              { value: "objects", label: "Objetos" },
+                              { value: "vehicles", label: "Veículos" },
+                              { value: "both", label: "Ambos" },
+                            ] as const).map(opt => (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => setForm({...form, spaceUse: opt.value})}
+                                className={`text-xs font-medium px-3 py-2.5 rounded-lg border transition-colors ${
+                                  form.spaceUse === opt.value
+                                    ? "bg-accent/10 border-accent/40 text-accent"
+                                    : "bg-card border-border/60 text-muted-foreground hover:border-primary/30"
+                                }`}
+                              >
+                                {opt.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
                         {/* === SPACE TYPE === */}
                         <div className="space-y-2.5">
                           <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Tipo de espaço</p>
@@ -321,6 +355,7 @@ const HostLanding = () => {
                               <SelectItem value="area-coberta">Área coberta</SelectItem>
                               <SelectItem value="galpao">Pequeno galpão</SelectItem>
                               <SelectItem value="comercial">Espaço comercial</SelectItem>
+                              <SelectItem value="estacionamento">Estacionamento / Vaga</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -357,9 +392,8 @@ const HostLanding = () => {
                           Continuar
                           <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />
                         </Button>
-                      </>
-                    ) : (
-                      <>
+                    </div>
+                    <div className={step === 2 ? "space-y-4" : "hidden"}>
                         {/* === STEP 2: DETAILS === */}
 
                         {/* Category + toggles */}
@@ -401,7 +435,7 @@ const HostLanding = () => {
                               <SelectItem value="custom">Personalizada (informar nas obs.)</SelectItem>
                             </SelectContent>
                           </Select>
-                          <div className="grid grid-cols-2 gap-2.5">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                             <Select value={form.accessHours} onValueChange={v => setForm({...form, accessHours: v})}>
                               <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Horário de acesso" /></SelectTrigger>
                               <SelectContent>
@@ -450,7 +484,7 @@ const HostLanding = () => {
                                   <button
                                     type="button"
                                     onClick={() => removePhoto(i)}
-                                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                                   >
                                     <X size={12} />
                                   </button>
@@ -476,8 +510,7 @@ const HostLanding = () => {
                              {!submitting && <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-1 transition-transform" />}
                            </Button>
                         </div>
-                      </>
-                    )}
+                    </div>
                     </>
                     )}
                   </div>
@@ -491,8 +524,8 @@ const HostLanding = () => {
         <section className="py-12 md:py-16 bg-secondary/40">
           <div className="container max-w-4xl">
             <div className="text-center mb-8">
-              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Espaços aceitos</h2>
-              <p className="text-sm text-muted-foreground">Qualquer espaço ocioso pode virar renda.</p>
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1.5">Espaços que você pode anunciar</h2>
+              <p className="text-sm text-muted-foreground">Garagens, vagas, depósitos e mais — para objetos ou veículos.</p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               {spaceTypes.map((s, i) => (
@@ -504,6 +537,20 @@ const HostLanding = () => {
                   <p className="text-xs font-semibold text-foreground">{s.label}</p>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ========== IMAGEM DE APOIO ========== */}
+        <section className="py-8 md:py-12">
+          <div className="container max-w-4xl">
+            <div className="rounded-2xl overflow-hidden border border-border/60 shadow-lg">
+              <img
+                src={storageSupportImg}
+                alt="Espaço organizado com moto, bicicleta e caixas para armazenamento"
+                className="w-full h-48 md:h-64 object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </section>

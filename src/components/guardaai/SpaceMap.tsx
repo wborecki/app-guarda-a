@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState, memo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -13,12 +13,9 @@ L.Icon.Default.mergeOptions({
 // ─── Pin design system ─────────────────────────────────────────────
 const PIN_ORANGE = "#F97316";
 const PIN_ORANGE_DARK = "#EA580C";
-const PIN_ORANGE_LIGHT = "#FB923C";
 
 function createPinIcon(isHighlighted: boolean, price?: string) {
   const label = price || "";
-
-  // SVG map pin shape — classic teardrop/location marker
   const w = isHighlighted ? 36 : 30;
   const h = isHighlighted ? 46 : 38;
   const fill = isHighlighted ? PIN_ORANGE_DARK : PIN_ORANGE;
@@ -28,7 +25,6 @@ function createPinIcon(isHighlighted: boolean, price?: string) {
     : "filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25));";
   const anim = "transition: all 0.2s ease;";
 
-  // Pin with price label below
   if (label) {
     return L.divIcon({
       className: "custom-map-pin",
@@ -58,7 +54,6 @@ function createPinIcon(isHighlighted: boolean, price?: string) {
     });
   }
 
-  // Pin without label
   return L.divIcon({
     className: "custom-map-pin",
     html: `<div style="${anim}${isHighlighted ? 'transform:scale(1.12);' : ''}">
@@ -70,6 +65,38 @@ function createPinIcon(isHighlighted: boolean, price?: string) {
     iconSize: [w, h],
     iconAnchor: [w / 2, h],
     popupAnchor: [0, -h],
+  });
+}
+
+// ─── User location marker ──────────────────────────────────────────
+function createUserLocationIcon() {
+  return L.divIcon({
+    className: "user-location-pin",
+    html: `<div style="display:flex;flex-direction:column;align-items:center;">
+      <div style="
+        position: relative;
+        width: 22px;
+        height: 22px;
+      ">
+        <div style="
+          position: absolute;
+          inset: -6px;
+          border-radius: 50%;
+          background: rgba(59, 130, 246, 0.12);
+          animation: userPulse 2s ease-in-out infinite;
+        "></div>
+        <div style="
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: #3B82F6;
+          border: 3px solid white;
+          box-shadow: 0 2px 8px rgba(59,130,246,0.4), 0 0 0 1px rgba(59,130,246,0.15);
+        "></div>
+      </div>
+    </div>`,
+    iconSize: [34, 34],
+    iconAnchor: [17, 17],
   });
 }
 
@@ -96,21 +123,47 @@ interface SpaceMapProps {
   className?: string;
 }
 
-// ─── Clean, desaturated tile layer ─────────────────────────────────
-// CartoDB Positron — minimal, light, premium feel
 const TILE_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
 
-export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick, className }: SpaceMapProps) {
+// Inject global styles once
+let stylesInjected = false;
+function injectStyles() {
+  if (stylesInjected) return;
+  stylesInjected = true;
+  const style = document.createElement("style");
+  style.id = "space-map-styles";
+  style.textContent = `
+    @keyframes userPulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.8); opacity: 0; }
+    }
+    .user-location-pin { background: none !important; border: none !important; }
+  `;
+  document.head.appendChild(style);
+}
+
+function SpaceMapInner({ spaces, highlightedId, onPinHover, onPinClick, className }: SpaceMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Map<number | string, L.Marker>>(new Map());
   const spacePricesRef = useRef<Map<number | string, string>>(new Map());
+  const userMarkerRef = useRef<L.Marker | null>(null);
+  const userCircleRef = useRef<L.Circle | null>(null);
+  const [geoStatus, setGeoStatus] = useState<"idle" | "loading" | "granted" | "denied">("idle");
 
-  // Initialize map
+  // Stable callback refs to avoid re-bindng markers
+  const onPinHoverRef = useRef(onPinHover);
+  const onPinClickRef = useRef(onPinClick);
+  useEffect(() => { onPinHoverRef.current = onPinHover; }, [onPinHover]);
+  useEffect(() => { onPinClickRef.current = onPinClick; }, [onPinClick]);
+
+  // Initialize map — runs only once when container is available and spaces exist
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
     if (spaces.length === 0) return;
+
+    injectStyles();
 
     const map = L.map(containerRef.current, {
       center: [spaces[0].lat, spaces[0].lng],
@@ -124,7 +177,6 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
       maxZoom: 19,
     }).addTo(map);
 
-    // Zoom control on top-right
     L.control.zoom({ position: "topright" }).addTo(map);
 
     mapRef.current = map;
@@ -134,20 +186,77 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
       mapRef.current = null;
       markersRef.current.clear();
       spacePricesRef.current.clear();
+      userMarkerRef.current = null;
+      userCircleRef.current = null;
     };
-  }, []);
+  }, [spaces.length > 0 ? "ready" : "empty"]); // only re-run when spaces go from empty→non-empty
+
+  // Request geolocation — independent of spaces, non-blocking
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setGeoStatus("denied");
+      return;
+    }
+
+    setGeoStatus("loading");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setGeoStatus("granted");
+        const { latitude, longitude } = pos.coords;
+        const map = mapRef.current;
+        if (!map) return;
+
+        // Remove old user marker
+        if (userMarkerRef.current) userMarkerRef.current.remove();
+        if (userCircleRef.current) userCircleRef.current.remove();
+
+        // Add accuracy circle
+        const accuracy = Math.min(pos.coords.accuracy, 2000);
+        userCircleRef.current = L.circle([latitude, longitude], {
+          radius: accuracy,
+          color: "#3B82F6",
+          fillColor: "#3B82F6",
+          fillOpacity: 0.06,
+          weight: 1,
+          opacity: 0.2,
+        }).addTo(map);
+
+        // Add user marker
+        userMarkerRef.current = L.marker([latitude, longitude], {
+          icon: createUserLocationIcon(),
+          zIndexOffset: 2000,
+          interactive: false,
+        }).addTo(map);
+
+        // Extend bounds to include user location if markers exist
+        if (markersRef.current.size > 0) {
+          const allPoints: L.LatLngExpression[] = [];
+          markersRef.current.forEach((m) => {
+            const ll = m.getLatLng();
+            allPoints.push([ll.lat, ll.lng]);
+          });
+          allPoints.push([latitude, longitude]);
+          const bounds = L.latLngBounds(allPoints);
+          map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+        }
+      },
+      () => {
+        setGeoStatus("denied");
+      },
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 120000 }
+    );
+  }, []); // Run once on mount — no dependency on spaces
 
   // Update markers when spaces change
   useEffect(() => {
     const map = mapRef.current;
     if (!map || spaces.length === 0) return;
 
-    // Remove old markers
+    // Remove old space markers only
     markersRef.current.forEach((m) => m.remove());
     markersRef.current.clear();
     spacePricesRef.current.clear();
 
-    // Add new markers with price labels
     spaces.forEach((space) => {
       spacePricesRef.current.set(space.id, space.price);
 
@@ -157,7 +266,7 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
 
       marker.bindPopup(
         `<div class="p-0" style="margin: -14px -20px -14px -20px">
-          <img src="${space.photo}" alt="${space.name}" style="width:100%;height:100px;object-fit:cover;border-radius:10px 10px 0 0;" />
+          <img src="${space.photo}" alt="${space.name}" loading="lazy" style="width:100%;height:100px;object-fit:cover;border-radius:10px 10px 0 0;" />
           <div style="padding:10px 12px 12px">
             <p style="font-weight:700;font-size:13px;margin:0 0 2px 0;color:hsl(210 25% 12%);">${space.name}</p>
             <p style="font-size:11px;color:hsl(210 10% 50%);margin:0 0 6px 0;">${space.type} · ${space.neighborhood}</p>
@@ -170,9 +279,9 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
         { closeButton: false, maxWidth: 220, minWidth: 180, className: "space-popup" }
       );
 
-      marker.on("mouseover", () => onPinHover(space.id));
-      marker.on("mouseout", () => onPinHover(null));
-      marker.on("click", () => onPinClick(space.id));
+      marker.on("mouseover", () => onPinHoverRef.current(space.id));
+      marker.on("mouseout", () => onPinHoverRef.current(null));
+      marker.on("click", () => onPinClickRef.current(space.id));
 
       markersRef.current.set(space.id, marker);
     });
@@ -180,7 +289,7 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
     // Fit bounds
     const bounds = L.latLngBounds(spaces.map((s) => [s.lat, s.lng]));
     map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
-  }, [spaces, onPinHover, onPinClick]);
+  }, [spaces]);
 
   // Update highlighted marker icon
   useEffect(() => {
@@ -201,8 +310,23 @@ export default function SpaceMap({ spaces, highlightedId, onPinHover, onPinClick
   }
 
   return (
-    <div className={`overflow-hidden ${className}`}>
+    <div className={`overflow-hidden relative ${className}`}>
       <div ref={containerRef} style={{ height: "100%", width: "100%", minHeight: "400px" }} />
+
+      {/* Geolocation hint banner */}
+      {geoStatus === "denied" && (
+        <div className="absolute bottom-3 left-3 right-3 z-[1000] pointer-events-none">
+          <div className="bg-card/90 backdrop-blur-sm border border-border/60 rounded-lg px-3 py-2 flex items-center gap-2 shadow-sm pointer-events-auto max-w-xs">
+            <div className="w-2 h-2 rounded-full bg-muted-foreground/40 flex-shrink-0" />
+            <p className="text-[11px] text-muted-foreground leading-tight">
+              Permita a localização para ver os espaços mais próximos de você.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+const SpaceMap = memo(SpaceMapInner);
+export default SpaceMap;

@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { DollarSign, MapPin, Zap, Calendar, Wallet, ShieldCheck } from "lucide-react";
 
 const items = [
-  { icon: DollarSign, title: "Muito mais barato", desc: "Pague muito menos que um self storage tradicional." },
-  { icon: MapPin, title: "Espaços perto de casa", desc: "Encontre opções no seu bairro, sem atravessar a cidade." },
-  { icon: Zap, title: "Reserva simples e rápida", desc: "Escolha, reserve e pague online em minutos." },
-  { icon: Calendar, title: "Curtos e longos períodos", desc: "Guarde por dias, semanas ou meses. Flexibilidade total." },
-  { icon: Wallet, title: "Renda extra garantida", desc: "Transforme espaço ocioso em dinheiro." },
+  { icon: DollarSign, title: "Muito mais acessível", desc: "Preços flexíveis para guardar caixas, estoque, carros, motos e mais." },
+  { icon: MapPin, title: "Perto de você", desc: "Garagens, vagas e depósitos no seu bairro — para objetos ou veículos." },
+  { icon: Zap, title: "Reserva rápida", desc: "Escolha, reserve e pague online em minutos." },
+  { icon: Calendar, title: "Dias, semanas ou meses", desc: "Guarde pelo tempo que precisar. Flexibilidade total." },
+  { icon: Wallet, title: "Renda com espaço ocioso", desc: "Transforme garagens, vagas e depósitos em receita — para objetos e veículos." },
   { icon: ShieldCheck, title: "Segurança na plataforma", desc: "Cadastro com foto, termos claros e intermediação digital." },
 ];
 
@@ -24,7 +24,7 @@ const Differentials = () => {
             Por que escolher o GuardaAí?
           </h2>
           <p className="text-muted-foreground text-[13px] md:text-lg max-w-2xl mx-auto">
-            Vantagens que fazem do GuardaAí a melhor opção.
+            Uma plataforma para guardar objetos e veículos com praticidade.
           </p>
         </motion.div>
 

@@ -14,6 +14,159 @@ export type Database = {
   }
   public: {
     Tables: {
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          last_message_at: string
+          participant_a: string
+          participant_b: string
+          reservation_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          participant_a: string
+          participant_b: string
+          reservation_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          participant_a?: string
+          participant_b?: string
+          reservation_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: true
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          read: boolean
+          sender_id: string
+        }
+        Insert: {
+          content?: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          metadata: Json | null
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          read?: boolean
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          paid_at: string | null
+          payer_id: string
+          payment_method: string | null
+          platform_fee: number
+          recipient_id: string
+          reservation_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          payer_id: string
+          payment_method?: string | null
+          platform_fee?: number
+          recipient_id: string
+          reservation_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          payer_id?: string
+          payment_method?: string | null
+          platform_fee?: number
+          recipient_id?: string
+          reservation_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -71,6 +224,59 @@ export type Database = {
         }
         Relationships: []
       }
+      reservations: {
+        Row: {
+          created_at: string
+          end_date: string
+          host_id: string
+          id: string
+          notes: string | null
+          renter_id: string
+          space_id: string | null
+          start_date: string
+          status: string
+          total_price: number
+          updated_at: string
+          volume: number
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          host_id: string
+          id?: string
+          notes?: string | null
+          renter_id: string
+          space_id?: string | null
+          start_date: string
+          status?: string
+          total_price?: number
+          updated_at?: string
+          volume?: number
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          host_id?: string
+          id?: string
+          notes?: string | null
+          renter_id?: string
+          space_id?: string | null
+          start_date?: string
+          status?: string
+          total_price?: number
+          updated_at?: string
+          volume?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       review_requests: {
         Row: {
           admin_notes: string | null
@@ -111,6 +317,54 @@ export type Database = {
             columns: ["risk_analysis_id"]
             isOneToOne: false
             referencedRelation: "risk_analyses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          comment: string
+          created_at: string
+          host_id: string
+          id: string
+          rating: number
+          reservation_id: string
+          reviewer_id: string
+          space_id: string | null
+        }
+        Insert: {
+          comment?: string
+          created_at?: string
+          host_id: string
+          id?: string
+          rating: number
+          reservation_id: string
+          reviewer_id: string
+          space_id?: string | null
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          host_id?: string
+          id?: string
+          rating?: number
+          reservation_id?: string
+          reviewer_id?: string
+          space_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
             referencedColumns: ["id"]
           },
         ]
@@ -156,14 +410,19 @@ export type Database = {
           access_hours: string | null
           access_type: string | null
           availability: string | null
+          availability_schedule: Json | null
           available_days: string[] | null
           beneficiary_name: string | null
+          cleaning_fee_amount: number | null
+          cleaning_fee_enabled: boolean | null
           closed: boolean | null
           covered: boolean | null
           created_at: string
           description: string | null
           document_number: string | null
           easy_access: boolean | null
+          gate_height: number | null
+          gate_width: number | null
           height: number | null
           id: string
           length: number | null
@@ -173,13 +432,17 @@ export type Database = {
           photos: string[] | null
           pix_key: string | null
           pix_key_type: string | null
+          price_per_day: number | null
+          rental_type: string
           rules: string | null
           security_features: string | null
           space_category: string | null
           space_type: string
+          space_use: string
           status: string
           updated_at: string
           user_id: string
+          vehicle_compatible: Json | null
           volume: number | null
           width: number | null
         }
@@ -187,14 +450,19 @@ export type Database = {
           access_hours?: string | null
           access_type?: string | null
           availability?: string | null
+          availability_schedule?: Json | null
           available_days?: string[] | null
           beneficiary_name?: string | null
+          cleaning_fee_amount?: number | null
+          cleaning_fee_enabled?: boolean | null
           closed?: boolean | null
           covered?: boolean | null
           created_at?: string
           description?: string | null
           document_number?: string | null
           easy_access?: boolean | null
+          gate_height?: number | null
+          gate_width?: number | null
           height?: number | null
           id?: string
           length?: number | null
@@ -204,13 +472,17 @@ export type Database = {
           photos?: string[] | null
           pix_key?: string | null
           pix_key_type?: string | null
+          price_per_day?: number | null
+          rental_type?: string
           rules?: string | null
           security_features?: string | null
           space_category?: string | null
           space_type?: string
+          space_use?: string
           status?: string
           updated_at?: string
           user_id: string
+          vehicle_compatible?: Json | null
           volume?: number | null
           width?: number | null
         }
@@ -218,14 +490,19 @@ export type Database = {
           access_hours?: string | null
           access_type?: string | null
           availability?: string | null
+          availability_schedule?: Json | null
           available_days?: string[] | null
           beneficiary_name?: string | null
+          cleaning_fee_amount?: number | null
+          cleaning_fee_enabled?: boolean | null
           closed?: boolean | null
           covered?: boolean | null
           created_at?: string
           description?: string | null
           document_number?: string | null
           easy_access?: boolean | null
+          gate_height?: number | null
+          gate_width?: number | null
           height?: number | null
           id?: string
           length?: number | null
@@ -235,13 +512,17 @@ export type Database = {
           photos?: string[] | null
           pix_key?: string | null
           pix_key_type?: string | null
+          price_per_day?: number | null
+          rental_type?: string
           rules?: string | null
           security_features?: string | null
           space_category?: string | null
           space_type?: string
+          space_use?: string
           status?: string
           updated_at?: string
           user_id?: string
+          vehicle_compatible?: Json | null
           volume?: number | null
           width?: number | null
         }
@@ -274,15 +555,43 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_platform_stats: { Args: never; Returns: Json }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -409,6 +718,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

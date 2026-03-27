@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Package, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff } from "lucide-react";
+import { Warehouse, Home, Mail, Lock, ArrowRight, User, Eye, EyeOff, Car } from "lucide-react";
+import BackButton from "@/components/guardaai/BackButton";
 import Header from "@/components/guardaai/Header";
 import Footer from "@/components/guardaai/Footer";
+import SEO from "@/components/SEO";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -127,14 +129,16 @@ const Login = () => {
   const subtitle = mode === "login"
     ? "Entre para acompanhar suas reservas e espaços anunciados."
     : mode === "signup"
-    ? "Crie uma conta única para guardar itens e anunciar espaço."
+    ? "Crie uma conta única para guardar objetos ou veículos e anunciar espaço."
     : "Informe seu e-mail e enviaremos instruções para redefinir sua senha.";
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEO title="Entrar" description="Acesse sua conta GuardaAí para gerenciar reservas, espaços e mensagens." canonical="/entrar" noIndex />
       <Header />
       <main className="flex-1 pt-24 pb-16">
         <div className="container max-w-lg mx-auto">
+          <BackButton label="Início" fallbackTo="/" className="mb-6" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -149,21 +153,28 @@ const Login = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="grid grid-cols-2 gap-4 mb-8"
+              className="grid grid-cols-3 gap-3 mb-8"
             >
               <div className="p-4 rounded-2xl bg-primary/5 border border-primary/15 text-center">
                 <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-2">
-                  <Package size={18} className="text-primary" />
+                  <Warehouse size={18} className="text-primary" />
                 </div>
-                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar itens</h3>
-                <p className="text-xs text-muted-foreground">Reservas, pagamentos e status.</p>
+                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar objetos</h3>
+                <p className="text-xs text-muted-foreground">Caixas, móveis, estoque e mais.</p>
               </div>
               <div className="p-4 rounded-2xl bg-accent/5 border border-accent/15 text-center">
                 <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-2">
-                  <Home size={18} className="text-accent" />
+                  <Car size={18} className="text-accent" />
+                </div>
+                <h3 className="text-sm font-semibold text-foreground mb-0.5">Guardar veículos</h3>
+                <p className="text-xs text-muted-foreground">Carros, motos, barcos e mais.</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-secondary border border-border/60 text-center">
+                <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center mx-auto mb-2">
+                  <Home size={18} className="text-foreground" />
                 </div>
                 <h3 className="text-sm font-semibold text-foreground mb-0.5">Anunciar espaço</h3>
-                <p className="text-xs text-muted-foreground">Espaços, solicitações e ganhos.</p>
+                <p className="text-xs text-muted-foreground">Ganhe renda com espaço ocioso.</p>
               </div>
             </motion.div>
           )}
